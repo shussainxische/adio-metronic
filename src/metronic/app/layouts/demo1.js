@@ -31,18 +31,15 @@ class KTLayout {
 	static _handleSidebarMenu() {
 		const menuEl = document.querySelector('#sidebar_menu');
 		const scrollableEl = document.querySelector('#sidebar_scrollable');
-		const menuActiveItemEl = menuEl.querySelector('.menu-item.active');
+		const menuActiveItemEl = menuEl.querySelector(".menu-item.active");
 
-		if (
-			!menuActiveItemEl ||
-			KTDom.isVisibleInParent(menuActiveItemEl, scrollableEl)
-		) {
+		if (!menuActiveItemEl || KTDom.isVisibleInParent(menuActiveItemEl, scrollableEl)) {
 			return;
 		}
 
 		scrollableEl.scroll({
 			top: KTDom.getRelativeTopPosition(menuActiveItemEl, scrollableEl) - 100,
-			behavior: 'instant',
+			behavior: 'instant'
 		});
 	}
 
