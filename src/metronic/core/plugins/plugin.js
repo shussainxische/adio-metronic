@@ -362,16 +362,6 @@ export default plugin(({config, addBase, addComponents, addVariant, e}) => {
       modifySelectors(({className}) => {
         return `[data-dropdown-content].open .${e(`dropdown-open${separator}${className}`)}`;
       });
-    },
-    ({modifySelectors, separator}) => {
-      modifySelectors(({className}) => {
-        return `.menu-item-dropdown.show .${e(`dropdown-open${separator}${className}`)}`;
-      });
-    },
-    ({modifySelectors, separator}) => {
-      modifySelectors(({className}) => {
-        return `.menu-item-dropdown.show.${e(`dropdown-open${separator}${className}`)}`;
-      });
     }
   ]);
 
