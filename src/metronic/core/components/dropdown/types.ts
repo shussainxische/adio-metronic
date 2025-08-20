@@ -1,19 +1,22 @@
-import { Placement } from "@popperjs/core";
+export declare type KTDropdownTriggerType = 'hover' | 'click';
 
-export declare type KTMenuItemToggleType = 'dropdown' | 'accordion';
-
-export declare type KTMenuItemTriggerType = 'hover' | 'click';
-
-export interface KTMenuConfigInterface {
-	dropdownZindex: string,
-	dropdownHoverTimeout: number,
-	dropdownPlacement: Placement;
-	dropdownOffset: string;
-  accordionExpandAll: boolean,
+export interface KTDropdownConfigInterface {
+	zindex: number,
+	hoverTimeout: number,
+	permanent: boolean,
+	dismiss: boolean,
+	placement: string,
+	placementRtl: string,
+	attach: string,
+	offset: string,
+	offsetRtl: string,
+  trigger: KTDropdownTriggerType,
+	hiddenClass: string
 }
 
-export interface KTMenuInterface {		
+export interface KTDropdownInterface {		
 	disable(): void;
 	enable(): void;
-	update(): void;
+	show(): void;
+	hide(): void;
 }
