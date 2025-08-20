@@ -3,14 +3,13 @@ import {
 	KTDataTableConfigInterface,
 	KTDataTableDataInterface,
 	KTDataTableInterface,
-} from '@keenthemes/ktui/src/components/datatable';
+} from '../../core/components/datatable';
 
 const apiUrl: string = /^(localhost|127.0.0.1)$/.test(window.location.hostname)
 	? 'http://127.0.0.1:8001/metronic-tailwind-html/demo1/account/security/allowed-ip-addresses/_data.html'
 	: 'https://keenthemes.com/metronic/tailwind/demo1/account/security/allowed-ip-addresses/_data.html';
-const element: HTMLElement = document.querySelector(
-	'#ip_addresses_table'
-) as HTMLElement;
+const element: HTMLElement = document.querySelector('#ip_addresses_table') as HTMLElement;
+
 
 interface IPAddressData extends KTDataTableDataInterface {
 	id: number;
@@ -53,17 +52,17 @@ const dataTableOptions: KTDataTableConfigInterface = {
 				context: KTDataTableInterface
 			): string => {
 				const checkbox = document.createElement('input');
-				checkbox.className = 'kt-checkbox kt-checkbox-sm';
+				checkbox.className = 'checkbox checkbox-sm';
 				checkbox.type = 'checkbox';
 				checkbox.value = data.id.toString();
-				checkbox.setAttribute('data-kt-datatable-row-check', 'true');
+				checkbox.setAttribute('data-datatable-row-check', 'true');
 				return checkbox.outerHTML.trim();
 			},
 		},
 		status: {
 			title: 'Status',
 			render: (item: string): string => {
-				return `<span class="inline-flex rounded-full size-2 ${item}"></span>`;
+				return `<span class="badge badge-dot size-2 ${item}"></span>`;
 			},
 			createdCell(cell) {
 				cell.classList.add('text-center');
@@ -82,27 +81,33 @@ const dataTableOptions: KTDataTableConfigInterface = {
 			title: 'Method',
 		},
 		edit: {
-			render: (item: string, data: IPAddressData): string => {
+			render: (
+				item: string,
+				data: IPAddressData
+			): string => {
 				const button = document.createElement('button');
-				button.className = 'kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost';
+				button.className = 'btn btn-sm btn-icon btn-clear btn-light';
 				button.innerHTML = '<i class="ki-outline ki-notepad-edit"></i>';
 				return button.outerHTML.trim();
 			},
 			createdCell: (cell, cellData, rowData) => {
-				cell.querySelector('.kt-btn').addEventListener('click', () => {
+				cell.querySelector('.btn').addEventListener('click', () => {
 					alert(`Clicked on edit button for row ${rowData.label}`);
 				});
 			},
 		},
 		delete: {
-			render: (item: string, data: IPAddressData): string => {
+			render: (
+				item: string,
+				data: IPAddressData
+			): string => {
 				const button = document.createElement('button');
-				button.className = 'kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost';
+				button.className = 'btn btn-sm btn-icon btn-clear btn-light';
 				button.innerHTML = '<i class="ki-outline ki-trash"></i>';
 				return button.outerHTML.trim();
 			},
 			createdCell: (cell, cellData, rowData) => {
-				cell.querySelector('.kt-btn').addEventListener('click', () => {
+				cell.querySelector('.btn').addEventListener('click', () => {
 					alert(`Clicked on delete button for row ${rowData.label}`);
 				});
 			},
@@ -119,12 +124,10 @@ document.querySelector('#select_ip_btn').addEventListener('click', () => {
 	} else {
 		alert('No rows selected');
 	}
-});
+})
 
 // Cache elements with the data-datatable-search attribute
-const searchElements = document.querySelectorAll<HTMLInputElement>(
-	'[data-datatable-search]'
-);
+const searchElements = document.querySelectorAll<HTMLInputElement>('[data-datatable-search]');
 
 searchElements.forEach((element) => {
 	// Get the ID of the datatable to be searched
