@@ -1,0 +1,52 @@
+<!-- <div class="menu-item" data-menu-item-offset="-10px, 0" data-menu-item-placement="left-start"
+    data-menu-item-toggle="dropdown" data-menu-item-trigger="click|lg:hover">
+    <div class="menu-link">
+        <span class="me-2.5">
+            <i class="ki-filled ki-icon">
+            </i>
+        </span>
+        <span class="menu-title">
+      {{ 'user_settings.language' | translate }}
+        </span>
+        <div
+            class="flex items-center gap-1.5 rounded-md border border-gray-300 text-gray-600 p-1.5 text-2xs font-medium shrink-0">
+            {{currentLangObject.name}}
+            <img [src]="'assets/media/flags/' + currentLangObject.flag" class="inline-block size-3.5 rounded-full" />
+        </div>
+    </div>
+    <div class="menu-dropdown menu-default light:border-gray-300 w-full max-w-[170px]">
+        @for (language of supportedLanguages; track language.code) {
+        <div class="menu-item active" (click)="switchLang(language.code)">
+            <a class="menu-link h-10">
+                <span class="menu-icon">
+                    <img [src]="'assets/media/flags/' + language.flag" class="inline-block size-4 rounded-full" />
+                </span>
+                <span class="menu-title">
+                    {{language.name}}
+                </span>
+                @if(language.name === currentLangObject.name) {
+                <span class="menu-badge">
+                    <i class="ki-solid ki-check-circle text-success text-base">
+                    </i>
+                </span>
+                }
+            </a>
+        </div>
+        }
+    </div>
+</div> -->
+<div class="flex items-center gap-2 menu-link justify-between" [ngClass]="{'hover:bg-surface-active-status': !!label}">
+  <span *ngIf="!!label" class="text-base text-gray-800">{{ label }}</span>
+
+  <app-select
+    [control]="languageControl"
+    [options]="languageOptions"
+    [showIcons]="true"
+    [minWidth]="minWidth"
+    [iconSize]="'size-4.5'"
+    [size]="size"
+    [placeholder]="'Select Language'"
+    class="language-select-compact"
+    (change)="onLanguageChange($event)">
+  </app-select>
+</div>

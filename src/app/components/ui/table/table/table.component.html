@@ -1,0 +1,17 @@
+<div class="rounded-[20px]" [class]="className">
+      <div data-datatable="true">
+        <div class="scrollable-x-auto">
+          <table class="table" data-datatable-table="true" data-datatable-info="false" data-datatable-info-empty="false">
+            <ng-content></ng-content>
+          </table>
+        </div>
+        <app-table-pagination
+          *ngIf="showPagination"
+          [currentPage]="currentPage"
+          [perPage]="perPage"
+          [totalItems]="totalItems"
+          (pageChange)="onPageChange($event)"
+          (perPageChange)="onPerPageChange($event)">
+        </app-table-pagination>
+      </div>
+    </div>

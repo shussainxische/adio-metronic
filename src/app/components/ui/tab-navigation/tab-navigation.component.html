@@ -1,0 +1,15 @@
+<div [class]="class" class="py-4">
+  <div class="flex border-b border-b-stroke-container">
+    <ng-container *ngFor="let tab of tabs">
+      <span *appHasPermission="tab.permissions || ''" class="me-5 cursor-pointer relative" (click)="selectTab(tab.id)">
+      <div class="flex items-center gap-2 pt-3 px-4">
+        <a class="inline-block py-2 text-xl text-gray-900" [ngClass]="{'hover:text-primary-active text-primary-active font-bold': activeTabId === tab.id, 'hover:text-primary-light': activeTabId !== tab.id}">
+          {{ tab.label | translate }}
+        </a>
+        <div *ngIf="tab.count" class="bg-red min-w-7 h-7 px-2 py-2 rounded-full text-base text-white flex items-center justify-center font-bold">{{tab.count}}</div>
+      </div>
+        <div *ngIf="activeTabId === tab.id" class="absolute bottom-0 left-0 right-0 h-[3px] bg-primary-active"></div>
+      </span>
+    </ng-container>
+  </div>
+<div>

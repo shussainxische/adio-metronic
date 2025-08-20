@@ -1,0 +1,66 @@
+<!-- <div class="rounded-lg border border-stroke-cards-inner py-6 px-4 flex justify-between items-center">
+  <div class="justify-between flex items-center gap-2">
+    <img
+      src="assets/file/pdf.svg"
+      alt="PDF file"
+      class="h-6 w-6"
+    />
+    <div class="text-primary-on-surface text-sm">Test Company.pdf</div>
+  </div>
+  <span class="material-symbols-outlined text-lg text-gray-800 cursor-pointer">arrow_downward</span>
+</div> -->
+
+<div
+  class="rounded-lg border border-stroke-cards-inner py-6 px-4 flex justify-between items-center"
+  [class]="className"
+  [ngClass]="{
+    'opacity-50': !document,
+    'border-red-300 bg-red-50': hasImageError
+  }"
+>
+  <div class="justify-between flex items-center gap-2">
+    <!-- Show actual image if it's an image file -->
+    <img
+      *ngIf="document && isImage"
+      [src]="document.blobUrl"
+      [alt]="document.fileName"
+      class="h-8 w-8 object-cover rounded"
+      (error)="onImageError($event)"
+      (load)="onImageLoad($event)"
+    />
+    <!-- Show file type icon if it's not an image -->
+    <img
+      *ngIf="!document || !isImage"
+      [src]="fileIcon"
+      [alt]="isPdf ? 'PDF file' : 'Document file'"
+      class="h-8 w-8"
+    />
+    <div
+      class="text-primary-on-surface text-sm"
+      [ngClass]="{
+        'text-gray-400': !document,
+        'text-red-600': hasImageError
+      }"
+    >
+      {{ displayFileName }}
+      <span *ngIf="hasImageError" class="text-red-500 text-xs block"
+        >({{ "forms.error_loading_file" | translate }})</span
+      >
+    </div>
+  </div>
+  <span
+    *ngIf="canDownload"
+    class="material-symbols-outlined text-lg cursor-pointer text-gray-800 hover:text-gray-900"
+    (click)="downloadFile()"
+    title="Download file"
+  >
+    arrow_downward
+  </span>
+  <span
+    *ngIf="!canDownload && document"
+    class="material-symbols-outlined text-lg text-gray-400 cursor-not-allowed"
+    title="Cannot download - file has errors"
+  >
+    arrow_downward
+  </span>
+</div>

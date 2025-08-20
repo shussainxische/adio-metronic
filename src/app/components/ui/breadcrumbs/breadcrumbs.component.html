@@ -1,0 +1,19 @@
+   <div class="py-4 px-6 bg-surface-support-info border-t border-b border-t-stroke-container border-b-stroke-container mb-8">
+      <ol class="flex flex-wrap items-center">
+        <ng-container *ngFor="let item of items; let last = last; let i = index">
+          <li *ngIf="item.link && !last" class="flex items-center">
+            <a [routerLink]="item.link" (click)="nav.navigateTo([item.link])" [routerLink]="item.link" class="text-gray-900 hover:text-blue2-active">
+              {{ item.label | translate }}
+            </a>
+           <span class="material-symbols-outlined text-gray-700 text-xl">navigate_next</span>
+          </li>
+          <!-- Item without link or last item -->
+          <li *ngIf="!item.link || last" class="flex items-center">
+            <span [class]="last ? 'font-semibold text-blue2-active' : 'text-gray-900'">
+              {{ item.label | translate }}
+            </span>
+           <span *ngIf="!last" class="material-symbols-outlined text-gray-700 text-xl">navigate_next</span>
+          </li>
+        </ng-container>
+      </ol>
+    </div>

@@ -1,0 +1,67 @@
+<!-- stepper.component.html -->
+<div class="w-full mt-8" [class]="className">
+  <div class="relative flex justify-between w-full h-full">
+    <!-- Steps -->
+    <ng-container *ngFor="let step of steps; let i = index">
+      <div class="relative z-10 flex flex-col flex-1 items-baseline">
+        <!-- Step circle and indicator -->
+        <div class="flex justify-center w-full items-center">
+          <!-- Progress line connector -->
+          <ng-container *ngIf="i < steps.length - 1">
+            <div
+              class="absolute z-0 w-full"
+              [ngClass]="isRtl ? 'translate-x-[-50%]' : 'translate-x-1/2'"
+            >
+              <div class="w-full h-1">
+                <div
+                  class="h-full w-full"
+                  [ngClass]="getProgressLineClasses(i)"
+                ></div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Step indicator -->
+          <div class="absolute h-[50%] flex items-center">
+            <div
+              class="p-3 border-2 rounded-full shadow-0-1"
+              [ngClass]="getStepClasses(i)"
+              [attr.data-stepper-item]="'#' + step.id"
+              (click)="onStepClick(i + 1)"
+            >
+              <!-- Active step indicator (dot) -->
+              <ng-container *ngIf="getStepState(i) === 'active'">
+                <div class="p-2 rounded-full bg-primary"></div>
+              </ng-container>
+
+              <!-- Pending step (empty circle) -->
+              <ng-container *ngIf="getStepState(i) === 'pending'">
+                <div class="p-2 rounded-full bg-surface"></div>
+              </ng-container>
+
+              <!-- Completed step (checkmark) -->
+              <ng-container *ngIf="showCheckIcon(i)">
+                <div
+                  class="w-4 h-4 flex-shrink-0 flex items-center justify-center bg-primary rounded-full text-surface"
+                >
+                  <span class="material-symbols-outlined text-2xl leading-none"
+                    >done</span
+                  >
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step label -->
+        <h4
+          class="text-base text-center mx-auto mt-8"
+          [ngClass]="getLabelClasses(i)"
+          (click)="onStepClick(i + 1)"
+        >
+          {{ step.label | translate }}
+        </h4>
+      </div>
+    </ng-container>
+  </div>
+</div>

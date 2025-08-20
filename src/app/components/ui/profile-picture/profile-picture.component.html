@@ -1,0 +1,10 @@
+<ng-container>
+  <ng-container *ngIf="profilePictureExists; else fallbackInitial">
+    <img alt="" class="size-{{size}} rounded-full border border-gray-700 z-10 min-w-[42px] aspect-square" [src]="photoUrl" />
+  </ng-container>
+  <ng-template #fallbackInitial>
+    <div class="size-{{size}} rounded-full inline-flex items-center justify-center relative text-lg font-medium border border-gray-700 bg-gray-100 text-gray-800 z-10 w-[42px] aspect-square">
+      {{ firstLetter }}
+    </div>
+  </ng-template>
+</ng-container>

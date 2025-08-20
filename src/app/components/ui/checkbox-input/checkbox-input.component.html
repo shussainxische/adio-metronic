@@ -1,0 +1,40 @@
+<!-- <label class="form-label flex items-center gap-2.5 cursor-pointer group" [class.opacity-60]="disabled && disabledAppearance" (click)="onCheckboxChange($event)">
+  <input
+  type="checkbox"
+  [id]="id"
+  [checked]="checked"
+  [disabled]="disabled"
+  (change)="onCheckboxChange($event)"
+  class="border !border-gray-900 group-hover:!border-2 checkbox checked:!border-primary-active !bg-transparent checked:!bg-primary-active cursor-pointer disabled:!cursor-pointer pointer-events-none"
+/>
+  <span *ngIf="label">{{ label }}</span>
+  <ng-content></ng-content>
+</label> -->
+
+<label class="form-label flex items-center gap-2.5 cursor-pointer group"
+       [class.opacity-60]="disabled && disabledAppearance"
+       [ngClass]="checked ? 'text-primary-on-surface' : 'text-gray-900'">
+  <div class="checkbox-container relative">
+    <!-- Hide the actual checkbox but keep it accessible -->
+    <input
+      class="opacity-0 absolute w-0 h-0"
+      type="checkbox"
+      [id]="id"
+      [checked]="checked"
+      [disabled]="disabled"
+      (click)="toggleChecked($event)"
+    />
+    <!-- Custom visual checkbox -->
+    <div [ngClass]="CheckboxClasses"
+         class="custom-checkbox flex items-center justify-center border border-gray-900 group-hover:border-2 cursor-pointer disabled:cursor-not-allowed"
+         [class.bg-primary-active]="checked"
+         [class.border-primary-active]="checked">
+      <!-- Custom checkmark that we can control the size of -->
+      <svg *ngIf="checked" class="checkmark" viewBox="0 0 24 24" [ngClass]="CheckmarkClasses">
+        <path fill="white" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+      </svg>
+    </div>
+  </div>
+  <span *ngIf="label">{{ label }}</span>
+  <ng-content></ng-content>
+</label>

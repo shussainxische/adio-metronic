@@ -1,0 +1,42 @@
+<div #parentWrapper class="relative inline-block">
+  <div class="relative w-full" #menuDropdownWrapper>
+    <app-menu-dropdown #menuDropdown>
+      <div
+        class="relative cursor-pointer menu-toggle"
+        (click)="toggleDropdown()"
+      >
+        <app-adio-button
+          mode="outline"
+          variant="regular"
+          size="medium"
+          [pTooltip]="'common.sort' | translate"
+          tooltipPosition="top"
+          className="flex justify-center !pe-2 !ps-2 text-gray-800"
+        >
+          <span class="material-symbols-outlined text-2xl" iconBefore
+            >swap_vert</span
+          >
+          <div *ngIf="label" class="text-sm">
+            {{ label }}
+          </div>
+        </app-adio-button>
+      </div>
+      <!-- Dropdown -->
+      <app-dropdown-wrapper
+        [style.width]="dropdownWidth"
+        [style.max-width]="dropdownWidth"
+      >
+        <div class="flex flex-col max-h-[168px] overflow-y-auto gap-2">
+          <app-menu-item
+            *ngFor="let option of sortOptions"
+            [label]="option.label | translate"
+            [checkable]="false"
+            [selected]="isSelected(option.value)"
+            (itemClick)="onSortOptionClick(option)"
+          >
+          </app-menu-item>
+        </div>
+      </app-dropdown-wrapper>
+    </app-menu-dropdown>
+  </div>
+</div>

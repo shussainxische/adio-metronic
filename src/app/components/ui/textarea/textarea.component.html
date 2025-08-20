@@ -1,0 +1,151 @@
+<div class="relative">
+  <ng-container>
+    <label
+      class="block mb-2"
+      [ngClass]="{
+        'text-xs': size === 'small',
+        'text-base': size === 'medium' || size === 'large',
+        'text-red': hasError,
+        'text-gray-700': !hasError
+      }"
+    >
+      {{ label | translate }}
+      <span *ngIf="required" class="text-red-500">*</span>
+    </label>
+  </ng-container>
+
+  <!-- Rich Text Editor -->
+  <div
+    *ngIf="richText"
+    class="relative group"
+    [ngClass]="{
+      'text-xs': size === 'small',
+      'text-base': size === 'medium' || size === 'large',
+      'list-mode': listMode
+    }"
+  >
+    <p-editor
+      [formControl]="control"
+      [disabled]="disabled"
+      #editorElement
+      [ngClass]="{
+        'border-red': hasError,
+        'border-gray-700': !hasError,
+        'list-editor': listMode
+      }"
+      [style]="{
+        height: listMode
+          ? '124px'
+          : size === 'small'
+          ? '200px'
+          : size === 'medium'
+          ? '250px'
+          : '300px',
+        'min-height': listMode ? '124px' : 'auto',
+        border: hasError
+          ? '1px solid var(--tw-red)'
+          : '1px solid var(--tw-gray-700)'
+      }"
+      [placeholder]="placeholder | translate"
+    >
+      <!-- Show toolbar only when not in list mode -->
+      <ng-container *ngIf="!listMode">
+        <ng-template pTemplate="header">
+          <div
+            [ngClass]="{}"
+            class="w-full flex rounded-bl-md rounded-br-md rich-text-area"
+            [style]="{
+              'border-bottom': hasError ? '1px solid var(--tw-red)' : '1px solid var(--tw-gray-700)',
+              'border-left': hasError ? '1px solid var(--tw-red)' : '1px solid var(--tw-gray-700)',
+              'border-right': hasError ? '1px solid var(--tw-red)' : '1px solid var(--tw-gray-700)',
+            }"
+          >
+            <span class="ql-formats !flex">
+              <button class="ql-bold" aria-label="Bold"></button>
+              <button class="ql-italic" aria-label="Italic"></button>
+              <button class="ql-underline" aria-label="Underline"></button>
+            </span>
+            <span class="ql-formats !flex">
+              <button
+                class="ql-list"
+                value="ordered"
+                aria-label="Ordered List"
+              ></button>
+              <button
+                class="ql-list"
+                value="bullet"
+                aria-label="Bullet List"
+              ></button>
+            </span>
+            <span class="ql-formats !flex">
+              <button class="ql-link" aria-label="Insert Link"></button>
+            </span>
+          </div>
+        </ng-template>
+      </ng-container>
+    </p-editor>
+  </div>
+
+  <!-- Regular Textarea -->
+  <div
+    *ngIf="!richText"
+    class="relative group border rounded-md flex"
+    [ngClass]="{
+      'border-gray-700': !hasError,
+      'border-red': hasError,
+      'hover:border-gray-900': !disabled && !hasError,
+      'focus-within:border-primary-light': !disabled && !hasError,
+      'active:border-gray-700': !disabled && !hasError,
+      'bg-transparent': true,
+    }"
+  >
+    <textarea
+      [formControl]="control"
+      name="message"
+      rows="5"
+      [placeholder]="placeholder | translate"
+      [disabled]="disabled"
+      class="w-full outline-none border-0 resize-none"
+      [ngClass]="{
+        'p-2.5 text-xs': size === 'small',
+        'p-3 text-sm': size === 'medium',
+        'p-3.5 text-base': size === 'large',
+        'rounded-md': true,
+        'text-gray-800': true,
+        'hover:text-gray-900': true,
+        'focus:text-gray-900': !hasError,
+        'active:text-primary-on-surface': !hasError,
+        'bg-transparent': true,
+        'placeholder:text-gray-700': true,
+      }"
+      appReplaceEnglishWithArabic
+      *ngIf="isRtl"
+    ></textarea>
+    <textarea
+      [formControl]="control"
+      name="message"
+      rows="5"
+      [placeholder]="placeholder | translate"
+      [disabled]="disabled"
+      class="w-full outline-none border-0 resize-none"
+      [ngClass]="{
+        'p-2.5 text-xs': size === 'small',
+        'p-3 text-sm': size === 'medium',
+        'p-3.5 text-base': size === 'large',
+        'rounded-md': true,
+        'text-gray-800': true,
+        'hover:text-gray-900': true,
+        'focus:text-gray-900': !hasError,
+        'active:text-primary-on-surface': !hasError,
+        'bg-transparent': true,
+        'placeholder:text-gray-700': true,
+      }"
+      *ngIf="!isRtl"
+    ></textarea>
+  </div>
+</div>
+
+<!-- Error Message -->
+<div *ngIf="hasError && control?.touched" class="text-red text-sm mt-1">
+  <ng-container *ngIf="errorMessage">{{ errorMessage }}</ng-container>
+</div>

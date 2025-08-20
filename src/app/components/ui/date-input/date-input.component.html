@@ -1,0 +1,29 @@
+<div class="relative" [dir]="isRtl ? 'rtl' : 'ltr'">
+  <app-input [control]="control" [label]="label" [required]="required" [placeholder]="placeholder | translate" [size]="size" [disabled]="disabled || control.disabled" [language]="language" [readOnly]="true">
+    <span class="material-symbols-outlined text-gray-800 me-3 cursor-pointer text-base" iconAfter (click)="openPicker(); $event.stopPropagation()">
+      calendar_today
+    </span>
+  </app-input>
+  <div class="absolute inset-0 cursor-pointer" (click)="openPicker()">
+  </div>
+  <p-datePicker #picker [formControl]="datePickerControl"
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [monthNavigator]="true"
+    [yearNavigator]="true"
+    [yearRange]="getYearRange()"
+    [showOnFocus]="false"
+    [baseZIndex]="1000"
+    [autoZIndex]="true"
+    [showIcon]="false"
+    [styleClass]="'custom-calendar'"
+    [panelStyleClass]="'!bg-surface'"
+    [appendTo]="'body'"
+    [locale]="language === 'ar' ? arabicLocale : undefined"
+    [disabled]="disabled || control.disabled"
+    (onHide)="onCalendarHide()"
+    (onSelect)="onDateSelect($event)"
+    class="absolute pointer-events-none h-0 top-0 opacity-0">
+  </p-datePicker>
+</div>
+
