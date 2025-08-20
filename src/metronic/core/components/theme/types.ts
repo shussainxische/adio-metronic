@@ -1,19 +1,12 @@
-import { Placement } from "@popperjs/core";
+export declare type KTThemeModeType = 'light' | 'dark' | 'system';
 
-export declare type KTMenuItemToggleType = 'dropdown' | 'accordion';
-
-export declare type KTMenuItemTriggerType = 'hover' | 'click';
-
-export interface KTMenuConfigInterface {
-	dropdownZindex: string,
-	dropdownHoverTimeout: number,
-	dropdownPlacement: Placement;
-	dropdownOffset: string;
-  accordionExpandAll: boolean,
+export interface KTThemeConfigInterface {
+	mode: KTThemeModeType,
+	class: boolean,
+	attribute: string
 }
 
-export interface KTMenuInterface {		
-	disable(): void;
-	enable(): void;
-	update(): void;
+export interface KTThemeInterface {
+	setMode(mode: KTThemeModeType): void;
+	getMode(): KTThemeModeType;
 }
