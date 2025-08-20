@@ -1,2 +1,2 @@
-export { KTMenu } from './menu';
-export type { KTMenuConfigInterface, KTMenuInterface } from './types';
+export { KTSticky } from './sticky';
+export type { KTStickyConfigInterface, KTStickyInterface } from './types';
