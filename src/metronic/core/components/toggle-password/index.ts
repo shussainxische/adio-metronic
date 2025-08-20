@@ -1,2 +1,2 @@
-export { KTMenu } from './menu';
-export type { KTMenuConfigInterface, KTMenuInterface } from './types';
+export { KTTogglePassword } from './toggle-password';
+export type { KTTogglePasswordConfigInterface, KTTogglePasswordInterface } from './types';
