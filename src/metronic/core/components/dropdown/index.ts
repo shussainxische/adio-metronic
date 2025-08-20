@@ -1,2 +1,2 @@
-export { KTMenu } from './menu';
-export type { KTMenuConfigInterface, KTMenuInterface } from './types';
+export { KTDropdown } from './dropdown';
+export type { KTDropdownConfigInterface, KTDropdownInterface } from './types';
