@@ -1,2 +1,2 @@
-export { KTMenu } from './menu';
-export type { KTMenuConfigInterface, KTMenuInterface } from './types';
+export { KTImageInput } from './image-input';
+export type { KTImageInputConfigInterface, KTImageInputInterface } from './types';
