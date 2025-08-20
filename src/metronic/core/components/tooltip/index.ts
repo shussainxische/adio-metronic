@@ -1,2 +1,2 @@
-export { KTMenu } from './menu';
-export type { KTMenuConfigInterface, KTMenuInterface } from './types';
+export { KTTooltip } from './tooltip';
+export type { KTTooltipConfigInterface, KTTooltipInterface } from './types';
