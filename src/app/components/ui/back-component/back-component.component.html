@@ -1,0 +1,19 @@
+<div class="inline-flex items-center text-gray-800 gap-2">
+  <app-icon-wrapper
+    size="medium"
+    shape="squared"
+    mode="neutral"
+    class="menu-toggle"
+    [disableFocusStyles]="true"
+    (click)="onBackClick()"
+  >
+    <span class="material-symbols-outlined text-gray-800 ltr:rotate-180"
+      >arrow_forward</span
+    >
+  </app-icon-wrapper>
+  <div class="text-base">
+    <!-- Use custom text if provided, otherwise use translation -->
+    <span *ngIf="text; else translatedText">{{ text }}</span>
+    <ng-template #translatedText>{{ translationKey | translate }}</ng-template>
+  </div>
+</div>

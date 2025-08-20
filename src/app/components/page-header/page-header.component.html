@@ -1,0 +1,20 @@
+<div class="gap-2 py-4 flex flex-col">
+  <!-- Title row with actions -->
+  <div class="flex items-center gap-4 flex-wrap">
+    <div class="text-primary-on-surface text-[32px] font-medium">{{title}}</div>
+    <!-- Slot for badges, buttons or other actions -->
+    <ng-content select="[header-actions]"></ng-content>
+  </div>
+
+  <!-- Description -->
+  <div class="text-gray-800 text-lg">
+    <ng-container *ngIf="!hasHtmlDescription; else htmlDescription">
+      {{description}}
+    </ng-container>
+    <ng-template #htmlDescription>
+      <div [innerHTML]="description"></div>
+    </ng-template>
+  </div>
+
+  <ng-content></ng-content>
+</div>

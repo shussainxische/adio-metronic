@@ -1,0 +1,159 @@
+<!-- Standard Label -->
+<ng-container *ngIf="labelStyle === 'standard' && label">
+  <label
+    class="block mb-2 text-base font-normal"
+    [ngClass]="{
+      'text-xs': size === 'small',
+      'text-base': size === 'medium' || size === 'large'
+    }"
+  >
+    {{ label | translate }}
+    <span *ngIf="required" class="text-red-500">*</span>
+  </label>
+</ng-container>
+
+<!-- Fieldset with conditional legend -->
+<fieldset
+  (click)="onClick($event)"
+  class="border rounded-md relative group flex items-center w-full max-h-full"
+  [ngClass]="{
+    'border-gray-700': !hasError,
+    'border-red': hasError,
+    'hover:border-gray-900': !disabled && !hasError,
+    'focus-within:border-primary-light': !disabled && !hasError,
+    'active:border-gray-700': !disabled && !hasError,
+    'bg-transparent': true
+  }"
+  [pTooltip]="tooltip"
+  [tooltipPosition]="tooltipPosition"
+>
+  <!-- Floating Label Legend -->
+  <legend class="px-1 ms-2" *ngIf="!!label && labelStyle === 'floating'">
+    <span
+      [ngClass]="{
+        'text-xs': size === 'small',
+        'text-base': size === 'medium' || size === 'large'
+      }"
+    >
+      {{ label | translate }}
+      <span *ngIf="required" class="text-red-500">*</span>
+    </span>
+  </legend>
+
+  <!-- Icon Before -->
+  <div
+    (click)="onClick($event)"
+    class="cursor-pointer"
+    (mousedown)="onIconMouseDown($event)"
+  >
+    <ng-content select="[iconBefore]"></ng-content>
+  </div>
+
+  <!-- RTL Input -->
+  <input
+    #rtlInput
+    [formControl]="getControl()"
+    [placeholder]="placeholder | translate"
+    [type]="type"
+    [pattern]="inputPattern"
+    [maxlength]="maxLength"
+    [minlength]="minLength"
+    title="{{ placeholder }}"
+    class="border-0 w-full outline-none {{ inputClass }}"
+    [ngClass]="{
+      'py-5.5 px-2.5': size === 'small',
+      'py-[23px] px-3': size === 'medium',
+      'py-6.5 px-3.5': size === 'large',
+      'rounded-md': true,
+      'text-xs h-4': size === 'small',
+      'text-sm h-5': size === 'medium',
+      'text-base h-6': size === 'large',
+      'text-gray-800': true,
+      'hover:text-gray-900': !disabled,
+      'focus:text-gray-900': !hasError,
+      'active:text-primary-on-surface': !hasError,
+      'bg-transparent': true,
+      'placeholder:text-gray-700': true
+    }"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)"
+    (keypress)="onKeyPress($event)"
+    (paste)="onPaste($event)"
+    [disabled]="disabled"
+    appReplaceEnglishWithArabic
+    *ngIf="isRtl"
+    (input)="handleInput($event)"
+    [readonly]="readOnly"
+    autocomplete="off"
+  />
+
+  <!-- LTR Input -->
+  <input
+    #ltrInput
+    [formControl]="getControl()"
+    [placeholder]="placeholder | translate"
+    [type]="type"
+    [pattern]="inputPattern"
+    [maxlength]="maxLength"
+    [minlength]="minLength"
+    title="{{ placeholder }}"
+    class="border-0 w-full outline-none {{ inputClass }}"
+    [ngClass]="{
+      'py-5.5 px-2.5': size === 'small',
+      'py-[23px] px-3': size === 'medium',
+      'py-6.5 px-3.5': size === 'large',
+      'rounded-md': true,
+      'text-xs h-4': size === 'small',
+      'text-sm h-5': size === 'medium',
+      'text-base h-6': size === 'large',
+      'text-gray-800': true,
+      'hover:text-gray-900': !disabled,
+      'focus:text-gray-900': !hasError,
+      'active:text-primary-on-surface': !hasError,
+      'bg-transparent': true,
+      'placeholder:text-gray-700': true
+    }"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)"
+    (keypress)="onKeyPress($event)"
+    (paste)="onPaste($event)"
+    [disabled]="disabled"
+    *ngIf="!isRtl"
+    (input)="handleInput($event)"
+    [readonly]="readOnly"
+    autocomplete="off"
+  />
+
+  <!-- Icon After -->
+  <div
+    (click)="onClick($event)"
+    class="cursor-pointer"
+    (mousedown)="onIconMouseDown($event)"
+  >
+    <ng-content select="[iconAfter]"></ng-content>
+  </div>
+</fieldset>
+
+<!-- Error message -->
+<div *ngIf="hasError && getControl()?.touched" class="text-red text-sm mt-1">
+  <ng-container *ngIf="errorMessage">{{
+    errorMessage | translate
+  }}</ng-container>
+  <ng-container *ngIf="!errorMessage">
+    <span *ngIf="getControl()?.errors?.['required']">{{
+      "validation.required_generic" | translate
+    }}</span>
+    <span *ngIf="getControl()?.errors?.['email']">{{
+      "validation.email_invalid" | translate
+    }}</span>
+    <span *ngIf="getControl()?.errors?.['pattern']">{{
+      "validation.enter_valid_format" | translate
+    }}</span>
+    <span *ngIf="getControl()?.errors?.['minlength']">{{
+      "validation.minimum_length_not_met" | translate
+    }}</span>
+    <span *ngIf="getControl()?.errors?.['maxlength']">{{
+      "validation.maximum_length_exceeded" | translate
+    }}</span>
+  </ng-container>
+</div>

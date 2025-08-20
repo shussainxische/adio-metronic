@@ -1,0 +1,14 @@
+<div class="menu inline-flex items-center gap-1.5 cursor-pointer leading-none text-start w-full h-full" data-menu="true"
+[ngClass]="{
+  'border border-gray-700 rounded-md px-3 py-[11px] w-[140.697px] h-[42px] justify-between': boxed,
+  '': !boxed
+}">
+  <div class="menu-item w-full h-full"
+      [attr.data-menu-item-offset]="offset"
+      [attr.data-menu-item-placement]="placement"
+      [attr.data-menu-item-placement-rtl]="placementRtl"
+      data-menu-item-toggle="dropdown"
+      [attr.data-menu-item-trigger]="!disabled&&trigger">
+      <ng-content></ng-content>
+  </div>
+</div>

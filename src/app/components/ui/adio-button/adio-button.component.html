@@ -1,0 +1,6 @@
+<button [type]="type" [disabled]="disabled" [class]="buttonClasses+' '+className" aria-label="tooltip" [pTooltip]="tooltip"
+[tooltipPosition]="tooltipPosition">
+  <ng-content select="[iconBefore]"></ng-content>
+  <ng-content></ng-content>
+  <ng-content select="[iconAfter]"></ng-content>
+</button>

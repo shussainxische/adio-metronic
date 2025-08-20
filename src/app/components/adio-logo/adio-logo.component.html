@@ -1,0 +1,40 @@
+<img
+  src="assets/images/abd/adio360-logo-dark.svg"
+  alt="Adio Logo"
+  [class]="'light:hidden'"
+  class="w-[150px]"
+  *ngIf="variant === 'compact'"
+/>
+<img
+  src="assets/images/abd/adio360-logo-light.svg"
+  alt="Adio Logo"
+  [class]="'dark:hidden'"
+  class="w-[150px]"
+  *ngIf="variant === 'compact'"
+/>
+
+<!-- Full mode -->
+<div [class]="'flex items-center gap-2 dark:hidden'" *ngIf="variant === 'full'">
+  <img
+    src="assets/images/abd/adio360-logo-light.svg"
+    alt="Adio Logo"
+    class="w-8"
+  />
+  <img
+    src="assets/images/abd/adio360-text-light.svg"
+    alt="Adio 360"
+    class="w-36"
+  />
+</div>
+<div [class]="'flex items-center gap-2 light:hidden'" *ngIf="variant === 'full'">
+  <img
+    src="assets/images/abd/adio360-logo-dark.svg"
+    alt="Adio Logo"
+    class="w-8"
+  />
+  <img
+    src="assets/images/abd/adio360-text-dark.svg"
+    alt="Adio 360"
+    class="w-36"
+  />
+</div>

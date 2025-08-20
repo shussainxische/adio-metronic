@@ -1,0 +1,149 @@
+<ng-container *ngIf="label">
+  <label
+    class="block mb-2"
+    [ngClass]="{
+      'text-xs': size === 'small',
+      'text-base': size === 'medium' || size === 'large',
+      'text-red': hasError || hasSizeError,
+      'text-gray-700': !hasError && !hasSizeError
+    }"
+  >
+    {{ label | translate }}
+    <span *ngIf="required" class="text-red-500">*</span>
+  </label>
+</ng-container>
+<input
+  #fileInput
+  class="hidden"
+  type="file"
+  (change)="onFileChange($event)"
+  [accept]="accept"
+  [attr.aria-label]="ariaLabelTranslateKey | translate"
+/>
+<div
+  class="border rounded-lg relative group flex py-6 px-4 h-[120px]"
+  [class]="class"
+  [class.transition-all]="!isDragOver"
+  [class.duration-200]="!isDragOver"
+  [ngClass]="{
+    'border-dashed':
+      !selectedFile && !(isDragOver && !disabled && !hasError && !hasSizeError),
+    'border-gray-700 text-gray-800 hover:text-gray-900':
+      !hasError && !hasSizeError && !isDragOver,
+    'border-red': hasError || hasSizeError,
+    '!border-solid text-primary-on-surface': selectedFile,
+    'border-primary border-2 !border-solid':
+      isDragOver && !disabled && !hasError && !hasSizeError,
+    'hover:border-gray-900':
+      !disabled && !hasError && !hasSizeError && !isDragOver,
+    'focus-within:border-primary-light':
+      !disabled && !hasError && !hasSizeError,
+    'active:border-gray-700': !disabled && !hasError && !hasSizeError,
+    'text-xs': size === 'small',
+    'text-base': size === 'medium' || size === 'large',
+    'text-red': hasError || hasSizeError,
+    'text-gray-700': !hasError && !hasSizeError,
+    'cursor-not-allowed opacity-50': disabled
+  }"
+  (dragover)="onDragOver($event)"
+  (dragenter)="onDragEnter($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  (click)="!disabled && fileInput.click()"
+>
+  <!-- 'cursor-pointer': !disabled, -->
+  <div
+    class="flex flex-1 justify-between items-center pointer-events-none w-full"
+  >
+    <div class="flex-1 w-full">
+      <!-- Empty state with drag and drop hint -->
+      <div
+        class="flex flex-col items-center justify-center w-full gap-2"
+        *ngIf="!selectedFile && !existingFileName"
+      >
+        <span class="material-symbols-outlined text-2xl">arrow_circle_up</span>
+        <div class="font-semibold text-sm">
+          {{ "forms.drag_drop_or_click" | translate }}
+        </div>
+        <div
+          class="text-xs"
+          [ngClass]="{
+    'text-gray-700 ': !hasError && !hasSizeError,
+  }"
+        >
+          {{ getAcceptedFormatsText() }} - {{ "forms.up_to" | translate }}
+          {{ formatFileSize(maxFileSize) }}
+        </div>
+      </div>
+      <!-- File selected state -->
+      <div
+        class="flex items-center w-full justify-between"
+        *ngIf="selectedFile || existingFileName"
+      >
+        <!-- Image preview for image files -->
+        <div
+          class="me-2 relative group flex-shrink-0"
+          *ngIf="shouldShowImagePreview"
+        >
+          <img
+            [src]="previewUrl"
+            class="object-cover h-12 aspect-square rounded-xl cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-105 pointer-events-auto"
+            (click)="showImagePreview(); $event.stopPropagation()"
+            [title]="'Click to enlarge'"
+          />
+        </div>
+        <!-- PDF icon for PDF files -->
+        <div class="me-2 relative group flex-shrink-0" *ngIf="isPdfFile">
+          <div class="h-12 w-12 rounded-xl flex items-center justify-center">
+            <img src="assets/file/pdf.svg" alt="PDF file" />
+          </div>
+        </div>
+        <!-- Generic file icon for other file types (optional) -->
+        <div
+          class="me-2 relative group flex-shrink-0"
+          *ngIf="
+            !shouldShowImagePreview &&
+            !isPdfFile &&
+            (selectedFile || existingFileName)
+          "
+        >
+          <div
+            class="h-12 w-12 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-gray-600"
+              >description</span
+            >
+          </div>
+        </div>
+
+        <!-- Text content - this is the key fix -->
+        <div class="flex-1 min-w-0 me-2">
+          <div class="truncate text-sm text-primary-on-surface">
+            {{ selectedFile?.name ?? existingFileName }}
+          </div>
+          <div class="text-gray-700 text-xs">{{ currentFileSize }}</div>
+        </div>
+
+        <!-- Delete button -->
+        <app-icon-wrapper
+          (click)="removeFile($event)"
+          class="cursor-pointer pointer-events-auto group/icon flex-shrink-0"
+          shape="rounded"
+        >
+          <span class="material-symbols-outlined group-hover/icon:text-red"
+            >delete</span
+          >
+        </app-icon-wrapper>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="(hasError && control?.touched) || hasSizeError"
+  class="text-red text-sm mt-1"
+>
+  <ng-container *ngIf="fileSizeError">{{ fileSizeError }}</ng-container>
+  <ng-container *ngIf="!fileSizeError && errorMessage">{{
+    errorMessage | translate
+  }}</ng-container>
+</div>

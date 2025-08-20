@@ -1,0 +1,20 @@
+<div class="menu" data-menu="true" data-menu-accordion="true">
+  <div class="menu-item border border-stroke-cards-inner bg-surface rounded-lg w-full menu-item-show:bg-surface-active-status py-4 px-6" data-menu-item-toggle="accordion" data-menu-item-trigger="click">
+    <div class="menu-link fs-4 fw-semibold justify-between gap-2.5 text-gray-800 menu-item-show:text-primary-on-surface menu-item-show:font-semibold">
+      <div>
+          {{title}}
+      </div>
+      <span class="menu-arrow">
+        <span class="material-symbols-outlined text-xl menu-item-show:hidden">expand_more</span>
+        <span class="material-symbols-outlined text-xl hidden menu-item-show:inline-flex">expand_less</span>
+      </span>
+    </div>
+    <div class="menu-accordion">
+      <div class="menu-item text-gray-900">
+        <div class="menu-content">
+          <ng-content></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
