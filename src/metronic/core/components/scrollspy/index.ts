@@ -1,2 +1,2 @@
-export { KTMenu } from './menu';
-export type { KTMenuConfigInterface, KTMenuInterface } from './types';
+export { KTScrollspy } from './scrollspy';
+export type { KTScrollspyConfigInterface, KTScrollspyInterface } from './types';
