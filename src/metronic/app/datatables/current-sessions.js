@@ -24,25 +24,23 @@ class DataTableManager {
 				select: {
 					render: (item, data, context) => {
 						const checkbox = document.createElement('input');
-						checkbox.className = 'kt-checkbox kt-checkbox-sm';
+						checkbox.className = 'checkbox checkbox-sm';
 						checkbox.type = 'checkbox';
 						checkbox.value = data.id.toString();
-						checkbox.setAttribute('data-kt-datatable-row-check', 'true');
+						checkbox.setAttribute('data-datatable-row-check', 'true');
 						return checkbox.outerHTML.trim();
 					},
 				},
 				user: {
 					title: 'Person',
 					render: (item) => {
-						const prefix = DataTableManager.isLocalhost()
-							? 'metronic-tailwind-html'
-							: 'metronic/tailwind';
+						const prefix = DataTableManager.isLocalhost() ? 'metronic-tailwind-html' : 'metronic/tailwind';
 						return `
               <div class="flex items-center gap-2.5">
                 <div class="shrink-0">
                   <img class="h-9 rounded-full" src="/static/${prefix}/dist/assets/media/avatars/${item.avatar}">
                 </div>
-                <a class="leading-none font-semibold text-mono hover:text-primary" href="#">
+                <a class="leading-none font-semibold text-gray-900 hover:text-primary" href="#">
                   ${item.name}
                 </a>
               </div>
@@ -54,7 +52,7 @@ class DataTableManager {
 					render: (item) => {
 						return `
               <div class="flex items-center gap-2">
-                <i class="ki-outline ki-chrome text-muted-foreground text-lg"></i>
+                <i class="ki-outline ki-chrome text-gray-700 text-lg"></i>
                 <span class="text-gray-700">${item.name}</span>
               </div>
             `;
@@ -66,13 +64,11 @@ class DataTableManager {
 				location: {
 					title: 'Location',
 					render: (item) => {
-						const prefix = DataTableManager.isLocalhost()
-							? 'metronic-tailwind-html'
-							: 'metronic/tailwind';
+						const prefix = DataTableManager.isLocalhost() ? 'metronic-tailwind-html' : 'metronic/tailwind';
 						return `
               <div class="flex items-center gap-1.5">
                 <img alt="flag" class="h-4 rounded-full" src="/static/${prefix}/dist/assets/media/flags/${item.flag}">
-                <span class="leading-none text-muted-foreground">${item.name}</span>
+                <span class="leading-none text-gray-700">${item.name}</span>
               </div>
             `;
 					},
@@ -81,13 +77,13 @@ class DataTableManager {
 					title: '',
 					render: (item) => {
 						return `
-              <button class="kt-btn kt-btn-icon kt-btn-ghost kt-btn-sm">
+              <button class="btn btn-icon btn-light btn-clear btn-sm">
                 <i class="ki-outline ki-dots-vertical"></i>
               </button>
             `;
 					},
 					createdCell: (cell, cellData, rowData) => {
-						cell.querySelector('.kt-btn').addEventListener('click', () => {
+						cell.querySelector('.btn').addEventListener('click', () => {
 							alert(`Clicked on action button for row ${rowData.user.name}`);
 						});
 					},
@@ -163,9 +159,7 @@ class DataTableManager {
 	 * @return {void}
 	 */
 	initSearch() {
-		const searchElement = document.querySelector(
-			'[data-datatable-search="true"]'
-		);
+		const searchElement = document.querySelector('[data-datatable-search="true"]');
 		if (this.dataTable && searchElement) {
 			const debouncedSearch = this.debounce(() => {
 				this.dataTable.search(searchElement.value);
