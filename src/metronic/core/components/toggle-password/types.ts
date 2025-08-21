@@ -1,13 +1,8 @@
-export interface KTToggleConfigInterface {
-	target?: string,
-	activeClass?: string,
-	class?: string,
-	removeClass?: string,
-	attribute?: string
+export interface KTTogglePasswordConfigInterface {
+	permanent?: boolean
 }
 
-export interface KTToggleInterface {		
+export interface KTTogglePasswordInterface {		
 	toggle(): void;
-	update(): void;
-	isActive(): boolean;
+	isVisible(): boolean;
 }
