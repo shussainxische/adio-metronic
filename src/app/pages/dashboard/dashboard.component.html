@@ -2,32 +2,32 @@
   <div class="mb-2" style="font-size: xx-large">
     <app-page-header
       [title]="
-        ('dashboard.title' | translate) +
+        ('dashboard.title') +
         ' ' +
         (userData?.account?.name?.split(' ')[0] || 'User')
       "
-      [description]="'dashboard.description' | translate"
+      [description]="'dashboard.description'"
     >
     </app-page-header>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-    <app-tasks></app-tasks>
+    <!-- <app-tasks></app-tasks>
       <app-tenders *ngIf="hasTenderRole() || hassuperAdminRole()"></app-tenders>
-      <app-landbank *ngIf="haslandRole() || hassuperAdminRole()" ></app-landbank>
+      <app-landbank *ngIf="haslandRole() || hassuperAdminRole()" ></app-landbank> -->
   </div>
 
   <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
     <div class="xl:col-span-2 flex flex-col gap-6">
-      <app-recent-tasks></app-recent-tasks>
+      <!-- <app-recent-tasks></app-recent-tasks>
       <app-task-distribution></app-task-distribution>
-      <app-recent-activites></app-recent-activites>
+      <app-recent-activites></app-recent-activites> -->
     </div>
     <div class="xl:col-span-1 flex flex-col gap-6">
-      <app-quick-access></app-quick-access>
+      <!-- <app-quick-access></app-quick-access>
       <app-upcoming-deadlines [hidden]="true"></app-upcoming-deadlines>
       <app-system-announcement class="system-announcement" ></app-system-announcement>
-      <app-team-activites [hidden]="true" ></app-team-activites>
+      <app-team-activites [hidden]="true" ></app-team-activites> -->
     </div>
   </div>
 </app-page-wrapper>
