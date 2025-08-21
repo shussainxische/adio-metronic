@@ -22,6 +22,8 @@ import KTLayout from '../metronic/app/layouts/demo1';
 export class AppComponent {
   title = 'adio-metronic';
   constructor(private router: Router, public loaderService: LoaderService) {
+  
+    this.router.events.subscribe(event => {});
   }
 
     ngAfterViewInit(): void {
