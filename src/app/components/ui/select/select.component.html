@@ -9,7 +9,7 @@
         'text-gray-700': !hasError
       }"
     >
-      {{ label | translate }}
+      {{ label }}
       <span *ngIf="required" class="text-red-500">*</span>
     </label>
   </ng-container>
@@ -76,7 +76,7 @@
                 'text-gray-900': isDropdownOpen && !disabled && !hasError
               }"
             >
-              {{ placeholder | translate }}
+              {{ placeholder }}
             </span>
 
             <span
@@ -205,6 +205,6 @@
 
 <div *ngIf="hasError && control?.touched" class="text-red text-sm mt-1">
   <ng-container *ngIf="errorMessage">{{
-    errorMessage | translate
+    errorMessage
   }}</ng-container>
 </div>

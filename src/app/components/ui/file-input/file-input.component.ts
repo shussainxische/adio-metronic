@@ -12,11 +12,11 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+// import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdioButtonComponent } from '../adio-button/adio-button.component';
 import Swal from 'sweetalert2';
-import { SweetAlertService } from '../../../services/sweet-alert.service';
-import { ImagePreviewComponent } from '../../image-preview/image-preview.component';
+// import { SweetAlertService } from '../../../services/sweet-alert.service';
+// import { ImagePreviewComponent } from '../../image-preview/image-preview.component';
 import { IconWrapperComponent } from '../icon-wrapper/icon-wrapper.component';
 
 @Component({
@@ -25,9 +25,9 @@ import { IconWrapperComponent } from '../icon-wrapper/icon-wrapper.component';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    TranslateModule,
+    // TranslateModule,
     AdioButtonComponent,
-    ImagePreviewComponent,
+    // ImagePreviewComponent,
     IconWrapperComponent,
   ],
   templateUrl: './file-input.component.html',
@@ -50,27 +50,27 @@ export class FileInputComponent implements OnDestroy {
 
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   getAcceptedFormatsText(): string {
-    if (!this.accept || this.accept === '*') {
-      return this.translate.instant('forms.all_file_types');
-    }
+    // if (!this.accept || this.accept === '*') {
+    //   return this.translate.instant('forms.all_file_types');
+    // }
 
     const formats = this.accept.split(',').map((format) => format.trim());
     const formattedTypes: string[] = [];
 
-    formats.forEach((format) => {
-      if (format === 'application/pdf' || format === '.pdf') {
-        formattedTypes.push(this.translate.instant('popup.pdf'));
-      } else if (format.startsWith('.')) {
-        // File extensions - convert to uppercase and remove dot
-        formattedTypes.push(format.substring(1).toUpperCase());
-      } else if (format === 'image/*') {
-        formattedTypes.push(this.translate.instant('forms.image_files'));
-      } else if (format === 'video/*') {
-        formattedTypes.push(this.translate.instant('forms.video_files'));
-      } else if (format === 'audio/*') {
-        formattedTypes.push(this.translate.instant('forms.audio_files'));
-      }
-    });
+    // formats.forEach((format) => {
+    //   if (format === 'application/pdf' || format === '.pdf') {
+    //     formattedTypes.push(this.translate.instant('popup.pdf'));
+    //   } else if (format.startsWith('.')) {
+    //     // File extensions - convert to uppercase and remove dot
+    //     formattedTypes.push(format.substring(1).toUpperCase());
+    //   } else if (format === 'image/*') {
+    //     formattedTypes.push(this.translate.instant('forms.image_files'));
+    //   } else if (format === 'video/*') {
+    //     formattedTypes.push(this.translate.instant('forms.video_files'));
+    //   } else if (format === 'audio/*') {
+    //     formattedTypes.push(this.translate.instant('forms.audio_files'));
+    //   }
+    // });
 
     return formattedTypes.join(', ');
   }
@@ -82,10 +82,10 @@ export class FileInputComponent implements OnDestroy {
   fileSizeError: string = '';
 
   constructor(
-    private sweetAlertService: SweetAlertService,
+    // private sweetAlertService: SweetAlertService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    private translate: TranslateService
+    // private translate: TranslateService
   ) {}
 
   get hasError(): boolean {
@@ -124,13 +124,13 @@ export class FileInputComponent implements OnDestroy {
     this.fileSizeError = '';
 
     // Validate file size
-    if (!this.isValidFileSize(file)) {
-      this.fileSizeError = this.translate.instant('forms.file_size', {
-        maxSize: this.formatFileSize(this.maxFileSize),
-      });
-      this.control.setErrors({ fileSizeExceeded: true });
-      return;
-    }
+    // if (!this.isValidFileSize(file)) {
+    //   this.fileSizeError = this.translate.instant('forms.file_size', {
+    //     maxSize: this.formatFileSize(this.maxFileSize),
+    //   });
+    //   this.control.setErrors({ fileSizeExceeded: true });
+    //   return;
+    // }
 
     // Validate file type if accept attribute is specified
     if (this.accept && !this.isValidFileType(file)) {
@@ -212,33 +212,33 @@ export class FileInputComponent implements OnDestroy {
     const fileName =
       this.selectedFile?.name || this.existingFileName || 'Image Preview';
 
-    this.sweetAlertService.openWithComponent(
-      ImagePreviewComponent,
-      {
-        imageUrl: this.previewUrl,
-        fileName: fileName,
-      },
-      {
-        showCancelButton: false,
-        showConfirmButton: false,
-        customClass: {
-          popup:
-            'swal2-popup-custom rounded-2xl bg-surface-dropdown-popups shadow-0-2 border border-stroke-dropdown-popups border-solid',
-        },
-        showCloseButton: false,
-        icon: null,
-        backdrop: `rgba(0, 0, 0, 0.5)`,
-        didOpen: (modalElement) => {
-          const componentInstance =
-            this.sweetAlertService.getComponentInstance<ImagePreviewComponent>();
-          if (componentInstance) {
-            componentInstance.close.subscribe(() => {
-              Swal.close();
-            });
-          }
-        },
-      }
-    );
+    // this.sweetAlertService.openWithComponent(
+    //   ImagePreviewComponent,
+    //   {
+    //     imageUrl: this.previewUrl,
+    //     fileName: fileName,
+    //   },
+    //   {
+    //     showCancelButton: false,
+    //     showConfirmButton: false,
+    //     customClass: {
+    //       popup:
+    //         'swal2-popup-custom rounded-2xl bg-surface-dropdown-popups shadow-0-2 border border-stroke-dropdown-popups border-solid',
+    //     },
+    //     showCloseButton: false,
+    //     icon: null,
+    //     backdrop: `rgba(0, 0, 0, 0.5)`,
+    //     didOpen: (modalElement) => {
+    //       const componentInstance =
+    //         this.sweetAlertService.getComponentInstance<ImagePreviewComponent>();
+    //       if (componentInstance) {
+    //         componentInstance.close.subscribe(() => {
+    //           Swal.close();
+    //         });
+    //       }
+    //     },
+    //   }
+    // );
   }
 
   /**
@@ -362,24 +362,24 @@ export class FileInputComponent implements OnDestroy {
     });
   }
 
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 ' + this.translate.instant('forms.bytes');
+  // formatFileSize(bytes: number): string {
+  //   if (bytes === 0) return '0 ' + this.translate.instant('forms.bytes');
 
-    const k = 1024;
-    const sizes = [
-      this.translate.instant('forms.bytes'),
-      this.translate.instant('forms.kb'),
-      this.translate.instant('forms.mb'),
-      this.translate.instant('forms.gb'),
-    ];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+  //   const k = 1024;
+  //   const sizes = [
+  //     this.translate.instant('forms.bytes'),
+  //     this.translate.instant('forms.kb'),
+  //     this.translate.instant('forms.mb'),
+  //     this.translate.instant('forms.gb'),
+  //   ];
+  //   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  }
+  //   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  // }
 
   get currentFileSize(): string {
     if (this.selectedFile) {
-      return this.formatFileSize(this.selectedFile.size);
+      return  '5mb'; //this.formatFileSize(this.selectedFile.size);
     }
     return '';
   }

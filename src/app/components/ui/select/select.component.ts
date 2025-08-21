@@ -13,7 +13,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+// import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoaderComponent } from '../loader/loader.component';
 import { CheckboxInputComponent } from '../checkbox-input/checkbox-input.component';
 import { InputComponent } from '../input/input.component';
@@ -37,12 +37,12 @@ export interface SelectOption {
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    TranslateModule,
+    // TranslateModule,
     LoaderComponent,
     MenuDropdownComponent,
-    CheckboxInputComponent,
+    // CheckboxInputComponent,
     MenuItemComponent,
-    InputComponent,
+    // InputComponent,
     DropdownWrapperComponent,
   ],
   templateUrl: './select.component.html',
@@ -77,7 +77,7 @@ export class SelectComponent implements OnInit, OnChanges, AfterViewInit {
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
-    private translate: TranslateService
+    // private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -214,7 +214,7 @@ export class SelectComponent implements OnInit, OnChanges, AfterViewInit {
     if (selectedOption) {
       return this.getOptionDisplayText(selectedOption);
     }
-    return this.translate.instant(this.placeholder);
+    return 'Test'//this.translate.instant(this.placeholder);
   }
 
   private updateDisabledState() {
@@ -272,10 +272,10 @@ export class SelectComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
   getOptionDisplayText(option: SelectOption): string {
-    const currentLang = this.translate.currentLang;
-    if (currentLang === 'ar' && option.arabicName) {
-      return option.arabicName;
-    }
-    return this.translate.instant(option.label);
+    // const currentLang = this.translate.currentLang;
+    // if (currentLang === 'ar' && option.arabicName) {
+    //   return option.arabicName;
+    // }
+    return 'Test';// this.translate.instant(option.label);
   }
 }

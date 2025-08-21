@@ -4,8 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 /* import { SelectComponent, SelectOption } from '../select/select.component'; */
-import { LanguageService } from '../../../services/language/language.service';
-import { SUPPORTED_LANGUAGES } from '../../../config/languages.config';
+// import { LanguageService } from '../../../services/language/language.service';
+// import { SUPPORTED_LANGUAGES } from '../../../config/languages.config';
 import { SelectComponent, SelectOption } from '../../ui/select/select.component';
 import { CommonModule } from '@angular/common';
 
@@ -22,9 +22,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './language-switcher.component.scss'
 })
 export class LanguageSwitcherComponent implements OnInit, OnDestroy {
-  supportedLanguages = SUPPORTED_LANGUAGES;
+  // supportedLanguages = SUPPORTED_LANGUAGES;
   currentLang: string = 'en';
-  currentLangObject: any = SUPPORTED_LANGUAGES[0];
+  // currentLangObject: any = SUPPORTED_LANGUAGES[0];
   languageControl = new FormControl('en');
   languageOptions: SelectOption[] = [];
   @Input() label = '';
@@ -36,16 +36,16 @@ export class LanguageSwitcherComponent implements OnInit, OnDestroy {
   @Input() minWidth: string;
 
   constructor(
-    private languageService: LanguageService,
+    // private languageService: LanguageService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     // Transform SUPPORTED_LANGUAGES to SelectOption format
-    this.languageOptions = SUPPORTED_LANGUAGES.map(lang => ({
-      value: lang.code,
-      label: lang.name,
-      icon: `assets/media/flags/${lang.flag}`
-    }));
+    // this.languageOptions = SUPPORTED_LANGUAGES.map(lang => ({
+    //   value: lang.code,
+    //   label: lang.name,
+    //   icon: `assets/media/flags/${lang.flag}`
+    // }));
 
     // Subscribe to route params to get language
     this.routeSubscription = this.route.params.subscribe(params => {
@@ -104,9 +104,9 @@ export class LanguageSwitcherComponent implements OnInit, OnDestroy {
 
   // Helper method to set currentLangObject based on language code
   private setCurrentLangObject(langCode: string) {
-    const found = this.supportedLanguages.find(lang => lang.code === langCode);
-    if (found) {
-      this.currentLangObject = found;
-    }
+    // const found = this.supportedLanguages.find(lang => lang.code === langCode);
+    // if (found) {
+    //   this.currentLangObject = found;
+    // }
   }
 }

@@ -6,10 +6,10 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { DatePicker } from 'primeng/datepicker';
 import { Language, TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
-import { LanguageService } from '../../../services/language/language.service';
+// import { LanguageService } from '../../../services/language/language.service';
 import { InputComponent } from '../input/input.component';
 import { PrimeNG } from 'primeng/config';
-import { TranslateService } from '@ngx-translate/core';
+// import { TranslateService } from '@ngx-translate/core';
 import dayjs from 'dayjs';
 
 @Component({
@@ -64,10 +64,10 @@ export class DateInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private languageService: LanguageService,
+    // private languageService: LanguageService,
     private elementRef: ElementRef,
     private primeng: PrimeNG,
-    private translateService: TranslateService
+    // private translateService: TranslateService
   ) {}
 
   // Convert string dates to Date objects
@@ -94,11 +94,11 @@ export class DateInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Subscribe to the language service
     this.subscriptions.push(
-      this.languageService.language$.subscribe(lang => {
-        this.language = lang;
-        this.updateDateFormat(lang);
-        this.translate(lang);
-      })
+      // this.languageService.language$.subscribe(lang => {
+      //   this.language = lang;
+      //   this.updateDateFormat(lang);
+      //   this.translate(lang);
+      // })
     );
 
     // Initial translation setup
@@ -186,8 +186,8 @@ export class DateInputComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   translate(lang: string) {
-    this.translateService.use(lang);
-    this.translateService.get('primeng').subscribe(res => this.primeng.setTranslation(res));
+    // this.translateService.use(lang);
+    // this.translateService.get('primeng').subscribe(res => this.primeng.setTranslation(res));
   }
 
   ngAfterViewInit() {

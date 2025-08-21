@@ -3,13 +3,13 @@ import KTComponents from '../../../metronic/core/index';
 import KTLayout from '../../../metronic/app/layouts/demo1';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NavItem } from '../../models/auth.model';
-import { NavigationService } from '../../navigation.service';
+// import { NavItem } from '../../models/auth.model';
+// import { NavigationService } from '../../navigation.service';
 import { IconWrapperComponent } from "../ui/icon-wrapper/icon-wrapper.component";
 import { PageWrapperComponent } from "../../wrappers/page-wrapper/page-wrapper.component";
 import { Subscription } from 'rxjs';
 import { AppLauncherService } from '../../services/app-launcher/app-launcher.service';
-import { TranslateModule } from '@ngx-translate/core';
+// import { TranslateModule } from '@ngx-translate/core';
 
 // Define the Application interface
 interface Application {
@@ -20,7 +20,7 @@ interface Application {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule, IconWrapperComponent, PageWrapperComponent, TranslateModule],
+  imports: [CommonModule, RouterModule, IconWrapperComponent, PageWrapperComponent],// TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -28,12 +28,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isDarkMode = false;
   launcherActive = false;
   launcherHover = false;
-  sideNavPages: NavItem[] = [];
+  // sideNavPages: NavItem[] = [];
   selectedApplication: Application | null = null;
   private selectedApplicationSubscription: Subscription;
 
   constructor(
-    public nav: NavigationService,
+    // public nav: NavigationService,
     private appLauncherService: AppLauncherService
   ) {}
 
@@ -58,7 +58,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private loadAndFilterNavigationMenu(): void {
     const menu = JSON.parse(localStorage.getItem("navigationMenu"));
-    this.sideNavPages = this.filterLeafNodes(menu);
+    // this.sideNavPages = this.filterLeafNodes(menu);
   }
 
   private filterLeafNodes(items: any[]): any[] {
