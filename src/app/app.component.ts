@@ -11,11 +11,7 @@ import KTLayout from '../metronic/app/layouts/demo1';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,
-    // MsalModule,
-    CommonModule,
-    TranslateModule,
-    LoaderComponent],
+  imports: [RouterOutlet, CommonModule, TranslateModule, LoaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -23,7 +19,9 @@ export class AppComponent {
   title = 'adio-metronic';
   constructor(private router: Router, public loaderService: LoaderService) {
   
-    this.router.events.subscribe(event => {});
+    this.router.events.subscribe(event => {
+      
+    });
   }
 
     ngAfterViewInit(): void {
