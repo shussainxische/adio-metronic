@@ -4,7 +4,9 @@ import { Router, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoaderComponent } from './components/ui/loader/loader.component';
 import { LoaderService } from './services/loader/loader.service';
-import KTComponents from '../metronic/core';
+import KTComponents from '../metronic/core/index';
+import KTLayout from '../metronic/app/layouts/demo1';
+
 
 @Component({
   selector: 'app-root',
