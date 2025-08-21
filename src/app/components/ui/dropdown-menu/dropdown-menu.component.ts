@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconWrapperComponent } from '../icon-wrapper/icon-wrapper.component';
-import { HasPermissionDirective } from '../../../directives/has-permission/has-permission.directive';
+// import { HasPermissionDirective } from '../../../directives/has-permission/has-permission.directive';
 import { DropdownWrapperComponent } from "../../../wrappers/dropdown-wrapper/dropdown-wrapper.component";
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -16,7 +16,7 @@ export interface MenuItemConfig {
 @Component({
   selector: 'app-dropdown-menu',
   standalone: true,
-  imports: [CommonModule, IconWrapperComponent, HasPermissionDirective, DropdownWrapperComponent, TranslateModule],
+  imports: [CommonModule, IconWrapperComponent,/* HasPermissionDirective,*/ DropdownWrapperComponent, TranslateModule],
   templateUrl: './dropdown-menu.component.html'
 })
 export class DropdownMenuComponent {
