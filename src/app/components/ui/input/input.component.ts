@@ -18,7 +18,7 @@ import {
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ReplaceEnglishWithArabicDirective } from '../../../directives/replace-english-with-arabic/replace-english-with-arabic.directive';
+// import { ReplaceEnglishWithArabicDirective } from '../../../directives/replace-english-with-arabic/replace-english-with-arabic.directive';
 import { Language, TranslateModule } from '@ngx-translate/core';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -28,7 +28,7 @@ import { TooltipModule } from 'primeng/tooltip';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    ReplaceEnglishWithArabicDirective,
+    // ReplaceEnglishWithArabicDirective,
     TooltipModule,
     TranslateModule,
   ],
@@ -67,7 +67,7 @@ export class InputComponent implements OnInit, OnChanges, ControlValueAccessor {
   
   // New validation inputs
 @Input() validationType: 'email' | 'mobile' | 'name' | 'number' | 'text' | 'arabic' = 'text';
-   @Input() pattern?: string; // Custom pattern override
+  @Input() pattern?: string; // Custom pattern override
   @Input() maxLength?: number;
   @Input() minLength?: number;
 

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavigationService } from '../../navigation.service';
+// import { NavigationService } from '../../navigation.service';
 import { RouterModule } from '@angular/router';
-import { environment } from '../../../environments/environment';
+// import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-footer',
@@ -10,9 +10,9 @@ import { environment } from '../../../environments/environment';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
-  constructor(public nav: NavigationService) {
-  }
+  // constructor(public nav: NavigationService) {
+  // }
   currentYear: number = new Date().getFullYear();
-  appVersion: string = environment.appVersion;
-  environmentName: string = environment.environmentName;
+  // appVersion: string = environment.appVersion;
+  // environmentName: string = environment.environmentName;
 }

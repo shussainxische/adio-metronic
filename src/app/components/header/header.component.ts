@@ -12,23 +12,23 @@ import {
 import { MsalService } from '@azure/msal-angular';
 import { AuthenticationResult } from '@azure/msal-browser';
 import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
-import { AuthService } from '../../services/auth/auth.service';
+// import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ProfilePictureComponent } from '../ui/profile-picture/profile-picture.component';
 import { CommonModule } from '@angular/common';
 import { InputComponent } from '../ui/input/input.component';
 import { IconWrapperComponent } from '../ui/icon-wrapper/icon-wrapper.component';
 import { AdioLogoComponent } from '../adio-logo/adio-logo.component';
-import { FormPopupComponent } from '../form-popup/form-popup.component';
+// import { FormPopupComponent } from '../form-popup/form-popup.component';
 import Swal from 'sweetalert2';
-import { SweetAlertService } from '../../services/sweet-alert.service';
+// import { SweetAlertService } from '../../services/sweet-alert.service';
 import { AppLauncherService } from '../../services/app-launcher/app-launcher.service';
 import { Subject, Subscription } from 'rxjs';
 import { MenuDropdownComponent } from '../ui/menu/menu-dropdown/menu-dropdown.component';
 import { DropdownWrapperComponent } from '../../wrappers/dropdown-wrapper/dropdown-wrapper.component';
 import { AdioButtonComponent } from '../ui/adio-button/adio-button.component';
 import { BackComponentComponent } from '../ui/back-component/back-component.component';
-import { NavigationService } from '../../navigation.service';
+// import { NavigationService } from '../../navigation.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 // Add interface for Application
@@ -44,7 +44,7 @@ interface Application {
     LanguageSwitcherComponent,
     ProfilePictureComponent,
     CommonModule,
-    InputComponent,
+    // InputComponent,
     IconWrapperComponent,
     AdioLogoComponent,
     MenuDropdownComponent,
@@ -93,16 +93,16 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   private selectedApplicationSubscription: Subscription;
 
   constructor(
-    private msalService: MsalService,
-    private authService: AuthService,
+    // private msalService: MsalService,
+    // private authService: AuthService,
     private router: Router,
-    private nav: NavigationService,
-    private sweetAlertService: SweetAlertService,
+    // private nav: NavigationService,
+    // private sweetAlertService: SweetAlertService,
     private appLauncherService: AppLauncherService,
     private el: ElementRef,
     private renderer: Renderer2
   ) {
-    this.msalService.initialize().subscribe();
+    // this.msalService.initialize().subscribe();
   }
 
   ngOnInit(): void {
@@ -276,7 +276,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     const route = this.applicationRoutesByName[app.name];
 
     if (route) {
-      this.nav.navigateTo([route]);
+      // this.nav.navigateTo([route]);
     }
 
     // Force close by clicking outside to trigger the document:click handler
@@ -318,44 +318,44 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private fetchUserProfile(): void {
-    const activeAccount = this.msalService.instance.getActiveAccount();
+    // const activeAccount = this.msalService.instance.getActiveAccount();
 
-    this.msalService.instance
-      .acquireTokenSilent({
-        scopes: ['user.read'],
-        account: activeAccount,
-      })
-      .then((response) => {
-        this.authenitcationRes = response;
-        localStorage.setItem('authenticationResult', JSON.stringify(response));
+    // this.msalService.instance
+    //   .acquireTokenSilent({
+    //     scopes: ['user.read'],
+    //     account: activeAccount,
+    //   })
+    //   .then((response) => {
+    //     this.authenitcationRes = response;
+    //     localStorage.setItem('authenticationResult', JSON.stringify(response));
 
-        // Make Graph API call for photo
-        fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
-          headers: {
-            Authorization: `Bearer ${response.accessToken}`,
-          },
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('No image found');
-            }
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('image')) {
-              throw new Error('Invalid image');
-            }
-            return response.blob();
-          })
-          .then((blob) => {
-            this.photoUrl = URL.createObjectURL(blob);
-            this.profilePictureExist = true;
-            localStorage.setItem('photoUrl', this.photoUrl);
-            localStorage.setItem('profilePictureExist', 'true');
-          })
-          .catch((error) => {
-            this.profilePictureExist = false;
-            localStorage.setItem('profilePictureExist', 'false');
-          });
-      });
+    //     // Make Graph API call for photo
+    //     fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+    //       headers: {
+    //         Authorization: `Bearer ${response.accessToken}`,
+    //       },
+    //     })
+    //       .then((response) => {
+    //         if (!response.ok) {
+    //           throw new Error('No image found');
+    //         }
+    //         const contentType = response.headers.get('content-type');
+    //         if (!contentType || !contentType.includes('image')) {
+    //           throw new Error('Invalid image');
+    //         }
+    //         return response.blob();
+    //       })
+    //       .then((blob) => {
+    //         this.photoUrl = URL.createObjectURL(blob);
+    //         this.profilePictureExist = true;
+    //         localStorage.setItem('photoUrl', this.photoUrl);
+    //         localStorage.setItem('profilePictureExist', 'true');
+    //       })
+    //       .catch((error) => {
+    //         this.profilePictureExist = false;
+    //         localStorage.setItem('profilePictureExist', 'false');
+    //       });
+    //   });
   }
 
   private setupThemeToggle(): void {
@@ -381,37 +381,37 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async logout() {
-    this.authService.logout().subscribe({
-      next: () => {},
-      error: (err) => {
-        console.error('Logout failed', err);
-      },
-    });
+    // this.authService.logout().subscribe({
+    //   next: () => {},
+    //   error: (err) => {
+    //     console.error('Logout failed', err);
+    //   },
+    // });
 
-    this.msalService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        this.router.navigate(['/login']);
-      },
-    });
+    // this.msalService.logout().subscribe({
+    //   next: () => {
+    //     this.router.navigate(['/login']);
+    //   },
+    //   error: () => {
+    //     this.router.navigate(['/login']);
+    //   },
+    // });
   }
 
   refreshUserSession(): void {
-    this.authService.refreshToken().subscribe({
-      next: (response) => {
-        if (response.isSuccess) {
-          // Success handler
-        } else {
-          this.authService.logout();
-        }
-      },
-      error: (err) => {
-        console.error('Token refresh error:', err);
-        this.authService.logout();
-      },
-    });
+    // this.authService.refreshToken().subscribe({
+    //   next: (response) => {
+    //     if (response.isSuccess) {
+    //       // Success handler
+    //     } else {
+    //       this.authService.logout();
+    //     }
+    //   },
+    //   error: (err) => {
+    //     console.error('Token refresh error:', err);
+    //     this.authService.logout();
+    //   },
+    // });
   }
 
   onSearch(value: string) {
