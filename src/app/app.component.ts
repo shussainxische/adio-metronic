@@ -1,5 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { LoaderComponent } from './components/ui/loader/loader.component';
+import { LoaderService } from './services/loader/loader.service';
+import KTComponents from '../metronic/core';
 
 @Component({
   selector: 'app-root',
