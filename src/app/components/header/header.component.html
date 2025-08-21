@@ -25,7 +25,7 @@
 
     <div class="flex justify-center mt-6" *ngIf="hasMoreApps || true">
       <app-adio-button [mode]="'outline'" variant="regular" [className]="'justify-center'" class="flex-1 mt-10" (click)="viewAllApps()">
-        {{ 'header.view_all_adio_applications' | translate }}
+        {{ 'header.view_all_adio_applications' }}
       </app-adio-button>
     </div>
   </div>
@@ -40,7 +40,7 @@
       <app-back-component
   *ngIf="selectedApplication"
   [useCustomHandler]="true"
-  [text]="('common.back_to' | translate) + ' ' + (('applications.' + selectedApplication.name)| translate)"
+  [text]="('common.back_to' ) + ' ' + (('applications.' + selectedApplication.name))"
   (backClick)="closeFullscreenLauncher()">
 </app-back-component>
     </div>
@@ -181,7 +181,7 @@
             <div class="flex flex-col">
               <app-language-switcher
                 [size]="'small'"
-                [label]="'user_settings.language' | translate"
+                [label]="'user_settings.language'"
                   [profileContent]="profileContent"
   [profileDropdown]="profileDropdown"
               ></app-language-switcher>
@@ -206,7 +206,7 @@
               </div> -->
               <div class="menu-item px-4 py-1.5">
                 <a class="btn btn-sm btn-light justify-center" (click)="logout()">
-                  {{ 'user_settings.logout' | translate }}
+                  {{ 'user_settings.logout' }}
                 </a>
               </div>
             </div>

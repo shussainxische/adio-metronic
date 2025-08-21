@@ -29,7 +29,7 @@ import { DropdownWrapperComponent } from '../../wrappers/dropdown-wrapper/dropdo
 import { AdioButtonComponent } from '../ui/adio-button/adio-button.component';
 import { BackComponentComponent } from '../ui/back-component/back-component.component';
 // import { NavigationService } from '../../navigation.service';
-import { TranslateModule } from '@ngx-translate/core';
+// import { TranslateModule } from '@ngx-translate/core';
 
 // Add interface for Application
 interface Application {
@@ -51,7 +51,7 @@ interface Application {
     DropdownWrapperComponent,
     AdioButtonComponent,
     BackComponentComponent,
-    TranslateModule,
+    // TranslateModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
