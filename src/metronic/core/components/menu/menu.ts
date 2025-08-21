@@ -1,9 +1,4 @@
-import {
-	Instance as PopperInstance,
-	createPopper,
-	Placement,
-	VirtualElement,
-} from '@popperjs/core';
+import { Instance as PopperInstance, createPopper, Placement, VirtualElement } from '@popperjs/core';
 import KTDom from '../../helpers/dom';
 import KTUtils from '../../helpers/utils';
 import KTData from '../../helpers/data';
@@ -13,12 +8,12 @@ import { KTMenuConfigInterface, KTMenuInterface } from './types';
 import { KTMenuItemToggleType, KTMenuItemTriggerType } from './types';
 import { KTOptionType } from '../../types';
 import { KT_ACCESSIBILITY_KEYS } from '../constants';
+import { KTDropdown } from '../dropdown';
 declare global {
 	interface Window {
 		KT_MENU_INITIALIZED: boolean;
 	}
 }
-import { KTDropdown } from '@keenthemes/ktui/src/components/dropdown';
 
 export class KTMenu extends KTComponent implements KTMenuInterface {
 	protected override _name: string = 'menu';
@@ -27,7 +22,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		dropdownHoverTimeout: 200,
 		dropdownPlacement: 'bottom',
 		dropdownOffset: '0, 5px',
-		accordionExpandAll: false,
+		accordionExpandAll: false
 	};
 	protected override _config: KTMenuConfigInterface = this._defaultConfig;
 	protected _disabled: boolean = false;
@@ -80,7 +75,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		} = {
 			cancel: false,
 			element,
-			event,
+			event
 		};
 		this._fireEvent('link.click', payload);
 		this._dispatchEvent('link.click', payload);
@@ -95,7 +90,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 		payload = {
 			element,
-			event,
+			event
 		};
 		this._fireEvent('link.clicked', payload);
 		this._dispatchEvent('link.clicked', payload);
@@ -223,9 +218,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 	protected _update(): void {
 		if (!this._element) return;
-		const itemElements = this._element.querySelectorAll(
-			'[data-kt-menu-item-trigger]'
-		);
+		const itemElements = this._element.querySelectorAll('[data-menu-item-trigger]');
 
 		itemElements.forEach((itemElement) => {
 			this._updateItemSubType(itemElement as HTMLElement);
@@ -238,17 +231,17 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 		if (subElement) {
 			if (this._getItemToggleMode(itemElement as HTMLElement) === 'dropdown') {
-				itemElement.classList.remove('kt-menu-item-accordion');
-				itemElement.classList.add('kt-menu-item-dropdown');
+				itemElement.classList.remove('menu-item-accordion');
+				itemElement.classList.add('menu-item-dropdown');
 
-				subElement.classList.remove('kt-menu-accordion');
-				subElement.classList.add('kt-menu-dropdown');
+				subElement.classList.remove('menu-accordion');
+				subElement.classList.add('menu-dropdown');
 			} else {
-				itemElement.classList.remove('kt-menu-item-dropdown');
-				itemElement.classList.add('kt-menu-item-accordion');
+				itemElement.classList.remove('menu-item-dropdown');
+				itemElement.classList.add('menu-item-accordion');
 
-				subElement.classList.remove('kt-menu-dropdown');
-				subElement.classList.add('kt-menu-accordion');
+				subElement.classList.remove('menu-dropdown');
+				subElement.classList.add('menu-accordion');
 			}
 		}
 	}
@@ -279,39 +272,33 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	}
 
 	protected _isItemParentShown(itemElement: HTMLElement): boolean {
-		const parents = KTDom.parents(itemElement, '.kt-menu-item.show');
+		const parents = KTDom.parents(itemElement, '.menu-item.show');
 
 		return parents && parents.length > 0 ? true : false;
 	}
 
 	protected _isItemSubElement(itemElement: HTMLElement): boolean {
-		return (
-			itemElement.classList.contains('kt-menu-dropdown') ||
-			itemElement.classList.contains('kt-menu-accordion')
-		);
+		return itemElement.classList.contains('menu-dropdown') || itemElement.classList.contains('menu-accordion');
 	}
 
 	protected _hasItemSub(itemElement: HTMLElement): boolean {
 		return (
-			itemElement.classList.contains('kt-menu-item') &&
-			itemElement.hasAttribute('data-kt-menu-item-trigger')
+			itemElement.classList.contains('menu-item') &&
+			itemElement.hasAttribute('data-menu-item-trigger')
 		);
 	}
 
 	protected _getItemLinkElement(itemElement: HTMLElement): HTMLElement {
-		return KTDom.child(itemElement, '.kt-menu-link, .kt-menu-toggle');
+		return KTDom.child(itemElement, '.menu-link, .menu-toggle');
 	}
 
 	protected _getItemSubElement(itemElement: HTMLElement): HTMLElement {
-		if (
-			itemElement.classList.contains('kt-menu-dropdown') === true ||
-			itemElement.classList.contains('kt-menu-accordion') === true
-		) {
+		if (itemElement.classList.contains('menu-dropdown') === true || itemElement.classList.contains('menu-accordion') === true) {
 			return itemElement;
 		} else if (KTData.has(itemElement, 'sub')) {
 			return KTData.get(itemElement, 'sub') as HTMLElement;
 		} else {
-			return KTDom.child(itemElement, '.kt-menu-dropdown, .kt-menu-accordion');
+			return KTDom.child(itemElement, '.menu-dropdown, .menu-accordion');
 		}
 	}
 
@@ -326,10 +313,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	}
 
 	protected _getItemElement(element: HTMLElement): HTMLElement {
-		if (
-			element.classList.contains('kt-menu-item') &&
-			element.hasAttribute('data-kt-menu-item-toggle')
-		) {
+		if (element.classList.contains('menu-item') && element.hasAttribute('data-menu-item-toggle')) {
 			return element;
 		}
 
@@ -339,17 +323,13 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		}
 
 		// Item is parent of element
-		const itemElement = element.closest(
-			'.kt-menu-item[data-kt-menu-item-toggle]'
-		);
+		const itemElement = element.closest('.menu-item[data-menu-item-toggle]');
 		if (itemElement) {
 			return itemElement as HTMLElement;
 		}
 
 		// Element's parent has item DOM reference in it's data storage
-		const subElement = element.closest(
-			'.kt-menu-dropdown, .kt-menu-accordion'
-		) as HTMLElement;
+		const subElement = element.closest('.menu-dropdown, .menu-accordion') as HTMLElement;
 		if (subElement) {
 			if (KTData.has(subElement, 'item') === true) {
 				return KTData.get(subElement, 'item') as HTMLElement;
@@ -360,9 +340,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	}
 
 	protected _getItemParentElement(itemElement: HTMLElement): HTMLElement {
-		const subElement: HTMLElement = itemElement.closest(
-			'.kt-menu-dropdown, .kt-menu-accordion'
-		);
+		const subElement: HTMLElement = itemElement.closest('.menu-dropdown, .menu-accordion');
 		let parentItem: HTMLElement;
 
 		if (subElement && KTData.has(subElement, 'item')) {
@@ -371,9 +349,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 		if (
 			subElement &&
-			(parentItem = subElement.closest(
-				'.kt-menu-item[data-kt-menu-item-trigger]'
-			))
+			(parentItem = subElement.closest('.menu-item[data-menu-item-trigger]'))
 		) {
 			return parentItem;
 		}
@@ -381,9 +357,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		return null;
 	}
 
-	protected _getItemParentElements(
-		itemElement: HTMLElement
-	): Array<HTMLElement> {
+	protected _getItemParentElements(itemElement: HTMLElement): Array<HTMLElement> {
 		const parentElements: Array<HTMLElement> = [];
 		let parentElement: HTMLElement;
 		let i = 0;
@@ -411,10 +385,8 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		}
 
 		if (selector !== null) {
-			//element = selector.querySelector('.show.kt-menu-item[data-kt-menu-trigger]');
-			element = selector.querySelector(
-				'.kt-menu-item[data-kt-menu-item-trigger]'
-			);
+			//element = selector.querySelector('.show.menu-item[data-menu-trigger]');
+			element = selector.querySelector('.menu-item[data-menu-item-trigger]');
 
 			if (element) {
 				return element;
@@ -426,9 +398,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		}
 	}
 
-	protected _getItemChildElements(
-		itemElement: HTMLElement
-	): Array<HTMLElement> {
+	protected _getItemChildElements(itemElement: HTMLElement): Array<HTMLElement> {
 		const children: Array<HTMLElement> = [];
 		let child: HTMLElement;
 		let i = 0;
@@ -457,9 +427,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 		// Hide all currently shown dropdowns except current one
 		KTMenu.hide(itemElement);
-		if (KTDropdown) {
-			KTDropdown.hide(itemElement);
-		}
+		KTDropdown.hide(itemElement);
 
 		const subElement: HTMLElement = this._getItemSubElement(itemElement);
 		if (!subElement) return;
@@ -470,8 +438,8 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		// Set z=index
 		let zindex: number = parseInt(this._getOption('dropdownZindex') as string);
 		if (parseInt(KTDom.getCssProp(subElement, 'z-index')) > zindex) {
-			zindex = parseInt(KTDom.getCssProp(subElement, 'z-index'));
-		}
+      zindex = parseInt(KTDom.getCssProp(subElement, 'z-index'));
+    }
 		if (KTDom.getHighestZindex(itemElement) > zindex) {
 			zindex = KTDom.getHighestZindex(itemElement) + 1;
 		}
@@ -493,13 +461,13 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		this._initDropdownPopper(itemElement, subElement);
 
 		itemElement.classList.add('show');
-		itemElement.classList.add('kt-menu-item-dropdown');
+		itemElement.classList.add('menu-item-dropdown');
 		subElement.classList.add('show');
 
 		// Append the sub the the root of the menu
 		if (this._getItemOption(itemElement, 'overflow') === true) {
 			document.body.appendChild(subElement);
-			subElement.setAttribute('data-kt-menu-sub-overflow', 'true');
+			subElement.setAttribute('data-menu-sub-overflow', 'true');
 			KTData.set(itemElement, 'sub', subElement);
 			KTData.set(subElement, 'item', itemElement);
 			KTData.set(subElement, 'menu', this);
@@ -528,13 +496,13 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		subElement.style.height = '';
 
 		itemElement.classList.remove('show');
-		itemElement.classList.remove('kt-menu-item-dropdown');
+		itemElement.classList.remove('menu-item-dropdown');
 		subElement.classList.remove('show');
 
 		// Append the sub back to it's parent
 		if (this._getItemOption(itemElement, 'overflow') === true) {
-			subElement.removeAttribute('data-kt-menu-sub-overflow');
-			if (itemElement.classList.contains('kt-menu-item')) {
+			subElement.removeAttribute('data-menu-sub-overflow');
+			if (itemElement.classList.contains('menu-item')) {
 				itemElement.appendChild(subElement);
 			} else {
 				if (!this._element) return;
@@ -554,10 +522,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		this._dispatchEvent('dropdown.hidden');
 	}
 
-	protected _initDropdownPopper(
-		itemElement: HTMLElement,
-		subElement: HTMLElement
-	): void {
+	protected _initDropdownPopper(itemElement: HTMLElement, subElement: HTMLElement): void {
 		// Setup popper instance
 		let reference: HTMLElement;
 		const attach: string = this._getItemOption(itemElement, 'attach') as string;
@@ -573,11 +538,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		}
 
 		if (reference) {
-			const popper = createPopper(
-				reference as Element | VirtualElement,
-				subElement,
-				this._getDropdownPopperConfig(itemElement)
-			);
+			const popper = createPopper(reference as Element | VirtualElement, subElement, this._getDropdownPopperConfig(itemElement));
 			KTData.set(itemElement, 'popper', popper);
 		}
 	}
@@ -596,33 +557,24 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		let placement = this._getOption('dropdownPlacement') as Placement;
 		if (this._getItemOption(itemElement, 'placement')) {
 			placement = this._getItemOption(itemElement, 'placement') as Placement;
-		}
+		}		
 		if (isRtl && this._getItemOption(itemElement, 'placementRtl')) {
 			placement = this._getItemOption(itemElement, 'placementRtl') as Placement;
-		}
+		} 
 
 		// Offset
 		let offsetValue = this._getOption('dropdownOffset');
 		if (this._getItemOption(itemElement, 'offset')) {
 			offsetValue = this._getItemOption(itemElement, 'offset') as Placement;
-		}
+		}		
 		if (isRtl && this._getItemOption(itemElement, 'offsetRtl')) {
 			offsetValue = this._getItemOption(itemElement, 'offsetRtl') as Placement;
 		}
-		const offset = offsetValue
-			? offsetValue
-					.toString()
-					.split(',')
-					.map((value) => parseInt(value.trim(), 10))
-			: [0, 0];
+		const offset = offsetValue ? offsetValue.toString().split(',').map(value => parseInt(value.trim(), 10)) : [0, 0];
 
 		// Strategy
-		const strategy =
-			this._getItemOption(itemElement, 'overflow') === true
-				? 'absolute'
-				: 'fixed';
-		const altAxis =
-			this._getItemOption(itemElement, 'flip') !== false ? true : false;
+		const strategy = this._getItemOption(itemElement, 'overflow') === true ? 'absolute' : 'fixed';
+		const altAxis = this._getItemOption(itemElement, 'flip') !== false ? true : false;
 		const popperConfig = {
 			placement: placement,
 			strategy: strategy,
@@ -630,22 +582,22 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 				{
 					name: 'offset',
 					options: {
-						offset: offset,
-					},
+						offset: offset
+					}
 				},
 				{
 					name: 'preventOverflow',
 					options: {
-						altAxis: altAxis,
-					},
+						altAxis: altAxis
+					}
 				},
 				{
 					name: 'flip',
 					options: {
-						flipVariations: false,
-					},
-				},
-			],
+						flipVariations: false
+					}
+				}
+			]
 		};
 
 		return popperConfig;
@@ -667,10 +619,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 			expandAll = true;
 		} else if (this._getItemOption(itemElement, 'expandAll') === false) {
 			expandAll = false;
-		} else if (
-			this._element &&
-			this._getItemOption(this._element, 'expandAll') === true
-		) {
+		} else if (this._element && this._getItemOption(this._element, 'expandAll') === true) {
 			expandAll = true;
 		}
 
@@ -739,10 +688,8 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 		if (!this._element) return;
 		const parentItems = this._getItemParentElements(itemElement);
-		const activeLinks = this._element.querySelectorAll('.kt-menu-link.active');
-		const activeParentItems = this._element.querySelectorAll(
-			'.kt-menu-item.here, .kt-menu-item.show'
-		);
+		const activeLinks = this._element.querySelectorAll('.menu-link.active');
+		const activeParentItems = this._element.querySelectorAll('.menu-item.here, .menu-item.show');
 
 		if (this._getItemToggleMode(itemElement) === 'accordion') {
 			this._showAccordion(itemElement);
@@ -772,28 +719,21 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		linkElement.classList.add('active');
 	}
 
-	protected _getLinkByAttribute(
-		value: string,
-		name: string = 'href'
-	): HTMLElement {
+	protected _getLinkByAttribute(value: string, name: string = 'href'): HTMLElement {
 		if (!this._element) return null;
-		const linkElement = this._element.querySelector(
-			`'.kt-menu-link[${name}="${value}"]`
-		) as HTMLElement;
+		const linkElement = this._element.querySelector(`'.menu-link[${name}="${value}"]`) as HTMLElement;
 
 		return linkElement && null;
 	}
 
 	protected _hideAccordions(itemElement: HTMLElement): void {
 		if (!this._element) return;
-		const itemsToHide = this._element.querySelectorAll(
-			'.show[data-kt-menu-item-trigger]'
-		);
+		const itemsToHide = this._element.querySelectorAll('.show[data-menu-item-trigger]');
 
 		itemsToHide.forEach((itemToHide) => {
 			if (
 				this._getItemToggleMode(itemToHide as HTMLElement) === 'accordion' &&
-				(itemToHide as HTMLElement) !== itemElement &&
+				itemToHide as HTMLElement !== itemElement &&
 				itemElement?.contains(itemToHide as HTMLElement) === false &&
 				itemToHide.contains(itemElement) === false
 			) {
@@ -807,8 +747,8 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		let value = null;
 		name = KTUtils.camelReverseCase(name);
 
-		if (element && element.hasAttribute(`data-kt-menu-item-${name}`)) {
-			attr = element.getAttribute(`data-kt-menu-item-${name}`);
+		if (element && element.hasAttribute(`data-menu-item-${name}`)) {
+			attr = element.getAttribute(`data-menu-item-${name}`);
 			if (!attr) return null;
 
 			value = this._getResponsiveOption(attr);
@@ -886,9 +826,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		return this._getItemSubElement(itemElement);
 	}
 
-	public getItemParentElements(
-		itemElement: HTMLElement
-	): Array<HTMLElement> | null {
+	public getItemParentElements(itemElement: HTMLElement): Array<HTMLElement> | null {
 		return this._getItemParentElements(itemElement);
 	}
 
@@ -927,31 +865,22 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 			return KTData.get(element, 'menu') as KTMenu;
 		}
 
-		// Element has .kt-menu parent
-		const menuElement = element.closest('[data-kt-menu]') as HTMLElement;
+		// Element has .menu parent
+		const menuElement = element.closest('[data-menu]') as HTMLElement;
 		if (menuElement && KTData.has(menuElement, 'menu')) {
 			return KTData.get(menuElement, 'menu') as KTMenu;
-		} else if (
-			menuElement &&
-			menuElement.getAttribute('data-kt-menu') === 'true'
-		) {
+		} else if (menuElement && menuElement.getAttribute("data-menu") === "true") {
 			return new KTMenu(menuElement);
 		}
 
-		const subElement = element.closest(
-			'[data-kt-menu-sub-overflow="true"]'
-		) as HTMLElement;
+		const subElement = element.closest('[data-menu-sub-overflow="true"]') as HTMLElement;
 		if (subElement && KTData.has(subElement, 'menu')) {
 			return KTData.get(subElement, 'menu') as KTMenu;
 		}
 
-		// Element has a parent with DOM reference to .kt-menu in it's DATA storage
-		if (
-			element.classList.contains('kt-menu-link') ||
-			element.classList.contains('kt-menu-toggle')
-		) {
-			const subElement = (element.closest('.kt-menu-dropdown') ||
-				element.closest('.kt-menu-accordion')) as HTMLElement;
+		// Element has a parent with DOM reference to .menu in it's DATA storage
+		if (element.classList.contains('menu-link') || element.classList.contains('menu-toggle')) {
+			const subElement = (element.closest('.menu-dropdown') || element.closest('.menu-accordion')) as HTMLElement;
 
 			if (KTData.has(subElement, 'menu')) {
 				return KTData.get(subElement, 'menu') as KTMenu;
@@ -961,31 +890,22 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		return null;
 	}
 
-	public static getOrCreateInstance(
-		element: HTMLElement,
-		config?: KTMenuConfigInterface
-	): KTMenu {
+	public static getOrCreateInstance(element: HTMLElement, config?: KTMenuConfigInterface): KTMenu {
 		return this.getInstance(element) || new KTMenu(element, config);
 	}
 
 	public static hide(skipElement?: HTMLElement): void {
 		const itemElements = document.querySelectorAll(
-			'.show.kt-menu-item-dropdown[data-kt-menu-item-trigger]'
+			'.show.menu-item-dropdown[data-menu-item-trigger]'
 		);
 
 		itemElements.forEach((itemElement) => {
 			const menu = KTMenu.getInstance(itemElement as HTMLElement);
 
-			if (
-				menu &&
-				menu.getItemToggleMode(itemElement as HTMLElement) === 'dropdown'
-			) {
+			if (menu && menu.getItemToggleMode(itemElement as HTMLElement) === 'dropdown') {
 				if (skipElement) {
-					if (
-						itemElement &&
-						menu
-							.getItemSubElement(itemElement as HTMLElement)
-							?.contains(skipElement) === false &&
+					if (itemElement &&
+						menu.getItemSubElement(itemElement as HTMLElement)?.contains(skipElement) === false &&
 						itemElement.contains(skipElement) === false &&
 						itemElement !== skipElement
 					) {
@@ -1000,23 +920,18 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 	public static updateDropdowns(): void {
 		const itemElements = document.querySelectorAll(
-			'.show.kt-menu-item-dropdown[data-kt-menu-item-trigger]'
+			'.show.menu-item-dropdown[data-menu-item-trigger]'
 		);
 
 		itemElements.forEach((itemElement) => {
 			if (KTData.has(itemElement as HTMLElement, 'popper')) {
-				(
-					KTData.get(itemElement as HTMLElement, 'popper') as PopperInstance
-				).forceUpdate();
+				(KTData.get(itemElement as HTMLElement, 'popper') as PopperInstance).forceUpdate();
 			}
 		});
 	}
 
-	public static updateByLinkAttribute(
-		value: string,
-		name: string = 'href'
-	): void {
-		const elements = document.querySelectorAll('[data-kt-menu]');
+	public static updateByLinkAttribute(value: string, name: string = 'href'): void {
+		const elements = document.querySelectorAll('[data-menu]');
 
 		elements.forEach((element) => {
 			const menu = KTMenu.getInstance(element as HTMLElement);
@@ -1033,7 +948,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	public static handleClickAway() {
 		document.addEventListener('click', function (event: Event) {
 			const itemElements = document.querySelectorAll(
-				'.show.kt-menu-item-dropdown[data-kt-menu-item-trigger]:not([data-kt-menu-item-static="true"])'
+				'.show.menu-item-dropdown[data-menu-item-trigger]:not([data-menu-item-static="true"])'
 			);
 
 			itemElements.forEach((itemElement) => {
@@ -1052,11 +967,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 						return;
 					}
 
-					if (
-						subElement &&
-						(subElement === event.target ||
-							subElement.contains(event.target as HTMLElement))
-					) {
+					if (subElement && (subElement === event.target || subElement.contains(event.target as HTMLElement))) {
 						return;
 					}
 
@@ -1067,9 +978,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	}
 
 	public static findFocused() {
-		const linkElement = document.querySelector(
-			'.kt-menu-link:focus,.kt-menu-toggle:focus'
-		) as HTMLElement;
+		const linkElement = document.querySelector('.menu-link:focus, .menu-toggle:focus') as HTMLElement;
 
 		if (linkElement && KTDom.isVisible(linkElement)) {
 			return linkElement;
@@ -1078,40 +987,23 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		}
 	}
 
-	public static getFocusLink(
-		linkElement: HTMLElement,
-		direction: 'next' | 'previouse',
-		preFocus = false
-	): HTMLElement {
+	public static getFocusLink(linkElement: HTMLElement, direction: 'next' | 'previouse', preFocus = false): HTMLElement {
 		if (!linkElement) return null;
 
 		const itemElement = linkElement.parentElement as HTMLElement;
-		if (!itemElement || !itemElement.classList.contains('kt-menu-item'))
-			return null;
+		if (!itemElement || !itemElement.classList.contains('menu-item')) return null;
 
 		if (direction === 'next') {
 			const nextElement = linkElement.nextElementSibling as HTMLElement;
 
-			if (
-				nextElement &&
-				(nextElement.matches(
-					'.kt-menu-accordion' + (!preFocus ? '.show' : '')
-				) ||
-					nextElement.matches('.kt-menu-dropdown' + (!preFocus ? '.show' : '')))
-			) {
-				const itemElement2 = KTDom.child(
-					nextElement,
-					'.kt-menu-item'
-				) as HTMLElement;
-				return KTDom.child(itemElement2, '.kt-menu-link') as HTMLElement;
+			if (nextElement && (nextElement.matches('.menu-accordion' + (!preFocus ? '.show' : '')) || nextElement.matches('.menu-dropdown' + (!preFocus ? '.show' : '')))) {
+				const itemElement2 = KTDom.child(nextElement, '.menu-item') as HTMLElement;
+				return KTDom.child(itemElement2, '.menu-link') as HTMLElement;
 			} else {
 				const nextElement2 = itemElement.nextElementSibling as HTMLElement;
 
-				if (nextElement2 && nextElement2.classList.contains('kt-menu-item')) {
-					const nextLink = KTDom.child(
-						nextElement2,
-						'.kt-menu-link'
-					) as HTMLElement;
+				if (nextElement2 && nextElement2.classList.contains('menu-item')) {
+					const nextLink = KTDom.child(nextElement2, '.menu-link') as HTMLElement;
 					if (nextLink) {
 						return nextLink;
 					}
@@ -1120,29 +1012,17 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 		} else {
 			const prevElement = itemElement.previousElementSibling as HTMLElement;
 			if (prevElement) {
-				if (prevElement && prevElement.classList.contains('kt-menu-item')) {
-					const nextLink = KTDom.child(
-						prevElement,
-						'.kt-menu-link'
-					) as HTMLElement;
+				if (prevElement && prevElement.classList.contains('menu-item')) {
+					const nextLink = KTDom.child(prevElement, '.menu-link') as HTMLElement;
 					if (nextLink) {
 						return nextLink;
 					}
 				}
 			} else {
 				const parentElement = itemElement.parentElement as HTMLElement;
-				if (
-					parentElement &&
-					(parentElement.matches(
-						'.kt-menu-accordion' + (!preFocus ? '.show' : '')
-					) ||
-						parentElement.matches(
-							'.kt-menu-dropdown' + (!preFocus ? '.show' : '')
-						))
-				) {
-					const prevElement2 =
-						parentElement.previousElementSibling as HTMLElement;
-					if (prevElement2.classList.contains('kt-menu-link')) {
+				if (parentElement && (parentElement.matches('.menu-accordion' + (!preFocus ? '.show' : '')) || parentElement.matches('.menu-dropdown' + (!preFocus ? '.show' : '')))) {
+					const prevElement2 = parentElement.previousElementSibling as HTMLElement;
+					if (prevElement2.classList.contains('menu-link')) {
 						return prevElement2;
 					}
 				}
@@ -1153,109 +1033,86 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	}
 
 	public static handleKeyboard() {
-		document.addEventListener(
-			'keydown',
-			(event: KeyboardEvent) => {
-				if (
-					KT_ACCESSIBILITY_KEYS.includes(event.key) &&
-					!(event.ctrlKey || event.altKey || event.shiftKey)
-				) {
-					const currentFocused = this.findFocused() as HTMLElement;
-					if (!currentFocused) return;
+		document.addEventListener('keydown', (event: KeyboardEvent) => {
+			if (KT_ACCESSIBILITY_KEYS.includes(event.key)  && !(event.ctrlKey || event.altKey || event.shiftKey)) {
+				const currentFocused = this.findFocused() as HTMLElement;
+				if (!currentFocused) return;
 
-					if (
-						['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(
-							event.key
-						)
-					) {
-						const direction = ['ArrowDown', 'ArrowRight'].includes(event.key)
-							? 'next'
-							: 'previouse';
-						const newFocusLink = this.getFocusLink(currentFocused, direction);
-						event.preventDefault();
+				if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+					const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 'next' : 'previouse';
+					const newFocusLink = this.getFocusLink(currentFocused, direction);
+					event.preventDefault();
 
-						if (newFocusLink) {
-							newFocusLink.focus();
-							newFocusLink.classList.add('focus');
-						}
-					}
-
-					if (event.key === 'Enter') {
-						const menu = this.getInstance(currentFocused);
-						const itemElement = menu.getItemElement(currentFocused);
-						const subShown = menu.isItemSubShown(itemElement);
-
-						if (!menu) return;
-
-						if (menu.getItemToggleMode(itemElement) === 'accordion') {
-							currentFocused.dispatchEvent(
-								new MouseEvent('click', {
-									bubbles: true,
-								})
-							);
-						}
-
-						if (menu.getItemToggleMode(itemElement) === 'dropdown') {
-							if (menu.getItemTriggerMode(itemElement) === 'click') {
-								currentFocused.dispatchEvent(
-									new MouseEvent('click', {
-										bubbles: true,
-									})
-								);
-							} else {
-								if (subShown) {
-									currentFocused.dispatchEvent(
-										new MouseEvent('mouseout', {
-											bubbles: true,
-										})
-									);
-								} else {
-									currentFocused.dispatchEvent(
-										new MouseEvent('mouseover', {
-											bubbles: true,
-										})
-									);
-								}
-							}
-						}
-
-						if (subShown) {
-							const subFocus = this.getFocusLink(currentFocused, 'next', true);
-							if (subFocus) {
-								subFocus.focus();
-							}
-						} else {
-							currentFocused.focus();
-						}
-
-						event.preventDefault();
-					}
-
-					if (event.key === 'Escape') {
-						const items = document.querySelectorAll(
-							'.show.kt-menu-item-dropdown[data-kt-menu-item-trigger]:not([data-kt-menu-item-static="true"])'
-						);
-						items.forEach((item) => {
-							const menu = KTMenu.getInstance(item as HTMLElement);
-
-							if (
-								menu &&
-								menu.getItemToggleMode(item as HTMLElement) === 'dropdown'
-							) {
-								menu.hide(item as HTMLElement);
-							}
-						});
+					if (newFocusLink) {
+						newFocusLink.focus();
+						newFocusLink.classList.add('focus');
 					}
 				}
-			},
-			false
-		);
+
+				if (event.key === 'Enter') {
+					const menu = this.getInstance(currentFocused);
+					const itemElement = menu.getItemElement(currentFocused);
+					const subShown = menu.isItemSubShown(itemElement);
+
+					if (!menu) return;
+
+					if (menu.getItemToggleMode(itemElement) === 'accordion') {
+						currentFocused.dispatchEvent(new MouseEvent('click', {
+							bubbles: true
+						}));
+					}
+
+					if (menu.getItemToggleMode(itemElement) === 'dropdown') {
+						if (menu.getItemTriggerMode(itemElement) === 'click') {
+							currentFocused.dispatchEvent(new MouseEvent('click', {
+								bubbles: true
+							}));
+						} else {
+							if (subShown) {
+								currentFocused.dispatchEvent(new MouseEvent('mouseout', {
+									bubbles: true
+								}));
+							} else {
+								currentFocused.dispatchEvent(new MouseEvent('mouseover', {
+									bubbles: true
+								}));
+							}
+						}
+					}
+
+					if (subShown) {
+						const subFocus = this.getFocusLink(currentFocused, 'next', true);
+						if (subFocus) {
+							subFocus.focus();
+						}
+					} else {
+						currentFocused.focus();
+					}
+
+					event.preventDefault();
+				}
+
+				if (event.key === 'Escape') {
+					const items = document.querySelectorAll('.show.menu-item-dropdown[data-menu-item-trigger]:not([data-menu-item-static="true"])');
+					items.forEach((item) => {
+						const menu = KTMenu.getInstance(item as HTMLElement);
+
+						if (
+							menu &&
+							menu.getItemToggleMode(item as HTMLElement) === 'dropdown'
+						) {
+							menu.hide(item as HTMLElement);
+						}
+					});
+				}
+			}
+    }, false);
 	}
 
 	public static handleMouseover() {
 		KTEventHandler.on(
 			document.body,
-			'[data-kt-menu-item-trigger], .kt-menu-dropdown',
+			'[data-menu-item-trigger], .menu-dropdown',
 			'mouseover',
 			(event: Event, target: HTMLElement) => {
 				const menu = KTMenu.getInstance(target);
@@ -1270,7 +1127,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	public static handleMouseout() {
 		KTEventHandler.on(
 			document.body,
-			'[data-kt-menu-item-trigger], .kt-menu-dropdown',
+			'[data-menu-item-trigger], .menu-dropdown',
 			'mouseout',
 			(event: Event, target: HTMLElement) => {
 				const menu = KTMenu.getInstance(target);
@@ -1285,7 +1142,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	public static handleClick() {
 		KTEventHandler.on(
 			document.body,
-			'.kt-menu-item[data-kt-menu-item-trigger] > .kt-menu-link, .kt-menu-item[data-kt-menu-item-trigger] > .kt-menu-label .kt-menu-toggle, .kt-menu-item[data-kt-menu-item-trigger] > .kt-menu-toggle, [data-kt-menu-item-trigger]:not(.kt-menu-item):not([data-kt-menu-item-trigger="auto"])',
+			'.menu-item[data-menu-item-trigger] > .menu-link, .menu-item[data-menu-item-trigger] > .menu-label .menu-toggle, .menu-item[data-menu-item-trigger] > .menu-toggle, [data-menu-item-trigger]:not(.menu-item):not([data-menu-item-trigger="auto"])',
 			'click',
 			(event: Event, target: HTMLElement) => {
 				const menu = KTMenu.getInstance(target);
@@ -1298,7 +1155,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 
 		KTEventHandler.on(
 			document.body,
-			'.kt-menu-item:not([data-kt-menu-item-trigger]) > .kt-menu-link',
+			'.menu-item:not([data-menu-item-trigger]) > .menu-link',
 			'click',
 			(event: Event, target: HTMLElement) => {
 				const menu = KTMenu.getInstance(target);
@@ -1316,7 +1173,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	public static handleDismiss() {
 		KTEventHandler.on(
 			document.body,
-			'[data-kt-menu-dismiss="true"]',
+			'[data-menu-dismiss="true"]',
 			'click',
 			(event: Event, target: HTMLElement) => {
 				const menu = KTMenu.getInstance(target);
@@ -1336,7 +1193,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 				timer,
 				() => {
 					// Locate and update Offcanvas instances on window resize
-					const elements = document.querySelectorAll('[data-kt-menu]');
+					const elements = document.querySelectorAll('[data-menu]');
 
 					elements.forEach((element) => {
 						KTMenu.getInstance(element as HTMLElement)?.update();
@@ -1358,9 +1215,7 @@ export class KTMenu extends KTComponent implements KTMenuInterface {
 	}
 
 	public static createInstances(): void {
-		const elements = document.querySelectorAll(
-			'[data-kt-menu]:not([data-kt-menu=false])'
-		);
+		const elements = document.querySelectorAll('[data-menu]:not([data-menu=false])');
 		elements.forEach((element) => {
 			new KTMenu(element as HTMLElement);
 		});
