@@ -1,0 +1,37 @@
+<div
+  class="rounded-2xl border border-stroke-container p-6 h-full bg-white"
+  [class]="className"
+  [ngClass]="{ 'shadow-0-1': showShadow }"
+>
+  <!-- Header with title and icon -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="text-gray-600 text-sm font-medium">
+      {{ title | translate }}
+    </div>
+    <div *ngIf="showIcon" class="text-gray-400">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <div class="flex items-end justify-between">
+    <!-- Large number -->
+    <div class="text-4xl font-bold text-gray-900">
+      {{ mainValue }}
+    </div>
+
+    <!-- Status indicator -->
+    <div *ngIf="statusText" class="flex items-center text-red-500 text-sm">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-1">
+        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      {{ statusText }}
+    </div>
+  </div>
+
+  <!-- Custom content slot -->
+  <ng-content></ng-content>
+</div>

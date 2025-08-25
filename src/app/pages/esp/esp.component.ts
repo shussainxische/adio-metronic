@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { CardComponent } from '../../wrappers/card/card.component';
+import { TopCardComponent } from '../../components/ui/top-card/top-card.component';
+import { PreviewCardComponent } from '../../components/ui/preview-card/preview-card.component';
 
 interface ApplicationType {
   name: string;
@@ -24,7 +25,7 @@ interface Application {
 @Component({
   selector: 'app-esp',
   standalone: true,
-  imports: [CommonModule, TranslateModule, CardComponent],
+  imports: [CommonModule, TranslateModule, TopCardComponent, PreviewCardComponent],
   templateUrl: './esp.component.html',
   styleUrl: './esp.component.scss'
 })

@@ -10,45 +10,17 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap lg:flex-nowrap gap-5 lg:gap-7.5">
-    <app-card 
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-7.5">
+    <app-top-card 
       *ngFor="let appType of applicationTypes" 
-      [className]="'cursor-pointer hover:shadow-lg transition-all duration-300 flex-1 min-w-0 ' + (isFilterActive(appType.name) ? 'ring-2 ring-blue-500 shadow-lg' : '')"
+      [title]="appType.name"
+      [mainValue]="getApplicationCount(appType.name).toString()"
+      [statusText]="appType.name === 'RFQ' ? '1 Overdue' : ''"
+      [showIcon]="true"
+      [className]="'cursor-pointer hover:shadow-lg transition-all duration-300 w-full ' + (isFilterActive(appType.name) ? 'ring-2 ring-blue-500 shadow-lg' : '')"
       [showShadow]="true"
       (click)="filterApplications(appType.name)">
-      
-      <div class="flex flex-col items-center text-center p-4">
-        <!-- Icon -->
-        <div class="mb-4">
-          <span class="material-symbols-outlined text-5xl" [ngClass]="appType.color">
-            {{ appType.icon }}
-          </span>
-        </div>
-        
-        <!-- Title -->
-        <h3 class="text-xl font-bold text-gray-900 mb-2">
-          {{ appType.name }}
-        </h3>
-        
-        <!-- Description -->
-        <p class="text-sm text-gray-600 mb-4">
-          {{ appType.description }}
-        </p>
-        
-        <!-- Count -->
-        <div class="flex items-center justify-center">
-          <span class="inline-flex items-center justify-center w-16 h-16 rounded-full text-2xl font-bold text-white"
-                [ngClass]="{
-                  'bg-blue-600': appType.name === 'RFQ',
-                  'bg-orange-600': appType.name === 'Evaluation', 
-                  'bg-green-600': appType.name === 'Review',
-                  'bg-gray-600': appType.name === 'Closed'
-                }">
-            {{ getApplicationCount(appType.name) }}
-          </span>
-        </div>
-      </div>
-    </app-card>
+    </app-top-card>
   </div>
 
   <!-- Filter tabs section -->
@@ -79,7 +51,7 @@
 
   <!-- Individual application cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <app-card 
+    <app-preview-card 
       *ngFor="let app of filteredApplications" 
       [className]="'h-full transition-all duration-300 hover:shadow-xl'"
       [showShadow]="true">
@@ -126,6 +98,6 @@
           <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
         </button>
       </div>
-    </app-card>
+    </app-preview-card>
   </div>
 </div>
