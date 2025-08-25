@@ -9,7 +9,7 @@ import { IconWrapperComponent } from "../ui/icon-wrapper/icon-wrapper.component"
 import { PageWrapperComponent } from "../../wrappers/page-wrapper/page-wrapper.component";
 import { Subscription } from 'rxjs';
 import { AppLauncherService } from '../../services/app-launcher/app-launcher.service';
-// import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 // Define the Application interface
 interface Application {
@@ -20,7 +20,7 @@ interface Application {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule, IconWrapperComponent, PageWrapperComponent],// TranslateModule],
+  imports: [CommonModule, RouterModule, IconWrapperComponent, PageWrapperComponent,TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })

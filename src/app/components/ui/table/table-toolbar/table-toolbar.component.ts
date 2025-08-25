@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { AdioButtonComponent } from '../../adio-button/adio-button.component';
 import { DropdownFilterComponent } from '../../dropdown-filter/dropdown-filter.component';
 import { SortMenuComponent } from '../../sort-menu/sort-menu.component';
-// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table-toolbar',
@@ -22,7 +22,7 @@ import { SortMenuComponent } from '../../sort-menu/sort-menu.component';
     FormsModule,
     AdioButtonComponent,
     DropdownFilterComponent,
-    // TranslateModule,
+    TranslateModule,
     InputComponent,
   ],
   templateUrl: './table-toolbar.component.html',

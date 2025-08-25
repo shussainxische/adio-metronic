@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { ReplaceEnglishWithArabicDirective } from '../../../directives/replace-english-with-arabic/replace-english-with-arabic.directive';
 import { Language, TranslateModule } from '@ngx-translate/core';
 import { Editor, EditorModule } from 'primeng/editor';
-import { requiredWithTrim } from '../../../validators';
+// import { requiredWithTrim } from '../../../validators';
 
 @Component({
   selector: 'app-textarea',

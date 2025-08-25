@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NavigationService } from '../../../navigation.service';
+//import { NavigationService } from '../../../navigation.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 export interface Breadcrumb {
@@ -23,7 +23,7 @@ export interface Breadcrumb {
 export class BreadcrumbsComponent {
   @Input() items: Breadcrumb[] = [];
   constructor(
-    public nav: NavigationService,
+    //public nav: NavigationService,
   ) {}
 
 }

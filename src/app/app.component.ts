@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RoutesRecognized } from '@angular/router';
+import { RoutesRecognized } from '@angular/router';
 import KTComponents from '../metronic/core/index';
 import KTLayout from '../metronic/app/layouts/demo1';
 // import { MsalModule, MsalService } from "@azure/msal-angular";
@@ -15,7 +15,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, TranslateModule, LoaderComponent, MainLayoutComponent],
+  imports: [CommonModule, TranslateModule, LoaderComponent, MainLayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
