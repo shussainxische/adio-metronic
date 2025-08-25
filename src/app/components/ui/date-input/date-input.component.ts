@@ -4,12 +4,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DatePicker } from 'primeng/datepicker';
-import { Language, TranslateModule } from '@ngx-translate/core';
+import { Language, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
 // import { LanguageService } from '../../../services/language/language.service';
 import { InputComponent } from '../input/input.component';
 import { PrimeNG } from 'primeng/config';
-// import { TranslateService } from '@ngx-translate/core';
 import dayjs from 'dayjs';
 
 @Component({
@@ -67,7 +66,7 @@ export class DateInputComponent implements OnInit, AfterViewInit, OnDestroy {
     // private languageService: LanguageService,
     private elementRef: ElementRef,
     private primeng: PrimeNG,
-    // private translateService: TranslateService
+    private translateService: TranslateService
   ) {}
 
   // Convert string dates to Date objects

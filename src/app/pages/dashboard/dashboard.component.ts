@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PageWrapperComponent } from '../../wrappers/page-wrapper/page-wrapper.component';
-// import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 // import { RecentTasksComponent } from './all widgets/recent-tasks/recent-tasks.component';
 // import { QuickAccessComponent } from './all widgets/quick-access/quick-access.component';
@@ -26,7 +26,7 @@ import { PageHeaderComponent } from '../../components/page-header/page-header.co
     // RecentActivitiesComponent,
     RouterModule,
     PageWrapperComponent,
-    // TranslateModule,
+    TranslateModule,
     PageHeaderComponent,
     // TasksComponent,
     // TendersComponent,
