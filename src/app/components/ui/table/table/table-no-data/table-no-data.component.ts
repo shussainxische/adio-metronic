@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { AdioButtonComponent } from '../../../adio-button/adio-button.component';
 // import { NavigationService } from '../../../../../navigation.service';
-// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 // import { HasPermissionDirective } from '../../../../../directives/has-permission/has-permission.directive';
 // import { HasNoPermissionDirective } from '../../../../../directives/has-no-permission/has-no-permission.directive';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-table-no-data',
   imports: [
     AdioButtonComponent,
-    // TranslateModule,
+    TranslateModule,
     // HasPermissionDirective,
     // HasNoPermissionDirective,
     CommonModule,

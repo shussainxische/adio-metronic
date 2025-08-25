@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { SelectComponent } from '../select/select.component';
 import { CommonModule } from '@angular/common';
-import { LookupsService } from '../../../services/lookups/lookups.service';
+// import { LookupsService } from '../../../services/lookups/lookups.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { finalize } from 'rxjs';
 
@@ -36,7 +36,7 @@ export class LookupSelectComponent implements OnInit {
     return this.control && this.control.invalid && (this.control.dirty || this.control.touched);
   }
 
-  constructor(private lookupService: LookupsService) { }
+  constructor() {} //(private lookupService: LookupsService) { }
   ngOnInit(): void {
       if (this.externalOptions?.length) {
         this.options = this.externalOptions;
@@ -56,14 +56,14 @@ export class LookupSelectComponent implements OnInit {
     this.change.emit(this.control.value);
   }
   fetchLookupOptions() {
-    this.lookupService.getBatchLookups([this.entityName])
-    .pipe(
-      finalize(() => this.isLoading = false)
-    )
-    .subscribe(response => {
-        const lookupData = response['data'][this.entityName] || [];
-        this.mapLookupData(lookupData);
-      });
+    // this.lookupService.getBatchLookups([this.entityName])
+    // .pipe(
+    //   finalize(() => this.isLoading = false)
+    // )
+    // .subscribe(response => {
+    //     const lookupData = response['data'][this.entityName] || [];
+    //     this.mapLookupData(lookupData);
+    //   });
   }
 
   private mapLookupData(lookupData: any[]) {
@@ -75,47 +75,47 @@ export class LookupSelectComponent implements OnInit {
     this.isLoading = false;
   }
   fetchOptionSetOptions() {
-    this.lookupService.getOptions(this.entityName, this.fieldName)
-    .pipe(
-      finalize(() => this.isLoading = false)
-    )
-    .subscribe({
-      next: (response) => {
-        this.options = response.data.map((item: any) => ({
-          value: item.value,
-          label: item.label
-        }));
-        if (this.needHideOptions) {
-          this.options = this.options.filter(opt => !this.exludedOptions.includes(opt.value));
+    // this.lookupService.getOptions(this.entityName, this.fieldName)
+    // .pipe(
+    //   finalize(() => this.isLoading = false)
+    // )
+    // .subscribe({
+    //   next: (response) => {
+    //     this.options = response.data.map((item: any) => ({
+    //       value: item.value,
+    //       label: item.label
+    //     }));
+    //     if (this.needHideOptions) {
+    //       this.options = this.options.filter(opt => !this.exludedOptions.includes(opt.value));
 
-        }
+    //     }
 
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching option set:', error);
-        this.isLoading = false;
-      }
-    });
+    //     this.isLoading = false;
+    //   },
+    //   error: (error) => {
+    //     console.error('Error fetching option set:', error);
+    //     this.isLoading = false;
+    //   }
+    // });
   }
   fetchAlternativeLookupOptions() {
-    this.lookupService.getAlternativeLookup(this.entityName)
-    .pipe(
-      finalize(() => this.isLoading = false)
-    )
-    .subscribe({
-      next: (response) => {
-        const lookupData = response.data || [];
-        this.options = lookupData.map(item => ({
-          value: item.id,
-          label: item.name
-        }));
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching alternative lookup options:', error);
-        this.isLoading = false;
-      }
-    });
+    // this.lookupService.getAlternativeLookup(this.entityName)
+    // .pipe(
+    //   finalize(() => this.isLoading = false)
+    // )
+    // .subscribe({
+    //   next: (response) => {
+    //     const lookupData = response.data || [];
+    //     this.options = lookupData.map(item => ({
+    //       value: item.id,
+    //       label: item.name
+    //     }));
+    //     this.isLoading = false;
+    //   },
+    //   error: (error) => {
+    //     console.error('Error fetching alternative lookup options:', error);
+    //     this.isLoading = false;
+    //   }
+    // });
   }
 }

@@ -13,7 +13,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoaderComponent } from '../loader/loader.component';
 import { CheckboxInputComponent } from '../checkbox-input/checkbox-input.component';
 import { InputComponent } from '../input/input.component';
@@ -37,7 +37,7 @@ export interface SelectOption {
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    // TranslateModule,
+    TranslateModule,
     LoaderComponent,
     MenuDropdownComponent,
     // CheckboxInputComponent,

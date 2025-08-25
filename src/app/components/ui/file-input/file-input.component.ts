@@ -12,7 +12,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdioButtonComponent } from '../adio-button/adio-button.component';
 import Swal from 'sweetalert2';
 // import { SweetAlertService } from '../../../services/sweet-alert.service';
@@ -25,7 +25,7 @@ import { IconWrapperComponent } from '../icon-wrapper/icon-wrapper.component';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    // TranslateModule,
+    TranslateModule,
     AdioButtonComponent,
     // ImagePreviewComponent,
     IconWrapperComponent,

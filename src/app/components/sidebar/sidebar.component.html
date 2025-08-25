@@ -11,13 +11,13 @@
       data-scrollable-wrappers="#sidebar_content" id="sidebar_scrollable">
       <div class="menu flex flex-col grow gap-1" data-menu="true" data-menu-accordion-expand-all="false"
         id="sidebar_menu">
-        <div class="text-primary text-xl font-bold ms-3 app-title">{{'DASHBOARD' }}</div>
+        <div class="text-primary text-xl font-bold ms-3 app-title">{{'sidebar.MUSATAHA' | translate}}</div>
         <ng-template #recursiveList let-items let-level="level">
           <ng-container *ngFor="let item of items">
             <!-- Level 0: Section Headers (no icons) -->
             <div class="menu-item" *ngIf="level === 0">
               <span class="menu-group-title uppercase text-gray-700 text-sm h-9 ms-3 flex items-center">
-                  {{ 'sidebar.'+ item.label }}
+                  {{ 'sidebar.'+ item.label | translate }}
               </span>
               <!-- Render children of level 0 -->
               <ng-container *ngIf="item.children?.length">
@@ -57,7 +57,7 @@
                 'text-sm': level>2
                 }"
                 >
-                  {{ 'sidebar.'+ item.label}}
+                  {{ 'sidebar.'+ item.label | translate}}
                 </span>
               </a>
             </div>
@@ -91,7 +91,7 @@
                 'text-sm': level>2
                 }"
                 >
-                  {{ 'sidebar.'+ item.label }}
+                  {{ 'sidebar.'+ item.label | translate }}
                 </span>
                 <span class="menu-arrow w-[20px] shrink-0 justify-end ms-1 menu-item-show:text-primary-on-surface">
                   <span class="material-symbols-outlined text-xl menu-item-show:hidden">expand_more</span>
