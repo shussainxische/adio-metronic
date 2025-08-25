@@ -214,4 +214,16 @@ export class EspComponent {
   getBadgeText(type: string, status: string): string {
     return `${type} - ${status}`;
   }
+
+  // Get category initial for badge display
+  getCategoryInitial(category: string): string {
+    const categoryMap: { [key: string]: string } = {
+      'Electricity': 'E',
+      'Gas': 'G',
+      'Water': 'W',
+      'Energy': 'E',
+      'Oil': 'O'
+    };
+    return categoryMap[category] || category.charAt(0).toUpperCase();
+  }
 }
