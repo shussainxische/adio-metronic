@@ -17,7 +17,4 @@ export class TopCardComponent {
   @Input() className = '';
   @Input() showShadow = true;
   @Input() titleMode: 'primary' | 'secondary' = 'primary';
-  @Input() showIcon = true;
-  @Input() mainValue = '';
-  @Input() statusText = '';
 }

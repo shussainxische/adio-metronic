@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopCardComponent } from '../../components/ui/top-card/top-card.component';
 import { PreviewCardComponent } from '../../components/ui/preview-card/preview-card.component';
+import { StatusBadgeComponent, StatusBadgeVariant } from '../../components/ui/status-badge/status-badge.component';
 
 interface ApplicationType {
   name: string;
@@ -15,17 +16,23 @@ interface ApplicationType {
 interface Application {
   id: string;
   companyName: string;
+  companyType?: string;
   type: string;
   status: 'Pending' | 'Completed';
   progress: number;
   date: string;
+  deadline?: string;
+  category?: string;
+  certifyingBody?: string;
+  alertState?: 'none' | 'warning' | 'critical';
+  slaState?: 'none' | 'active' | 'expired';
   actionLabel: string;
 }
 
 @Component({
   selector: 'app-esp',
   standalone: true,
-  imports: [CommonModule, TranslateModule, TopCardComponent, PreviewCardComponent],
+  imports: [CommonModule, TranslateModule, TopCardComponent, PreviewCardComponent, StatusBadgeComponent],
   templateUrl: './esp.component.html',
   styleUrl: './esp.component.scss'
 })
@@ -73,12 +80,18 @@ export class EspComponent {
   applications: Application[] = [
     // RFQ Applications
     {
-      id: 'ESP 1025',
-      companyName: 'Al Dhafra Manufacturing Renewal',
+      id: 'ESP-001',
+      companyName: 'Al Dhafra Manufacturing',
+      companyType: 'Renewal',
       type: 'RFQ',
       status: 'Pending',
-      progress: 10,
+      progress: 0,
       date: '1 Jan 2025',
+      deadline: '9/15/2025',
+      category: 'Electricity',
+      certifyingBody: 'Abu Dhabi Certification Body',
+      alertState: 'warning',
+      slaState: 'none',
       actionLabel: 'Clarifying Body'
     },
     {
@@ -171,5 +184,34 @@ export class EspComponent {
   // Check if application type is currently selected
   isFilterActive(type: string): boolean {
     return this.selectedFilter === type;
+  }
+
+  // Map application status to badge variant
+  getStatusVariant(status: string): StatusBadgeVariant {
+    const statusMap: { [key: string]: StatusBadgeVariant } = {
+      'Pending': 'pending',
+      'Completed': 'complete',
+      'Active': 'active',
+      'Under Review': 'warning',
+      'Approved': 'success',
+      'Rejected': 'archived'
+    };
+    return statusMap[status] || 'pending';
+  }
+
+  // Map application type to badge variant
+  getTypeVariant(type: string): StatusBadgeVariant {
+    const typeMap: { [key: string]: StatusBadgeVariant } = {
+      'RFQ': 'warning',
+      'Evaluation': 'pending', 
+      'Review': 'active',
+      'Closed': 'success'
+    };
+    return typeMap[type] || 'pending';
+  }
+
+  // Get formatted badge text for type and status
+  getBadgeText(type: string, status: string): string {
+    return `${type} - ${status}`;
   }
 }
