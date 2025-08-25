@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopCardComponent } from '../../components/ui/top-card/top-card.component';
 import { PreviewCardComponent } from '../../components/ui/preview-card/preview-card.component';
+import { PageHeaderComponent } from '../../components/ui/page-header/page-header.component';
+import { FilterTabsComponent, FilterTab } from '../../components/ui/filter-tabs/filter-tabs.component';
+import { IconComponent } from '../../components/ui/icon/icon.component';
 import { StatusBadgeComponent, StatusBadgeVariant } from '../../components/ui/status-badge/status-badge.component';
+import { ProgressBarComponent } from '../../components/ui/progress-bar/progress-bar.component';
+import { ApplicationFooterComponent } from '../../components/ui/application-footer/application-footer.component';
 
 interface ApplicationType {
   name: string;
@@ -32,7 +37,7 @@ interface Application {
 @Component({
   selector: 'app-esp',
   standalone: true,
-  imports: [CommonModule, TranslateModule, TopCardComponent, PreviewCardComponent, StatusBadgeComponent],
+  imports: [CommonModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, FilterTabsComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, ApplicationFooterComponent],
   templateUrl: './esp.component.html',
   styleUrl: './esp.component.scss'
 })
@@ -44,6 +49,21 @@ export class EspComponent {
   constructor() {
     console.log('ESP Component initialized!');
     this.filteredApplications = this.applications;
+  }
+
+  get filterTabs(): FilterTab[] {
+    return [
+      { key: 'All', label: 'All Applications', count: this.getApplicationCount('All') },
+      ...this.applicationTypes.map(type => ({
+        key: type.name,
+        label: type.name,
+        count: this.getApplicationCount(type.name)
+      }))
+    ];
+  }
+
+  get resultCountLabel(): string {
+    return `Showing: ${this.filteredApplications.length} applications`;
   }
 
   applicationTypes: ApplicationType[] = [
@@ -197,17 +217,6 @@ export class EspComponent {
       'Rejected': 'archived'
     };
     return statusMap[status] || 'pending';
-  }
-
-  // Map application type to badge variant
-  getTypeVariant(type: string): StatusBadgeVariant {
-    const typeMap: { [key: string]: StatusBadgeVariant } = {
-      'RFQ': 'warning',
-      'Evaluation': 'pending', 
-      'Review': 'active',
-      'Closed': 'success'
-    };
-    return typeMap[type] || 'pending';
   }
 
   // Get formatted badge text for type and status

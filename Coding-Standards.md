@@ -141,22 +141,29 @@ type StatusBadgeVariant = 'active' | 'success' | 'warning' | 'pending' | 'archiv
 
 #### Dynamic Component Usage
 ```html
-<!-- ✅ Page handles data, components handle display -->
-<app-preview-card 
-  *ngFor="let app of filteredApplications"
-  [className]="'h-full group'"
-  [showShadow]="true">
+<!-- ✅ Clean component composition - ESP after refactor -->
+<div class="container-fixed space-y-8">
+  <app-page-header title="ESP Applications" subtitle="..."></app-page-header>
   
-  <app-status-badge
-    [text]="getBadgeText(app.type, app.status)"
-    [variant]="getStatusVariant(app.status)"
-    size="xs">
-  </app-status-badge>
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <app-top-card [active]="isFilterActive(appType.name)" (click)="filterApplications(appType.name)">
+      <!-- Content projection -->
+    </app-top-card>
+  </div>
   
-  <h3 class="text-1.5xl font-bold text-primary-on-surface">{{ app.id }}</h3>
-  <!-- More content... -->
-</app-preview-card>
+  <app-filter-tabs [tabs]="filterTabs" (tabChanged)="filterApplications($event)"></app-filter-tabs>
+  
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <app-preview-card *ngFor="let app of filteredApplications">
+      <app-status-badge [text]="getBadgeText(app.type, app.status)"></app-status-badge>
+      <app-progress-bar [progress]="app.progress"></app-progress-bar>
+      <app-application-footer [certifyingBody]="app.certifyingBody"></app-application-footer>
+    </app-preview-card>
+  </div>
+</div>
 ```
+
+**Template Reduction**: ESP component went from **97 lines to 35 lines** (64% reduction)
 
 ### 6. State Management
 
@@ -270,6 +277,47 @@ Implement dynamic badge rendering with StatusBadgeComponent integration
 3. **Generic over specific** - create reusable containers, handle data in pages
 4. **Minimal styling** - rely on Tailwind config, avoid custom CSS
 5. **Content projection** - use `<ng-content>` for flexible component composition
+6. **Component extraction** - extract repetitive HTML patterns into focused components
+7. **Avoid double containers** - don't wrap components unnecessarily
+8. **Simplify grids** - use `grid md:grid-cols-2 lg:grid-cols-4` (omit `grid-cols-1`)
+
+## New Components Added in ESP Refactor
+
+### PageHeaderComponent
+- **Purpose**: Standard page title and subtitle layout
+- **Usage**: `<app-page-header title="..." subtitle="...">`
+- **Reusable**: Yes, across all pages
+
+### FilterTabsComponent  
+- **Purpose**: Tab-style filter buttons with counts
+- **Usage**: `<app-filter-tabs [tabs]="filterTabs" (tabChanged)="...">`
+- **Reusable**: Yes, for any filtering UI
+
+### ApplicationFooterComponent
+- **Purpose**: Card footer with certifying body and alert indicator
+- **Usage**: `<app-application-footer [certifyingBody]="..." [showAlert]="...">`
+- **Reusable**: Yes, for application-style cards
+
+### IconComponent (Lucide Integration)
+- **Purpose**: Consistent icon system using Lucide Angular
+- **Usage**: `<app-icon name="mail" [size]="20" className="text-gray-400">`
+- **Icons**: mail, alert-circle, file-text, etc.
+- **Benefit**: Replaces hardcoded SVGs, smaller bundle size
+
+### Updated Components
+
+#### TopCardComponent
+- **Added**: `[active]` prop for selection states
+- **Added**: Built-in hover effects and transitions
+- **Added**: `ring-primary` active state styling
+
+#### PreviewCardComponent
+- **Added**: `[hoverable]` prop to control hover behavior
+- **Added**: Built-in hover effects (`hover:shadow-lg`, `hover:-translate-y-1`)
+
+#### ProgressBarComponent
+- **Updated**: Default color changed to `primary` (ADIO brand color)
+- **Added**: `primary` color option for brand consistency
 
 ## Tools & Commands
 

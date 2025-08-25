@@ -1,8 +1,4 @@
-<div
-  class="rounded-xl border border-stroke-container p-5 h-full"
-  [class]="className"
-  [ngClass]="{ 'shadow-0-1': showShadow }"
->
+<div [class]="cardClasses">
   <div
     *ngIf="!!title && titleMode === 'primary'"
     class="text-primary-active text-2xl mb-6"

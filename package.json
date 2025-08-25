@@ -33,6 +33,7 @@
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "jwt-decode": "^4.0.0",
+    "lucide-angular": "^0.541.0",
     "mini-svg-data-uri": "^1.4.4",
     "ng-openapi-gen": "^0.52.0",
     "primeicons": "^7.0.0",
