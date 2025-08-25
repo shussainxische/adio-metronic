@@ -5,6 +5,18 @@
     subtitle="Manage and track all ESP application types">
   </app-page-header>
 
+  <!-- All Applications Button -->
+  <div class="flex">
+    <button
+      class="px-4 py-2 text-sm font-medium rounded-lg border border-stroke-container bg-white hover:bg-gray-50 transition-colors"
+      [class.ring-2]="selectedFilter === 'All'"
+      [class.ring-primary]="selectedFilter === 'All'"
+      [class.bg-gray-50]="selectedFilter === 'All'"
+      (click)="filterApplications('All')">
+      All Applications ({{ getApplicationCount('All') }})
+    </button>
+  </div>
+
   <!-- Application Type Cards -->
   <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
     <app-top-card
@@ -30,13 +42,16 @@
     </app-top-card>
   </div>
 
-  <!-- Filter Tabs -->
-  <app-filter-tabs
-    [tabs]="filterTabs"
-    [selectedTab]="selectedFilter"
-    [countLabel]="resultCountLabel"
-    (tabChanged)="filterApplications($event)">
-  </app-filter-tabs>
+  <!-- Sub-Status Pills (shown when stage is selected) -->
+  <div *ngIf="selectedFilter !== 'All' && getSubStatuses(selectedFilter).length > 0" class="flex flex-wrap gap-2">
+    <button
+      *ngFor="let subStatus of getSubStatuses(selectedFilter)"
+      class="px-3 py-1 text-xs font-medium rounded-full border transition-colors"
+      [class]="getSubStatusPillClasses(subStatus)"
+      (click)="filterBySubStatus(subStatus)">
+      {{ subStatus }}
+    </button>
+  </div>
 
   <!-- Application Cards -->
   <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -45,7 +60,7 @@
       <!-- Status Badge -->
       <div class="mb-4">
         <app-status-badge
-          [text]="getBadgeText(app.type, app.status)"
+          [text]="getBadgeText(app.stage, app.status)"
           [variant]="getStatusVariant(app.status)"
           size="sm"
           [autoWidth]="true">
@@ -80,7 +95,7 @@
       <!-- Footer -->
       <app-application-footer
         [certifyingBody]="app.certifyingBody || 'Abu Dhabi Certification Body'"
-        [showAlert]="app.type === 'RFQ'">
+        [showAlert]="app.stage === 'RFQ'">
       </app-application-footer>
     </app-preview-card>
   </div>

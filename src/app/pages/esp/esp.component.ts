@@ -22,8 +22,8 @@ interface Application {
   id: string;
   companyName: string;
   companyType?: string;
-  type: string;
-  status: 'Pending' | 'Completed';
+  stage: 'RFQ' | 'Evaluation' | 'Review' | 'Closed';
+  status: 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'Final Review' | 'Certified' | 'Not Certified' | 'Expired' | 'Canceled';
   progress: number;
   date: string;
   deadline?: string;
@@ -44,6 +44,7 @@ interface Application {
 
 export class EspComponent {
   selectedFilter: string = 'All';
+  selectedSubStatus: string = '';
   filteredApplications: Application[] = [];
 
   constructor() {
@@ -98,14 +99,14 @@ export class EspComponent {
   ];
 
   applications: Application[] = [
-    // RFQ Applications
+    // RFQ Applications - Pending (Yellow)
     {
       id: 'ESP-001',
       companyName: 'Al Dhafra Manufacturing',
       companyType: 'Renewal',
-      type: 'RFQ',
+      stage: 'RFQ',
       status: 'Pending',
-      progress: 0,
+      progress: 15,
       date: '1 Jan 2025',
       deadline: '9/15/2025',
       category: 'Electricity',
@@ -114,114 +115,209 @@ export class EspComponent {
       slaState: 'none',
       actionLabel: 'Clarifying Body'
     },
+    // RFQ Applications - Submitted (Blue)
     {
       id: 'ESP 1026',
       companyName: 'Green Energy Solutions',
-      type: 'RFQ',
-      status: 'Pending',
-      progress: 25,
+      stage: 'RFQ',
+      status: 'Submitted',
+      progress: 35,
       date: '2 Jan 2025',
       actionLabel: 'Under Review'
     },
-    {
-      id: 'ESP 1027',
-      companyName: 'Tech Innovations Ltd',
-      type: 'RFQ',
-      status: 'Completed',
-      progress: 100,
-      date: '28 Dec 2024',
-      actionLabel: 'View Details'
-    },
-    // Evaluation Applications
+    
+    // Evaluation Applications - In Progress (Yellow)
     {
       id: 'ESP 2001',
       companyName: 'Solar Power Corp',
-      type: 'Evaluation',
-      status: 'Pending',
-      progress: 45,
+      stage: 'Evaluation',
+      status: 'In Progress',
+      progress: 65,
       date: '5 Jan 2025',
       actionLabel: 'Technical Review'
     },
+    // Evaluation Applications - Returned (Orange)
     {
       id: 'ESP 2002',
       companyName: 'Advanced Materials Inc',
-      type: 'Evaluation',
-      status: 'Completed',
-      progress: 85,
+      stage: 'Evaluation',
+      status: 'Returned',
+      progress: 40,
       date: '3 Jan 2025',
-      actionLabel: 'Final Assessment'
+      actionLabel: 'Requires Updates'
     },
-    // Review Applications
+    
+    // Review Applications - Initial Review (Blue)
     {
       id: 'ESP 3001',
       companyName: 'Industrial Systems Co',
-      type: 'Review',
-      status: 'Pending',
-      progress: 60,
+      stage: 'Review',
+      status: 'Initial Review',
+      progress: 75,
       date: '6 Jan 2025',
       actionLabel: 'Management Review'
     },
+    // Review Applications - Final Review (Blue)
     {
       id: 'ESP 3002',
       companyName: 'Logistics Partners LLC',
-      type: 'Review',
-      status: 'Completed',
+      stage: 'Review',
+      status: 'Final Review',
       progress: 90,
       date: '4 Jan 2025',
-      actionLabel: 'Approve'
+      actionLabel: 'Final Approval'
     },
-    // Closed Applications
+    
+    // Closed Applications - Certified (Green)
     {
       id: 'ESP 4001',
-      companyName: 'Completed Project Alpha',
-      type: 'Closed',
-      status: 'Completed',
+      companyName: 'Certified Company Alpha',
+      stage: 'Closed',
+      status: 'Certified',
       progress: 100,
       date: '20 Dec 2024',
-      actionLabel: 'Archive'
+      actionLabel: 'Certificate Issued'
+    },
+    // Closed Applications - Not Certified (Red)
+    {
+      id: 'ESP 4002',
+      companyName: 'Rejected Company Beta',
+      stage: 'Closed',
+      status: 'Not Certified',
+      progress: 100,
+      date: '18 Dec 2024',
+      actionLabel: 'Application Rejected'
+    },
+    // Closed Applications - Expired (Red)
+    {
+      id: 'ESP 4003',
+      companyName: 'Expired Company Gamma',
+      stage: 'Closed',
+      status: 'Expired',
+      progress: 100,
+      date: '15 Dec 2024',
+      actionLabel: 'Certificate Expired'
+    },
+    // Closed Applications - Canceled (Red)
+    {
+      id: 'ESP 4004',
+      companyName: 'Canceled Company Delta',
+      stage: 'Closed',
+      status: 'Canceled',
+      progress: 60,
+      date: '12 Dec 2024',
+      actionLabel: 'Application Canceled'
     }
   ];
 
-  // Filter applications based on selected type
-  filterApplications(type: string) {
-    this.selectedFilter = type;
+  // Filter applications based on selected stage
+  filterApplications(stage: string) {
+    this.selectedFilter = stage;
+    this.selectedSubStatus = ''; // Reset sub-status when changing stage
     
-    if (type === 'All') {
+    if (stage === 'All') {
       this.filteredApplications = this.applications;
     } else {
-      this.filteredApplications = this.applications.filter(app => app.type === type);
+      this.filteredApplications = this.applications.filter(app => app.stage === stage);
     }
   }
 
-  // Get count for specific application type
-  getApplicationCount(type: string): number {
-    if (type === 'All') {
+  // Filter applications by sub-status within selected stage
+  filterBySubStatus(subStatus: string) {
+    this.selectedSubStatus = this.selectedSubStatus === subStatus ? '' : subStatus;
+    
+    if (this.selectedFilter === 'All') {
+      this.filteredApplications = this.applications;
+    } else {
+      let stageFiltered = this.applications.filter(app => app.stage === this.selectedFilter);
+      
+      if (this.selectedSubStatus) {
+        this.filteredApplications = stageFiltered.filter(app => app.status === this.selectedSubStatus);
+      } else {
+        this.filteredApplications = stageFiltered;
+      }
+    }
+  }
+
+  // Get count for specific application stage
+  getApplicationCount(stage: string): number {
+    if (stage === 'All') {
       return this.applications.length;
     }
-    return this.applications.filter(app => app.type === type).length;
+    return this.applications.filter(app => app.stage === stage).length;
   }
 
-  // Check if application type is currently selected
-  isFilterActive(type: string): boolean {
-    return this.selectedFilter === type;
+  // Check if application stage is currently selected
+  isFilterActive(stage: string): boolean {
+    return this.selectedFilter === stage;
   }
 
-  // Map application status to badge variant
+  // Map application status to badge variant with proper colors
   getStatusVariant(status: string): StatusBadgeVariant {
     const statusMap: { [key: string]: StatusBadgeVariant } = {
-      'Pending': 'pending',
-      'Completed': 'complete',
-      'Active': 'active',
-      'Under Review': 'warning',
-      'Approved': 'success',
-      'Rejected': 'archived'
+      // RFQ statuses
+      'Pending': 'warning',         // Yellow
+      'Submitted': 'active',        // Blue
+      // Evaluation statuses  
+      'In Progress': 'warning',     // Yellow
+      'Returned': 'pending',        // Orange
+      // Review statuses
+      'Initial Review': 'active',   // Blue
+      'Final Review': 'active',     // Blue
+      // Closed statuses
+      'Certified': 'success',       // Green
+      'Not Certified': 'archived',  // Red
+      'Expired': 'archived',        // Red
+      'Canceled': 'archived'        // Red
     };
     return statusMap[status] || 'pending';
   }
 
-  // Get formatted badge text for type and status
-  getBadgeText(type: string, status: string): string {
-    return `${type} - ${status}`;
+  // Get formatted badge text for stage and status
+  getBadgeText(stage: string, status: string): string {
+    return `${stage} - ${status}`;
+  }
+
+  // Get unique sub-statuses for a given stage with custom ordering
+  getSubStatuses(stage: string): string[] {
+    if (stage === 'All') return [];
+    
+    const stageApplications = this.applications.filter(app => app.stage === stage);
+    const uniqueStatuses = [...new Set(stageApplications.map(app => app.status))];
+    
+    // Custom ordering for Closed stage - Certified first
+    if (stage === 'Closed') {
+      const customOrder = ['Certified', 'Not Certified', 'Expired', 'Canceled'];
+      return uniqueStatuses.sort((a, b) => {
+        const aIndex = customOrder.indexOf(a);
+        const bIndex = customOrder.indexOf(b);
+        if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+        if (aIndex !== -1) return -1;
+        if (bIndex !== -1) return 1;
+        return a.localeCompare(b);
+      });
+    }
+    
+    return uniqueStatuses.sort();
+  }
+
+  // Get CSS classes for sub-status pill buttons using design system colors
+  getSubStatusPillClasses(subStatus: string): string {
+    const isSelected = this.selectedSubStatus === subStatus;
+    
+    // Map status to badge variant to get consistent colors
+    const variant = this.getStatusVariant(subStatus);
+    
+    // Use design system colors matching StatusBadgeComponent
+    const colorClasses: { [key: string]: string } = {
+      'warning': isSelected ? 'bg-status-warning text-primary-on-surface2 border-status-warning' : 'border-status-warning text-primary-on-surface hover:bg-status-warning hover:bg-opacity-10',
+      'active': isSelected ? 'bg-status-active text-primary-on-surface2 border-status-active' : 'border-status-active text-primary-on-surface hover:bg-status-active hover:bg-opacity-10',
+      'pending': isSelected ? 'bg-status-pending text-primary-on-surface2 border-status-pending' : 'border-status-pending text-primary-on-surface hover:bg-status-pending hover:bg-opacity-10',
+      'success': isSelected ? 'bg-status-success text-primary-on-surface2 border-status-success' : 'border-status-success text-primary-on-surface hover:bg-status-success hover:bg-opacity-10',
+      'archived': isSelected ? 'bg-status-archived text-primary-on-surface2 border-status-archived' : 'border-status-archived text-primary-on-surface hover:bg-status-archived hover:bg-opacity-10'
+    };
+    
+    return colorClasses[variant] || 'border-gray-300 text-gray-700 hover:bg-gray-50';
   }
 
   // Get category initial for badge display
