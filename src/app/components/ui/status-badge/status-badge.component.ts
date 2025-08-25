@@ -21,6 +21,7 @@ export class StatusBadgeComponent {
   @Input() size: StatusBadgeSize = 'md';
   @Input() variant: StatusBadgeVariant = 'pending';
   @Input() autoWidth: boolean = false;
+  @Input() className: string = '';
 
   get sizeClasses(): string {
     const widthPrefix = this.autoWidth ? 'min-w-' : 'w-';

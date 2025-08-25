@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
         </div>
       </div>
       
-      <div class="flex justify-between items-center text-2xs">
+      <div class="flex justify-between items-center text-xs">
         <span [class]="deadlineColor" *ngIf="deadline">{{ deadline }}</span>
         <span class="font-bold text-primary-on-surface">{{ progress }}%</span>
       </div>
@@ -41,6 +41,6 @@ export class ProgressBarComponent {
   }
 
   get deadlineColor(): string {
-    return this.urgent ? 'text-red' : 'text-gray-600';
+    return this.urgent ? 'text-red' : 'text-black';
   }
 }

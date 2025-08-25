@@ -8,18 +8,27 @@ import { IconComponent } from '../icon/icon.component';
   imports: [CommonModule, IconComponent],
   template: `
     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <app-icon name="file-text" [size]="20" className="text-gray-600"></app-icon>
+      <div class="flex items-center gap-2 group">
+        <app-icon [name]="getAssigneeIcon()" [size]="20" className="text-gray-600"></app-icon>
         <span class="text-2xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
-          {{ certifyingBody }}
+          {{ assignee }}
         </span>
       </div>
 
       <div class="flex items-center gap-2">
-        <div *ngIf="showAlert" class="w-6 h-6 bg-yellow rounded-full flex items-center justify-center">
-          <span class="text-2xs text-white font-bold">!</span>
+        <app-icon 
+          *ngIf="showAlert" 
+          name="alert-circle" 
+          [size]="20" 
+          className="text-red">
+        </app-icon>
+        <div class="relative">
+          <app-icon name="bell" [size]="16" className="text-black"></app-icon>
+          <div 
+            *ngIf="hasNotifications"
+            class="absolute -top-1 -right-1 w-2 h-2 bg-red rounded-full">
+          </div>
         </div>
-        <div class="w-4 h-4 bg-gray-300 rounded-full"></div>
       </div>
     </div>
   `,
@@ -28,4 +37,21 @@ import { IconComponent } from '../icon/icon.component';
 export class ApplicationFooterComponent {
   @Input() certifyingBody: string = 'Abu Dhabi Certification Body';
   @Input() showAlert: boolean = false;
+  @Input() assignee: string = '';
+  @Input() hasNotifications: boolean = false;
+
+  getAssigneeIcon(): string {
+    switch (this.assignee) {
+      case 'Certifying Body':
+        return 'building';
+      case 'Applicant':
+        return 'user';
+      case 'ADIO':
+      case 'TAQA':
+      case 'AD Ports':
+        return 'building-2';
+      default:
+        return 'user';
+    }
+  }
 }
