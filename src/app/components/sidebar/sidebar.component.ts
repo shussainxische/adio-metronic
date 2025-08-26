@@ -77,20 +77,44 @@ export class SidebarComponent implements OnInit, OnDestroy {
               pageCode: '/dashboard',
               applications: [{id: 'musataha', name: 'Musataha'}]
             },
-            {
-              id: 3,
-              label: 'TENDER',
-              icon: 'assignment',
-              parentId: 1,
-              pageCode: '/tender',
-              applications: [{id: 'musataha', name: 'Musataha'}]
-            },
+            // {
+            //   id: 3,
+            //   label: 'TENDER',
+            //   icon: 'assignment',
+            //   parentId: 1,
+            //   pageCode: '/tender',
+            //   applications: [{id: 'musataha', name: 'Musataha'}]
+            // },
             {
               id: 4,
               label: 'ESP_APPLICATIONS',
               icon: 'apps',
               parentId: 1,
               pageCode: '/applications',
+              applications: [{id: 'musataha', name: 'Musataha'}]
+            },
+            {
+              id: 5,
+              label: 'RESOURCES',
+              icon: 'folder',
+              parentId: 1,
+              pageCode: '/resources',
+              applications: [{id: 'musataha', name: 'Musataha'}]
+            },
+            {
+              id: 6,
+              label: 'NOTIFICATIONS',
+              icon: 'notifications',
+              parentId: 1,
+              pageCode: '/notifications',
+              applications: [{id: 'musataha', name: 'Musataha'}]
+            },
+            {
+              id: 7,
+              label: 'PROFILE_SETTINGS',
+              icon: 'settings',
+              parentId: 1,
+              pageCode: '/profile-settings',
               applications: [{id: 'musataha', name: 'Musataha'}]
             }
           ],

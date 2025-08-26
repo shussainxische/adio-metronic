@@ -1,0 +1,41 @@
+.resources-container {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.resource-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.resource-card:hover {
+  transform: translateY(-2px);
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.category-btn:hover {
+  background-color: #f9fafb;
+}
+
+.category-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
