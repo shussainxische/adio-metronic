@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../icon/icon.component';
 
@@ -12,6 +12,7 @@ import { IconComponent } from '../icon/icon.component';
 export class AssigneeInfoComponent {
   @Input() assignee: string = '';
   @Input() hasNotifications: boolean = false;
+  @Output() notificationClick = new EventEmitter<void>();
 
   getAssigneeIcon(): string {
     switch (this.assignee) {
@@ -26,5 +27,10 @@ export class AssigneeInfoComponent {
       default:
         return 'user';
     }
+  }
+
+  onNotificationClick(event: Event) {
+    event.stopPropagation(); // Prevent row/card click
+    this.notificationClick.emit();
   }
 }

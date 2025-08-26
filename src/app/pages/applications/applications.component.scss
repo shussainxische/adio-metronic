@@ -1,6 +1,6 @@
 // Component-specific styles
 .applications-container {
-  @apply container-fixed space-y-8;
+  @apply container-fixed;
 }
 
 // Card content styles (requires ::ng-deep for content projection)

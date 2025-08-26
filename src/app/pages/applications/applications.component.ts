@@ -25,12 +25,14 @@ import { StatsCardComponent } from '../../components/ui/stats-card/stats-card.co
 import { StatusFilterButtonComponent } from '../../components/ui/status-filter-button/status-filter-button.component';
 import { AssigneeInfoComponent } from '../../components/ui/assignee-info/assignee-info.component';
 import { TablePaginationComponent } from '../../components/ui/table/table-pagination/table-pagination.component';
+import { ActionButtonsComponent } from '../../components/ui/action-buttons/action-buttons.component';
+import { DataTableComponent, DataTableColumn } from '../../components/ui/data-table/data-table.component';
 
 
 @Component({
   selector: 'app-applications',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, TableComponent, TableHeaderComponent, TableBodyComponent, TableRowComponent, TableCellComponent, FilterButtonComponent, ViewToggleComponent, SelectDropdownComponent, StatsCardComponent, StatusFilterButtonComponent, AssigneeInfoComponent, TablePaginationComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, FilterButtonComponent, ViewToggleComponent, SelectDropdownComponent, StatsCardComponent, StatusFilterButtonComponent, AssigneeInfoComponent, TablePaginationComponent, ActionButtonsComponent, DataTableComponent],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.scss'
 })
@@ -61,7 +63,7 @@ export class ApplicationsComponent {
     { id: 'ESP002', companyName: 'Emirates Steel', companyType: 'new-manufacturing', stage: 'RFQ', status: 'Pending', progress: 10, date: '15 Jan 2025', assignee: 'Certifying Body', category: 'Electricity' },
     { id: 'ESP003', companyName: 'Green Energy Solutions', companyType: 'enrollment', stage: 'RFQ', status: 'Submitted', progress: 35, date: '2 Jan 2025', assignee: 'Applicant' },
     { id: 'ESP004', companyName: 'Dubai Manufacturing Co', companyType: 'existing-manufacturing', stage: 'RFQ', status: 'Submitted', progress: 25, date: '10 Jan 2025', assignee: 'Applicant', category: 'Gas' },
-    { id: 'ESP005', companyName: 'Solar Power Corp', companyType: 'enrollment', stage: 'Evaluation', status: 'In Progress', progress: 65, date: '5 Jan 2025', assignee: 'Certifying Body', category: 'Gas,Water' },
+    { id: 'ESP005', companyName: 'Solar Power Corp', companyType: 'enrollment', stage: 'Evaluation', status: 'In Progress', progress: 65, date: '5 Jan 2025', assignee: 'Certifying Body', category: 'Gas' },
     { id: 'ESP006', companyName: 'National Industries', companyType: 'renewal', stage: 'Evaluation', status: 'In Progress', progress: 55, date: '12 Jan 2025', assignee: 'Certifying Body', category: 'Electricity,Gas' },
     { id: 'ESP007', companyName: 'Advanced Materials Inc', companyType: 'new-manufacturing', stage: 'Evaluation', status: 'Returned', progress: 40, date: '3 Jan 2025', assignee: 'Certifying Body' },
     { id: 'ESP008', companyName: 'Petrochemicals LLC', companyType: 'existing-manufacturing', stage: 'Evaluation', status: 'Returned', progress: 30, date: '8 Jan 2025', assignee: 'Certifying Body', category: 'Gas' },
@@ -155,14 +157,14 @@ export class ApplicationsComponent {
     this.viewMode = mode;
   }
 
-  tableColumns = [
+  tableColumns: DataTableColumn[] = [
     { field: 'id', label: 'Application ID', sortable: true },
     { field: 'companyName', label: 'Company Name', sortable: true },
-    { field: 'stage', label: 'Stage', sortable: true },
     { field: 'status', label: 'Status', sortable: true },
+    { field: 'categories', label: 'Request', sortable: false },
     { field: 'progress', label: 'Progress', sortable: true },
     { field: 'assignee', label: 'Assignee', sortable: true },
-    { field: 'deadline', label: 'Deadline', sortable: true }
+    { field: 'actions', label: 'Actions', sortable: false, width: '200px' }
   ];
 
   getApplicationTypeLabel(value: string): string {
@@ -184,9 +186,6 @@ export class ApplicationsComponent {
     return 'Electricity';
   }
 
-  getProgressDeadlineText(app: Application): string {
-    return `Deadline: ${app.deadline || app.date}`;
-  }
 
   shouldShowOverdueAlert(stageName: string): boolean {
     return stageName === 'RFQ';
@@ -205,5 +204,46 @@ export class ApplicationsComponent {
     this.perPage = perPage;
     this.currentPage = 1; // Reset to first page when changing page size
     this.updatePagination();
+  }
+
+  onNotificationClick(app: Application, event?: Event) {
+    if (event) {
+      event.stopPropagation(); // Prevent row/card click
+    }
+    console.log('Notification clicked for application:', app.id);
+    // TODO: Implement notification handling logic
+    // Could open a modal, navigate to notifications page, etc.
+  }
+
+  onSLAClick(app: Application, event?: Event) {
+    if (event) {
+      event.stopPropagation(); // Prevent row/card click
+    }
+    console.log('SLA alert clicked for application:', app.id);
+    // TODO: Implement SLA alert handling logic
+    // Could show SLA details, timeline, etc.
+  }
+
+  getAssigneeIcon(assignee: string): string {
+    switch (assignee) {
+      case 'Certifying Body':
+        return 'building';
+      case 'Applicant':
+        return 'user';
+      case 'ADIO':
+      case 'TAQA':
+      case 'AD Ports':
+        return 'building-2';
+      default:
+        return 'user';
+    }
+  }
+
+  getRowClasses = (app: Application): string => {
+    return this.applicationAssignmentService.isLocked(app) ? 'locked' : '';
+  };
+
+  onTableRowClick(app: Application) {
+    this.navigateToDetail(app.id);
   }
 }
