@@ -57,8 +57,47 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   private loadAndFilterNavigationMenu(): void {
-    const menu = JSON.parse(localStorage.getItem("navigationMenu"));
-    this.sideNavPages = this.filterLeafNodes(menu);
+    const menu = JSON.parse(localStorage.getItem("navigationMenu") || 'null');
+    if (menu) {
+      this.sideNavPages = this.filterLeafNodes(menu);
+    } else {
+      // Create a test menu structure for development
+      this.sideNavPages = [
+        {
+          id: 1,
+          label: 'MUSATAHA',
+          icon: 'dashboard',
+          parentId: null,
+          children: [
+            {
+              id: 2,
+              label: 'DASHBOARD',
+              icon: 'dashboard',
+              parentId: 1,
+              pageCode: '/dashboard',
+              applications: [{id: 'musataha', name: 'Musataha'}]
+            },
+            {
+              id: 3,
+              label: 'TENDER',
+              icon: 'assignment',
+              parentId: 1,
+              pageCode: '/tender',
+              applications: [{id: 'musataha', name: 'Musataha'}]
+            },
+            {
+              id: 4,
+              label: 'ESP_APPLICATIONS',
+              icon: 'apps',
+              parentId: 1,
+              pageCode: '/applications',
+              applications: [{id: 'musataha', name: 'Musataha'}]
+            }
+          ],
+          applications: [{id: 'musataha', name: 'Musataha'}]
+        }
+      ];
+    }
   }
 
   private filterLeafNodes(items: any[]): any[] {

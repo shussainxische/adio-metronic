@@ -78,17 +78,24 @@
           </div>
         </div>
         <div class="flex items-center gap-1">
-          <button class="w-8 h-8 rounded border border-primary bg-primary text-white flex items-center justify-center">
+          <button 
+            class="w-8 h-8 rounded border flex items-center justify-center"
+            [class]="viewMode === 'grid' ? 'border-primary bg-primary text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'"
+            (click)="toggleView('grid')">
             <app-icon name="layout-grid" [size]="16"></app-icon>
           </button>
-          <button class="w-8 h-8 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center justify-center">
+          <button 
+            class="w-8 h-8 rounded border flex items-center justify-center"
+            [class]="viewMode === 'table' ? 'border-primary bg-primary text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'"
+            (click)="toggleView('table')">
             <app-icon name="list" [size]="16"></app-icon>
           </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <!-- Grid View -->
+  <div *ngIf="viewMode === 'grid'" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
     <app-preview-card 
       *ngFor="let app of filteredApplications"
       [className]="applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : ''"
@@ -113,7 +120,7 @@
       <h3 class="text-sm font-bold text-primary-on-surface mb-4">{{ app.id }}</h3>
 
       <h4 class="text-sm font-bold text-primary-on-surface mb-1">{{ app.companyName }}</h4>
-      <p class="text-xs text-gray-700 mb-6">{{ app.companyType || 'Renewal' }}</p>
+      <p class="text-xs text-gray-700 mb-6">{{ getApplicationTypeLabel(app.companyType) }}</p>
 
       <div class="mb-6 flex gap-2">
         <app-status-badge
@@ -139,5 +146,68 @@
         [hasNotifications]="hasNotifications(app)">
       </app-application-footer>
     </app-preview-card>
+  </div>
+
+  <!-- Table View -->
+  <div *ngIf="viewMode === 'table'">
+    <app-table [showPagination]="true" [totalItems]="filteredApplications.length">
+      <app-table-header [columns]="tableColumns"></app-table-header>
+      <app-table-body>
+        <app-table-row *ngFor="let app of filteredApplications" [ngClass]="applicationAssignmentService.isLocked(app) ? 'bg-gray-50' : ''">
+          <app-table-cell>
+            <div class="flex items-center gap-2">
+              {{ app.id }}
+              <app-icon 
+                *ngIf="isSLAViolation(app)" 
+                name="alert-circle" 
+                [size]="16" 
+                className="text-red">
+              </app-icon>
+            </div>
+          </app-table-cell>
+          <app-table-cell>
+            <div>
+              <div class="font-semibold text-primary-on-surface">{{ app.companyName }}</div>
+              <div class="text-xs text-gray-700">{{ getApplicationTypeLabel(app.companyType) }}</div>
+            </div>
+          </app-table-cell>
+          <app-table-cell>
+            <app-status-badge
+              [text]="app.stage"
+              variant="pending"
+              size="sm"
+              [autoWidth]="true">
+            </app-status-badge>
+          </app-table-cell>
+          <app-table-cell>
+            <app-status-badge
+              [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
+              [variant]="applicationStatusService.getStatusVariant(app.status)"
+              [className]="app.stage === 'Closed' && app.status !== 'Certified' ? '!bg-gray-400 !text-black' : ''"
+              size="sm"
+              [autoWidth]="true">
+            </app-status-badge>
+          </app-table-cell>
+          <app-table-cell>
+            <div class="flex items-center gap-2">
+              <div class="w-20 bg-gray-200 rounded-full h-2">
+                <div 
+                  class="h-2 rounded-full"
+                  [class]="isSLAViolation(app) ? 'bg-red-500' : 'bg-primary'"
+                  [style.width.%]="app.progress">
+                </div>
+              </div>
+              <span class="text-xs text-gray-600">{{ app.progress }}%</span>
+            </div>
+          </app-table-cell>
+          <app-table-cell>
+            <span class="text-sm">{{ app.assignee }}</span>
+          </app-table-cell>
+          <app-table-cell>
+            <span class="text-sm">{{ app.deadline || app.date }}</span>
+          </app-table-cell>
+        </app-table-row>
+      </app-table-body>
+    </app-table>
   </div>
 </div>
