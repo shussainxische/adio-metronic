@@ -13,6 +13,10 @@ export interface Application {
   category?: string;
   certifyingBody?: string;
   assignee: string;
+  contactName?: string;
+  contactPosition?: string;
+  contactEmail?: string;
+  contactPhone?: string;
 }
 
 @Injectable({

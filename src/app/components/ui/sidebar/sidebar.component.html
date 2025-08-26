@@ -1,0 +1,11 @@
+<div 
+  [class]="'fixed h-full overflow-y-auto ' + width + ' ' + className"
+  [ngClass]="{
+    'right-0': position === 'right',
+    'left-0': position === 'left'
+  }"
+  style="top: 180px;">
+  <div class="p-6 space-y-8">
+    <ng-content></ng-content>
+  </div>
+</div>

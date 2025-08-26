@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopCardComponent } from '../../components/ui/top-card/top-card.component';
 import { PreviewCardComponent } from '../../components/ui/preview-card/preview-card.component';
@@ -57,6 +58,7 @@ export class ApplicationsComponent {
   ];
 
   constructor(
+    private router: Router,
     public applicationStatusService: ApplicationStatusService,
     public applicationAssignmentService: ApplicationAssignmentService
   ) {
@@ -101,6 +103,10 @@ export class ApplicationsComponent {
     return app.status === 'Submitted' || 
            app.status === 'Returned' || 
            this.isSLAViolation(app);
+  }
+
+  navigateToDetail(applicationId: string) {
+    this.router.navigate(['/applications', applicationId]);
   }
 
   getApplicationCount = (stage: string) => this.applicationStatusService.getApplicationCount(this.applications, stage);

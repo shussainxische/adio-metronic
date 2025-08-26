@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { LucideAngularModule, Mail, AlertCircle, FileText, Users, Calendar, Clock, CheckCircle, Filter, FileCheck, Search, Award, Archive, LayoutGrid, List, Building, User, Building2, Bell } from 'lucide-angular';
+import { LucideAngularModule, Mail, AlertCircle, FileText, Users, Calendar, Clock, CheckCircle, Filter, FileCheck, Search, Award, Archive, LayoutGrid, List, Building, User, Building2, Bell, ArrowLeft, Check, ChevronLeft, ChevronRight } from 'lucide-angular';
 
 @Component({
   selector: 'app-icon',
@@ -37,7 +37,11 @@ export class IconComponent {
     'building': Building,
     'user': User,
     'building-2': Building2,
-    'bell': Bell
+    'bell': Bell,
+    'arrow-left': ArrowLeft,
+    'check': Check,
+    'chevron-left': ChevronLeft,
+    'chevron-right': ChevronRight
   };
 
   getIcon() {

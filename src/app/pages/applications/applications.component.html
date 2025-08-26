@@ -62,7 +62,7 @@
           <div class="relative">
             <select 
               class="h-8 pl-2 pr-10 text-xs border border-gray-300 rounded bg-white text-gray-700 focus:border-primary focus:outline-none appearance-none"
-              [(ngModel)]="selectedApplicationType"
+              [value]="selectedApplicationType"
               (change)="onApplicationTypeSelectChange($event)">
               <option value="all">All Types</option>
               <option value="enrollment">Enrollment</option>
@@ -92,7 +92,9 @@
     <app-preview-card 
       *ngFor="let app of filteredApplications"
       [className]="applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : ''"
-      [showShadow]="!applicationAssignmentService.isLocked(app)">
+      [showShadow]="!applicationAssignmentService.isLocked(app)"
+      class="cursor-pointer hover:shadow-lg transition-shadow"
+      (click)="navigateToDetail(app.id)">
       
       <div class="mb-4 flex items-center justify-between">
         <app-status-badge
