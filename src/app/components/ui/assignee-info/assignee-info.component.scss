@@ -1,0 +1,35 @@
+.assignee-info {
+  @apply flex items-center justify-between;
+}
+
+.assignee-content {
+  @apply flex items-center gap-1;
+}
+
+.assignee-icon {
+  @apply text-gray-500;
+}
+
+.assignee-text {
+  @apply text-xs text-gray-600;
+}
+
+.notification-badge {
+  @apply relative cursor-pointer p-1 rounded-full transition-colors;
+  
+  &:hover {
+    @apply bg-gray-100;
+  }
+  
+  &:active {
+    @apply bg-gray-200;
+  }
+}
+
+.notification-icon {
+  @apply text-primary;
+}
+
+.red-dot {
+  @apply absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full;
+}

@@ -1,0 +1,14 @@
+<div class="view-toggle">
+  <button 
+    class="toggle-button"
+    [class.active]="currentView === 'grid'"
+    (click)="toggleView('grid')">
+    <app-icon name="layout-grid" [size]="16"></app-icon>
+  </button>
+  <button 
+    class="toggle-button"
+    [class.active]="currentView === 'table'"
+    (click)="toggleView('table')">
+    <app-icon name="list" [size]="16"></app-icon>
+  </button>
+</div>

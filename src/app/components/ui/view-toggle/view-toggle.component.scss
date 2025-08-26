@@ -1,0 +1,12 @@
+.view-toggle {
+  @apply flex items-center gap-1;
+}
+
+.toggle-button {
+  @apply w-8 h-8 rounded border flex items-center justify-center transition-colors;
+  @apply border-gray-300 text-gray-600 hover:bg-gray-50;
+  
+  &.active {
+    @apply border-primary bg-primary text-white;
+  }
+}

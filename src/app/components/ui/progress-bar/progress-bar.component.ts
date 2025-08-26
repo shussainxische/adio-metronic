@@ -6,30 +6,29 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="space-y-3">
-      <div class="w-full bg-gray-200 rounded-full h-2">
+    <div class="flex items-center gap-3">
+      <div class="flex-1 bg-gray-200 rounded-full h-2">
         <div 
           class="h-2 rounded-full transition-all duration-300"
           [class]="progressColor"
           [style.width.%]="progress">
         </div>
       </div>
-      
-      <div class="flex justify-between items-center text-xs">
-        <span [class]="deadlineColor" *ngIf="deadline">{{ deadline }}</span>
-        <span class="font-bold text-primary-on-surface">{{ progress }}%</span>
-      </div>
+      <span class="text-xs font-bold text-primary-on-surface">{{ progress }}%</span>
     </div>
   `,
   styleUrl: './progress-bar.component.scss'
 })
 export class ProgressBarComponent {
   @Input() progress: number = 0;
-  @Input() deadline?: string;
   @Input() color: 'primary' | 'yellow' | 'green' | 'blue' | 'red' = 'primary';
   @Input() urgent: boolean = false;
 
   get progressColor(): string {
+    if (this.urgent) {
+      return 'bg-red-500';
+    }
+    
     const colorMap = {
       'primary': 'bg-primary',
       'yellow': 'bg-yellow-500',
@@ -38,9 +37,5 @@ export class ProgressBarComponent {
       'red': 'bg-red-500'
     };
     return colorMap[this.color];
-  }
-
-  get deadlineColor(): string {
-    return this.urgent ? 'text-red' : 'text-black';
   }
 }

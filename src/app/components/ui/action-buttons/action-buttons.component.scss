@@ -1,0 +1,11 @@
+.action-buttons-card-header {
+  // Single button, no additional layout needed
+}
+
+.action-buttons-card-footer {
+  // Single button, no additional layout needed  
+}
+
+.action-buttons-table {
+  @apply flex items-center gap-2 justify-end;
+}

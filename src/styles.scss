@@ -3,6 +3,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  /* Global grid patterns */
+  .responsive-grid {
+    @apply grid md:grid-cols-2 lg:grid-cols-4 gap-6;
+  }
+  
+  /* Global header patterns */
+  .page-header {
+    @apply mb-4 flex items-start justify-between;
+    
+    h2 {
+      @apply text-lg font-semibold text-primary-on-surface;
+    }
+    
+    p {
+      @apply text-sm text-gray-600;
+    }
+  }
+  
+  .header-controls {
+    @apply flex items-center gap-6;
+  }
+}
+
 // Keenicons
 @import "./metronic/vendors/keenicons/duotone/style.css";
 @import "./metronic/vendors/keenicons/filled/style.css";

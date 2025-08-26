@@ -3,7 +3,7 @@ import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } fro
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxInputComponent } from "../../checkbox-input/checkbox-input.component";
-// import { HasPermissionDirective } from '../../../../directives/has-permission/has-permission.directive';
+import { HasPermissionDirective } from '../../../../directives/has-permission/has-permission.directive';
 
 interface TableRow {
   field?: string;
@@ -16,7 +16,7 @@ interface TableRow {
 
 @Component({
   selector: 'app-table-header',
-  imports: [CommonModule, TooltipModule, CheckboxInputComponent, TranslateModule],// HasPermissionDirective],
+  imports: [CommonModule, TooltipModule, CheckboxInputComponent, TranslateModule, HasPermissionDirective],
   templateUrl: './table-header.component.html',
   styleUrl: './table-header.component.scss',
   host: {

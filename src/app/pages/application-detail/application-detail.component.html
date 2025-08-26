@@ -2,14 +2,12 @@
   <div class="container-fixed">
     <app-breadcrumbs [items]="breadcrumbs"></app-breadcrumbs>
   </div>
-  
   <div class="flex">
     <div class="flex-1 mr-96 bg-gray-50">
       <div class="container-fixed">
-        <!-- Back Button -->
         <app-button 
           (click)="goBack()"
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mt-4 mb-3 bg-transparent border-none p-0">
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 my-4 bg-transparent border-none p-0">
           <app-icon name="arrow-left" [size]="16"></app-icon>
           <span class="text-sm font-medium">Back to Applications</span>
         </app-button>

@@ -1,0 +1,20 @@
+.select-container {
+  @apply flex items-center gap-2;
+}
+
+.select-label {
+  @apply text-xs font-bold text-gray-700;
+}
+
+.select-wrapper {
+  @apply relative;
+}
+
+.select-input {
+  @apply h-8 pl-2 pr-10 text-xs border border-gray-300 rounded bg-white text-gray-700;
+  @apply focus:border-primary focus:outline-none appearance-none;
+}
+
+.select-arrow {
+  @apply absolute inset-y-0 right-3 flex items-center pointer-events-none;
+}
