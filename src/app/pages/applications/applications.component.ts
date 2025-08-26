@@ -158,13 +158,13 @@ export class ApplicationsComponent {
   }
 
   tableColumns: DataTableColumn[] = [
-    { field: 'id', label: 'Application ID', sortable: true },
+    { field: 'id', label: 'Application ID', sortable: true, width: '100px' },
     { field: 'companyName', label: 'Company Name', sortable: true },
     { field: 'status', label: 'Status', sortable: true },
-    { field: 'categories', label: 'Request', sortable: false },
-    { field: 'progress', label: 'Progress', sortable: true },
+    { field: 'categories', label: 'Request', sortable: false, width: '80px' },
+    { field: 'progress', label: 'Progress', sortable: true, width: '120px' },
     { field: 'assignee', label: 'Assignee', sortable: true },
-    { field: 'actions', label: 'Actions', sortable: false, width: '200px' }
+    { field: 'actions', label: 'Actions', sortable: false, width: '120px' }
   ];
 
   getApplicationTypeLabel(value: string): string {

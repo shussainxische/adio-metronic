@@ -26,3 +26,15 @@
     @apply mb-6;
   }
 }
+
+app-data-table {
+  th {
+    padding: 0.5rem 1rem !important;
+    color: black !important;
+  }
+  
+  td {
+    padding: 0.5rem 1rem !important;
+    color: black !important;
+  }
+}

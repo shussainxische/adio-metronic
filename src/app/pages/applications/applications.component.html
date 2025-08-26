@@ -155,9 +155,9 @@
       (rowClick)="onTableRowClick($event)">
       
       <ng-template #rowTemplate let-app let-columns="columns">
-        <td><span class="font-bold">{{ app.id }}</span></td>
+        <td><span class="text-sm font-medium">{{ app.id }}</span></td>
         <td>
-          <div class="font-semibold">{{ app.companyName }}</div>
+          <div class="text-sm font-medium">{{ app.companyName }}</div>
           <div class="text-xs text-gray-600">{{ getApplicationTypeLabel(app.companyType) }}</div>
         </td>
         <td>
