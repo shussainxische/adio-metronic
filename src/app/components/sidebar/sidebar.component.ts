@@ -65,18 +65,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.sideNavPages = [
         {
           id: 1,
-          label: 'MUSATAHA',
+          label: 'ENERGY_SUPPORT_PROGRAM',
           icon: 'dashboard',
           parentId: null,
           children: [
-            {
-              id: 2,
-              label: 'DASHBOARD',
-              icon: 'dashboard',
-              parentId: 1,
-              pageCode: '/dashboard',
-              applications: [{id: 'musataha', name: 'Musataha'}]
-            },
             // {
             //   id: 3,
             //   label: 'TENDER',
@@ -86,15 +78,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
             //   applications: [{id: 'musataha', name: 'Musataha'}]
             // },
             {
-              id: 4,
-              label: 'ESP_APPLICATIONS',
+              id: 3,
+              label: 'DASHBOARD',
               icon: 'apps',
               parentId: 1,
               pageCode: '/applications',
               applications: [{id: 'musataha', name: 'Musataha'}]
             },
             {
-              id: 5,
+              id: 4,
               label: 'RESOURCES',
               icon: 'folder',
               parentId: 1,
@@ -102,7 +94,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
               applications: [{id: 'musataha', name: 'Musataha'}]
             },
             {
-              id: 6,
+              id: 5,
               label: 'NOTIFICATIONS',
               icon: 'notifications',
               parentId: 1,
@@ -110,7 +102,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
               applications: [{id: 'musataha', name: 'Musataha'}]
             },
             {
-              id: 7,
+              id: 6,
               label: 'PROFILE_SETTINGS',
               icon: 'settings',
               parentId: 1,

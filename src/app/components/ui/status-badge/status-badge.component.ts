@@ -24,6 +24,13 @@ export class StatusBadgeComponent {
   @Input() className: string = '';
 
   get sizeClasses(): string {
+    // Special handling for category badges - make them square for single letters
+    if (this.variant === 'category') {
+      return this.size === 'xs' 
+        ? 'h-6 w-6 text-xs leading-6 flex items-center justify-center' // Square for categories
+        : 'h-6 w-8 text-xs leading-6 flex items-center justify-center';
+    }
+    
     const widthPrefix = this.autoWidth ? 'min-w-' : 'w-';
     const sizeMap: {[key: string]: string} = {
       'xs': `h-6 px-3 text-xs leading-6 ${widthPrefix}20`,
