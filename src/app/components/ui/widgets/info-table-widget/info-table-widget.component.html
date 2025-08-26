@@ -1,0 +1,63 @@
+<div class="widget-container">
+  <div class="widget-header" (click)="toggleCollapsed()">
+    <div class="flex items-center justify-between cursor-pointer">
+      <div class="flex items-center gap-3">
+        <h3 class="widget-title">{{ data.title }}</h3>
+        <span 
+          *ngIf="data.headerBadge" 
+          class="header-badge"
+          [ngClass]="'badge-' + data.headerBadge.variant">
+          {{ data.headerBadge.text }}
+        </span>
+      </div>
+      <app-icon 
+        [name]="collapsed ? 'chevron-down' : 'chevron-up'" 
+        [size]="16" 
+        className="text-gray-500">
+      </app-icon>
+    </div>
+  </div>
+  
+  <div class="widget-content" [class.hidden]="collapsed">
+    <div class="info-table">
+      <div *ngFor="let row of data.rows" class="info-row">
+        <div class="info-label">{{ row.label }}</div>
+        <div class="info-value">
+          <!-- Text value -->
+          <span *ngIf="!row.type || row.type === 'text'">{{ row.value }}</span>
+          
+          <!-- Status badge value -->
+          <div *ngIf="row.type === 'status-badge'">
+            <app-status-badge
+              [text]="getStringValue(row.value)"
+              [variant]="row.statusVariant || 'pending'"
+              size="sm"
+              [autoWidth]="true">
+            </app-status-badge>
+          </div>
+          
+          <!-- Status badges value -->
+          <div *ngIf="row.type === 'status-badges'" class="status-badges-container">
+            <app-status-badge 
+              *ngFor="let badge of getArrayValue(row.value)" 
+              [text]="badge"
+              variant="category"
+              size="sm">
+            </app-status-badge>
+          </div>
+          
+          <!-- Progress value -->
+          <div *ngIf="row.type === 'progress'" class="w-full">
+            <app-progress-bar [progress]="row.progress || 0"></app-progress-bar>
+          </div>
+          
+          <!-- Compliance value -->
+          <div *ngIf="row.type === 'compliance'" class="flex items-center justify-between w-full">
+            <span class="text-red-600 font-medium">{{ row.value }}</span>
+            <app-icon name="alert-circle" [size]="16" className="alert-icon text-red-500"></app-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

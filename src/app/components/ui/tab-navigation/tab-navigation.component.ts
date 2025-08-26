@@ -23,6 +23,7 @@ export class TabNavigationComponent {
   @Input() tabs: Tab[] = [];
   @Input() activeTabId: string = '';
   @Input() class: string = '';
+  @Input() variant: 'default' | 'pills' = 'default';
   @Output() tabSelected = new EventEmitter<string>();
 
   selectTab(tabId: string): void {

@@ -5,10 +5,23 @@ import { TabNavigationComponent } from '../../components/ui/tab-navigation/tab-n
 import { IconComponent } from '../../components/ui/icon/icon.component';
 import { ButtonComponent } from '../../components/ui/button/button.component';
 import { ApplicationStatusService, Application } from '../../services/application-status.service';
-import { SidebarComponent } from '../../components/ui/sidebar/sidebar.component';
-import { SummaryWidgetComponent, SummaryData } from '../../components/ui/sidebar/widgets/summary-widget/summary-widget.component';
-import { ApplicantContactWidgetComponent, ContactData } from '../../components/ui/sidebar/widgets/applicant-contact-widget/applicant-contact-widget.component';
-import { SLAComplianceWidgetComponent, SLAData } from '../../components/ui/sidebar/widgets/sla-compliance-widget/sla-compliance-widget.component';
+import { RightPanelComponent } from './right-panel/right-panel.component';
+import { InfoTableData } from '../../components/ui/widgets/info-table-widget/info-table-widget.component';
+
+// Stage Components
+import { TammApplicationStageComponent } from './stages/tamm-application/tamm-application-stage.component';
+import { RfqStageComponent } from './stages/rfq/rfq-stage.component';
+import { EvaluationStageComponent } from './stages/evaluation/evaluation-stage.component';
+import { ReviewStageComponent } from './stages/review/review-stage.component';
+import { ClosedStageComponent } from './stages/closed/closed-stage.component';
+
+// Evaluation Sub-Stage Components
+import { GeneralSubStageComponent } from './stages/evaluation/sub-stages/general/general-sub-stage.component';
+import { EconomicImpactSubStageComponent } from './stages/evaluation/sub-stages/economic-impact/economic-impact-sub-stage.component';
+import { ProductivitySubStageComponent } from './stages/evaluation/sub-stages/productivity/productivity-sub-stage.component';
+import { EmsDmsSubStageComponent } from './stages/evaluation/sub-stages/ems-dms/ems-dms-sub-stage.component';
+import { SummarySubStageComponent } from './stages/evaluation/sub-stages/summary/summary-sub-stage.component';
+import { ReviewSubmitSubStageComponent } from './stages/evaluation/sub-stages/review-submit/review-submit-sub-stage.component';
 
 interface ApplicationStage {
   id: string;
@@ -34,10 +47,20 @@ interface ApplicationStep {
     TabNavigationComponent,
     IconComponent,
     ButtonComponent,
-    SidebarComponent,
-    SummaryWidgetComponent,
-    ApplicantContactWidgetComponent,
-    SLAComplianceWidgetComponent
+    RightPanelComponent,
+    // Stage Components
+    TammApplicationStageComponent,
+    RfqStageComponent,
+    EvaluationStageComponent,
+    ReviewStageComponent,
+    ClosedStageComponent,
+    // Evaluation Sub-Stage Components
+    GeneralSubStageComponent,
+    EconomicImpactSubStageComponent,
+    ProductivitySubStageComponent,
+    EmsDmsSubStageComponent,
+    SummarySubStageComponent,
+    ReviewSubmitSubStageComponent
   ],
   templateUrl: './application-detail.component.html',
   styleUrl: './application-detail.component.scss'
@@ -52,21 +75,21 @@ export class ApplicationDetailComponent implements OnInit {
     {
       id: 'Application',
       name: 'Application',
-      icon: 'file-text',
+      icon: 'inbox',
       status: 'active',
       steps: [] // No sub-steps
     },
     {
       id: 'RFQ',
       name: 'RFQ',
-      icon: 'send',
+      icon: 'file-text',
       status: 'pending',
       steps: [] // No sub-steps
     },
     {
       id: 'Evaluation',
       name: 'Evaluation',
-      icon: 'clipboard-check',
+      icon: 'search',
       status: 'pending',
       steps: [
         { id: 'general', name: 'General', description: 'General information and requirements', status: 'pending', required: true },
@@ -80,14 +103,14 @@ export class ApplicationDetailComponent implements OnInit {
     {
       id: 'Review',
       name: 'Review',
-      icon: 'eye',
+      icon: 'users',
       status: 'pending',
       steps: [] // No sub-steps
     },
     {
       id: 'Closed',
       name: 'Closed',
-      icon: 'check-circle',
+      icon: 'folder',
       status: 'pending',
       steps: [] // No sub-steps - single final state
     }
@@ -165,7 +188,7 @@ export class ApplicationDetailComponent implements OnInit {
       id: step.id,
       label: step.name,
       description: step.description,
-      clickable: step.status === 'completed' || step.status === 'active'
+      clickable: true // Make all steps clickable for prototype
     })) || [];
   }
 
@@ -230,6 +253,11 @@ export class ApplicationDetailComponent implements OnInit {
     this.router.navigate(['/applications']);
   }
 
+  exportActivityLog() {
+    // TODO: Implement activity log export functionality
+    console.log('Export activity log clicked');
+  }
+
   get showPreviousStageButton(): boolean {
     return this.currentStep === 0 && this.stages.findIndex(s => s.id === this.currentStage) > 0;
   }
@@ -250,6 +278,32 @@ export class ApplicationDetailComponent implements OnInit {
 
   get showPreviousStepButton(): boolean {
     return this.currentStep > 0;
+  }
+
+  getNextButtonAction() {
+    if (this.showCompleteButton) {
+      this.completeApplication();
+    } else if (this.showNextStepButton) {
+      this.nextStep();
+    } else if (this.showNextStageButton) {
+      this.nextStage();
+    }
+  }
+
+  getNextButtonText(): string {
+    if (this.showCompleteButton) {
+      return 'Complete';
+    } else if (this.showNextStepButton) {
+      return 'Next';
+    } else if (this.showNextStageButton) {
+      return 'Next Stage';
+    }
+    return 'Next';
+  }
+
+  completeApplication() {
+    // TODO: Implement complete application functionality
+    console.log('Complete application clicked');
   }
 
 
@@ -387,48 +441,32 @@ export class ApplicationDetailComponent implements OnInit {
     return Math.max(0, diffDays);
   }
 
-  get summaryData(): SummaryData {
+  get summaryTableData(): InfoTableData {
     return {
-      applicationId: this.application?.id || 'ESP-002',
-      applicationDate: '7/20/2025',
-      company: this.application?.companyName || 'ADNOC Refining',
-      type: 'Renewal',
-      services: this.application?.category?.split(',') || ['Electricity', 'Gas'],
-      deadline: '9/20/2025',
-      assignedTo: this.application?.assignee || 'CB',
-      progress: this.application?.progress || 45,
-      currentStep: 'Technical Review',
-      status: 'Evaluation - In Progress',
-      statusVariant: 'warning'
+      title: 'Summary',
+      rows: [
+        { label: 'Status', value: this.applicationStatusService.getBadgeText(this.application?.stage || 'RFQ', this.application?.status || 'Pending'), type: 'status-badge', statusVariant: this.applicationStatusService.getStatusVariant(this.application?.status || 'Pending') as any },
+        { label: 'Application ID', value: this.application?.id || 'ESP-001' },
+        { label: 'Application Date', value: '8/1/2025' },
+        { label: 'Company', value: this.application?.companyName || 'Al Dhafra Manufacturing' },
+        { label: 'Type', value: 'Renewal' },
+        { label: 'Services', value: ['Electricity'], type: 'status-badges' },
+        { label: 'Progress', value: '', type: 'progress', progress: this.application?.progress || 45 },
+        { label: 'Compliance', value: 'Application Overdue', type: 'compliance' }
+      ]
     };
   }
 
-  get contactData(): ContactData {
+  get contactTableData(): InfoTableData {
     return {
-      name: this.application?.contactName || 'Sarah Al Mansoori',
-      position: this.application?.contactPosition || 'Operations Manager',
-      email: this.application?.contactEmail || 'sarah@adnoc.com',
-      phone: this.application?.contactPhone || '+971 50 987 6543'
+      title: 'Applicant Contact',
+      rows: [
+        { label: 'Name', value: this.application?.contactName || 'Ahmed Al Rashid' },
+        { label: 'Position', value: this.application?.contactPosition || 'Operations Manager' },
+        { label: 'Email', value: this.application?.contactEmail || 'ahmed.rashid@emiratessteel.ae' },
+        { label: 'Phone', value: this.application?.contactPhone || '+971 50 123 4567' }
+      ]
     };
   }
 
-  get slaData(): SLAData {
-    const daysLeft = this.getSLADaysLeft();
-    let status: 'warning' | 'danger' | 'normal' = 'normal';
-    let message = 'Application is within SLA requirements.';
-
-    if (daysLeft <= 3) {
-      status = 'danger';
-      message = 'This application is overdue. Please prioritize immediately.';
-    } else if (daysLeft <= 7) {
-      status = 'warning';
-      message = 'This application is due soon. Please prioritize.';
-    }
-
-    return {
-      daysLeft,
-      status,
-      message
-    };
-  }
 }

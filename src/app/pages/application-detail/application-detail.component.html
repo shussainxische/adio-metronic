@@ -3,32 +3,48 @@
     <app-breadcrumbs [items]="breadcrumbs"></app-breadcrumbs>
   </div> -->
   <div class="flex">
-    <div class="flex-1 mr-96 bg-gray-50">
+    <div class="flex-1 bg-gray-50">
       <div class="container-fixed">
-        <app-button 
-          (click)="goBack()"
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 my-4 bg-transparent border-none p-0">
-          <app-icon name="arrow-left" [size]="16"></app-icon>
-          <span class="text-sm font-medium">Back to Applications</span>
-        </app-button>
+        <div class="flex justify-between items-center my-4">
+          <app-button 
+            (click)="goBack()"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 bg-transparent border-none p-0">
+            <app-icon name="arrow-left" [size]="16"></app-icon>
+            <span class="text-sm font-medium">Back to Applications</span>
+          </app-button>
+          
+          <app-button 
+            (click)="exportActivityLog()"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 bg-transparent border border-gray-300 px-3 py-2 rounded-md hover:bg-gray-50">
+            <app-icon name="download" [size]="16"></app-icon>
+            <span class="text-sm font-medium">Export</span>
+          </app-button>
+        </div>
         
         <!-- Separator -->
         <div class="border-b border-gray-200 mb-3"></div>
+
+        <!-- Application Title -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-gray-900 mb-1">ESP0001</h1>
+          <p class="text-sm text-gray-600">{{ application?.companyName }}</p>
+        </div>
 
         <!-- Stage Tabs -->
         <div>
           <app-tab-navigation
             [tabs]="stageTabs"
             [activeTabId]="currentStage"
+            [variant]="'pills'"
             (tabSelected)="onStageChange($event)">
           </app-tab-navigation>
         </div>
 
         <!-- Step Content -->
-        <div *ngIf="currentStageData" class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div *ngIf="currentStageData" class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-8">
           
           <!-- Step Progress - Inside Container -->
-          <div *ngIf="hasMultipleSteps" class="bg-gray-50 border-b border-gray-200 px-6 py-4">
+          <div *ngIf="hasMultipleSteps" class="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-2xl">
             <div class="flex items-center flex-wrap text-sm">
               <span *ngFor="let step of currentStageSteps; let i = index; let last = last" 
                     class="flex items-center">
@@ -52,73 +68,40 @@
             </div>
           </div>
 
-          <!-- Step Content Area -->
+          <!-- Stage Content Area -->
           <div class="p-6">
-            <div class="min-h-[400px] flex items-center justify-center">
-              <div class="text-center">
-                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <app-icon name="file-text" [size]="32" className="text-gray-400"></app-icon>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ currentStepData?.name }}</h3>
-                <p class="text-gray-600 max-w-md">
-                  {{ currentStepData?.description }}
-                </p>
-                <p class="text-sm text-gray-500 mt-4">
-                  Content for this step will be implemented based on specific requirements.
-                </p>
-              </div>
+            <!-- Application Stage -->
+            <app-tamm-application-stage *ngIf="currentStage === 'Application'"></app-tamm-application-stage>
+            
+            <!-- RFQ Stage -->
+            <app-rfq-stage *ngIf="currentStage === 'RFQ'"></app-rfq-stage>
+            
+            <!-- Evaluation Stage with Sub-Stages -->
+            <div *ngIf="currentStage === 'Evaluation'">
+              <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
+              <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
+              <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
+              <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
+              <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
+              <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
             </div>
+            
+            <!-- Review Stage -->
+            <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
+            
+            <!-- Closed Stage -->
+            <app-closed-stage *ngIf="currentStage === 'Closed'"></app-closed-stage>
           </div>
 
-          <!-- Step Navigation -->
-          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <button 
-                *ngIf="showPreviousStepButton"
-                (click)="previousStep()"
-                class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 flex items-center gap-1">
-                <app-icon name="chevron-left" [size]="16"></app-icon>
-                Previous Step
-              </button>
-              <button 
-                *ngIf="showPreviousStageButton"
-                (click)="previousStage()"
-                class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 flex items-center gap-1">
-                <app-icon name="chevron-left" [size]="16"></app-icon>
-                Previous Stage
-              </button>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <button 
-                *ngIf="showNextStepButton"
-                (click)="nextStep()"
-                class="px-4 py-2 text-sm font-medium bg-primary text-white rounded-lg hover:bg-primary-active flex items-center gap-1">
-                Next Step
-                <app-icon name="chevron-right" [size]="16"></app-icon>
-              </button>
-              <button 
-                *ngIf="showNextStageButton"
-                (click)="nextStage()"
-                class="px-4 py-2 text-sm font-medium bg-primary text-white rounded-lg hover:bg-primary-active flex items-center gap-1">
-                Next Stage
-                <app-icon name="chevron-right" [size]="16"></app-icon>
-              </button>
-              <button 
-                *ngIf="showCompleteButton"
-                class="px-4 py-2 text-sm font-medium bg-green text-white rounded-lg hover:bg-green-600">
-                Complete Application
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
 
-    <app-sidebar position="right" width="w-96">
-      <app-summary-widget [data]="summaryData"></app-summary-widget>
-      <app-applicant-contact-widget [data]="contactData"></app-applicant-contact-widget>
-      <app-sla-compliance-widget [data]="slaData"></app-sla-compliance-widget>
-    </app-sidebar>
+    <app-right-panel 
+      position="right" 
+      width="w-96"
+      [summaryTableData]="summaryTableData"
+      [contactTableData]="contactTableData">
+    </app-right-panel>
   </div>
 </div>
