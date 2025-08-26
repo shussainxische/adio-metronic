@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TabNavigationComponent } from '../../components/ui/tab-navigation/tab-navigation.component';
 import { IconComponent } from '../../components/ui/icon/icon.component';
 import { ButtonComponent } from '../../components/ui/button/button.component';
-import { BreadcrumbsComponent, Breadcrumb } from '../../components/ui/breadcrumbs/breadcrumbs.component';
 import { ApplicationStatusService, Application } from '../../services/application-status.service';
 import { SidebarComponent } from '../../components/ui/sidebar/sidebar.component';
 import { SummaryWidgetComponent, SummaryData } from '../../components/ui/sidebar/widgets/summary-widget/summary-widget.component';
@@ -35,7 +34,6 @@ interface ApplicationStep {
     TabNavigationComponent,
     IconComponent,
     ButtonComponent,
-    BreadcrumbsComponent,
     SidebarComponent,
     SummaryWidgetComponent,
     ApplicantContactWidgetComponent,
@@ -254,12 +252,7 @@ export class ApplicationDetailComponent implements OnInit {
     return this.currentStep > 0;
   }
 
-  get breadcrumbs() {
-    return [
-      { label: 'Applications', link: '/applications' },
-      { label: this.application?.id || 'Application Detail' }
-    ];
-  }
+
 
   getSimpleStepClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {

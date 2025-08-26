@@ -9,7 +9,6 @@ import { PageHeaderComponent } from '../../components/ui/page-header/page-header
 import { IconComponent } from '../../components/ui/icon/icon.component';
 import { StatusBadgeComponent } from '../../components/ui/status-badge/status-badge.component';
 import { ProgressBarComponent } from '../../components/ui/progress-bar/progress-bar.component';
-import { ApplicationFooterComponent } from '../../components/ui/application-footer/application-footer.component';
 import { DropdownFilterComponent } from '../../components/ui/dropdown-filter/dropdown-filter.component';
 import { AdioButtonComponent } from '../../components/ui/adio-button/adio-button.component';
 import { ApplicationStatusService, Application } from '../../services/application-status.service';
@@ -19,12 +18,19 @@ import { TableHeaderComponent } from '../../components/ui/table/table-header/tab
 import { TableBodyComponent } from '../../components/ui/table/table-body/table-body.component';
 import { TableRowComponent } from '../../components/ui/table/table-row/table-row.component';
 import { TableCellComponent } from '../../components/ui/table/table-cell/table-cell.component';
+import { FilterButtonComponent } from '../../components/ui/filter-button/filter-button.component';
+import { ViewToggleComponent } from '../../components/ui/view-toggle/view-toggle.component';
+import { SelectDropdownComponent, SelectOption } from '../../components/ui/select-dropdown/select-dropdown.component';
+import { StatsCardComponent } from '../../components/ui/stats-card/stats-card.component';
+import { StatusFilterButtonComponent } from '../../components/ui/status-filter-button/status-filter-button.component';
+import { AssigneeInfoComponent } from '../../components/ui/assignee-info/assignee-info.component';
+import { TablePaginationComponent } from '../../components/ui/table/table-pagination/table-pagination.component';
 
 
 @Component({
   selector: 'app-applications',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, ApplicationFooterComponent, TableComponent, TableHeaderComponent, TableBodyComponent, TableRowComponent, TableCellComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, TableComponent, TableHeaderComponent, TableBodyComponent, TableRowComponent, TableCellComponent, FilterButtonComponent, ViewToggleComponent, SelectDropdownComponent, StatsCardComponent, StatusFilterButtonComponent, AssigneeInfoComponent, TablePaginationComponent],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.scss'
 })
@@ -34,9 +40,15 @@ export class ApplicationsComponent {
   selectedSubStatus: string = '';
   selectedApplicationType: string = 'all';
   filteredApplications: Application[] = [];
+  paginatedApplications: Application[] = [];
   viewMode: 'grid' | 'table' = 'grid';
+  
+  // Pagination properties
+  currentPage: number = 1;
+  perPage: number = 12; // 12 items per page for grid view (3x4 grid)
+  totalItems: number = 0;
 
-  applicationTypeOptions = [
+  applicationTypeOptions: SelectOption[] = [
     { label: 'All Types', value: 'all' },
     { label: 'Enrollment', value: 'enrollment' },
     { label: 'Renewal', value: 'renewal' },
@@ -98,10 +110,21 @@ export class ApplicationsComponent {
     }
     
     this.filteredApplications = filtered;
+    this.totalItems = filtered.length;
+    
+    // Reset to first page when filters change
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
-  onApplicationTypeSelectChange(event: any) {
-    this.selectedApplicationType = event.target.value;
+  private updatePagination() {
+    const startIndex = (this.currentPage - 1) * this.perPage;
+    const endIndex = startIndex + this.perPage;
+    this.paginatedApplications = this.filteredApplications.slice(startIndex, endIndex);
+  }
+
+  onApplicationTypeSelectChange(value: string) {
+    this.selectedApplicationType = value;
     this.updateFilteredApplications();
   }
 
@@ -145,5 +168,42 @@ export class ApplicationsComponent {
   getApplicationTypeLabel(value: string): string {
     const typeOption = this.applicationTypeOptions.find(option => option.value === value);
     return typeOption ? typeOption.label : value || 'Unknown';
+  }
+
+  getStatusBadgeClassName(app: Application): string {
+    return this.applicationStatusService.isClosedAndNotCertified(app.stage, app.status) 
+      ? 'bg-gray-400 text-black' 
+      : '';
+  }
+
+  getApplicationCategories(app: Application): string[] {
+    return (app.category || this.getDefaultCategory()).split(',').map(cat => cat.trim());
+  }
+
+  private getDefaultCategory(): string {
+    return 'Electricity';
+  }
+
+  getProgressDeadlineText(app: Application): string {
+    return `Deadline: ${app.deadline || app.date}`;
+  }
+
+  shouldShowOverdueAlert(stageName: string): boolean {
+    return stageName === 'RFQ';
+  }
+
+  getOverdueAlertText(): string {
+    return '1 Overdue';
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  onPerPageChange(perPage: number) {
+    this.perPage = perPage;
+    this.currentPage = 1; // Reset to first page when changing page size
+    this.updatePagination();
   }
 }

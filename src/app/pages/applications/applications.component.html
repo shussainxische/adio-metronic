@@ -1,34 +1,28 @@
-<div class="container-fixed space-y-8">
+<div class="applications-container">
   <app-page-header
     title="Energy Support Program"
     subtitle="Manage and track all application types">
   </app-page-header>
 
-  <div class="flex">
-    <button
-      class="px-4 py-2 text-sm rounded-lg border"
-      [class]="isFilterActive('All') ? 'ring-2 ring-primary bg-gray-50' : ''"
-      (click)="filterApplications('All')">
-      All Applications ({{ getApplicationCount('All') }})
-    </button>
-  </div>
+  <app-filter-button
+    label="All Applications"
+    [active]="isFilterActive('All')"
+    [count]="getApplicationCount('All')"
+    (clicked)="filterApplications('All')">
+  </app-filter-button>
 
-  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="responsive-grid">
     <app-top-card
       *ngFor="let appType of applicationTypes"
       [active]="isFilterActive(appType.name)"
       (click)="filterApplications(appType.name)">
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-gray-600 text-2sm">{{ appType.name }}</span>
-        <app-icon [name]="applicationStatusService.getIconForAppType(appType.name)" [size]="20" className="text-gray-400"></app-icon>
-      </div>
-      <div class="flex items-end justify-between">
-        <span class="text-3xl font-bold text-primary-on-surface">{{ getApplicationCount(appType.name) }}</span>
-        <div *ngIf="appType.name === 'RFQ'" class="flex items-center text-red text-2sm">
-          <app-icon name="alert-circle" [size]="16" className="mr-1"></app-icon>
-          1 Overdue
-        </div>
-      </div>
+      <app-stats-card
+        [title]="appType.name"
+        [count]="getApplicationCount(appType.name)"
+        [icon]="applicationStatusService.getIconForAppType(appType.name)"
+        [showAlert]="shouldShowOverdueAlert(appType.name)"
+        [alertText]="getOverdueAlertText()">
+      </app-stats-card>
     </app-top-card>
   </div>
 
@@ -37,77 +31,50 @@
       <app-icon name="filter" [size]="16" className="text-gray-700"></app-icon>
       <p class="text-sm font-bold text-gray-700">Filter by status</p>
     </div>
-    <div class="flex flex-wrap gap-2">
-      <button
-        *ngFor="let subStatus of getSubStatuses(selectedFilter)"
-        class="px-3 py-1 text-xs font-medium rounded-full border transition-colors"
-        [class]="applicationStatusService.getSubStatusPillClasses(subStatus, selectedSubStatus === subStatus)"
-        (click)="filterBySubStatus(subStatus)">
-        {{ subStatus }}
-      </button>
-    </div>
+    <app-status-filter-button
+      *ngFor="let subStatus of getSubStatuses(selectedFilter)"
+      [text]="subStatus"
+      [active]="selectedSubStatus === subStatus"
+      [customClasses]="applicationStatusService.getSubStatusPillClasses(subStatus, selectedSubStatus === subStatus)"
+      (clicked)="filterBySubStatus(subStatus)">
+    </app-status-filter-button>
   </div>
 
   <div class="border-t border-gray-200"></div>
 
-  <div class="mb-4">
-    <div class="flex items-start justify-between">
-      <div>
-        <h2 class="text-lg font-semibold text-primary-on-surface">Applications</h2>
-        <p class="text-sm text-gray-600">Showing {{ filteredApplications.length }} results</p>
-      </div>
-      <div class="flex items-center gap-6">
-        <div class="flex items-center gap-2">
-          <label class="text-xs font-bold text-gray-700">Application Type</label>
-          <div class="relative">
-            <select 
-              class="h-8 pl-2 pr-10 text-xs border border-gray-300 rounded bg-white text-gray-700 focus:border-primary focus:outline-none appearance-none"
-              [value]="selectedApplicationType"
-              (change)="onApplicationTypeSelectChange($event)">
-              <option value="all">All Types</option>
-              <option value="enrollment">Enrollment</option>
-              <option value="renewal">Renewal</option>
-              <option value="new-manufacturing">New Manufacturing Entity</option>
-              <option value="existing-manufacturing">Existing Manufacturing Entity</option>
-            </select>
-            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-              <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div class="flex items-center gap-1">
-          <button 
-            class="w-8 h-8 rounded border flex items-center justify-center"
-            [class]="viewMode === 'grid' ? 'border-primary bg-primary text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'"
-            (click)="toggleView('grid')">
-            <app-icon name="layout-grid" [size]="16"></app-icon>
-          </button>
-          <button 
-            class="w-8 h-8 rounded border flex items-center justify-center"
-            [class]="viewMode === 'table' ? 'border-primary bg-primary text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'"
-            (click)="toggleView('table')">
-            <app-icon name="list" [size]="16"></app-icon>
-          </button>
-        </div>
-      </div>
+  <div class="page-header">
+    <div>
+      <h2>Applications</h2>
+      <p>Showing {{ filteredApplications.length }} results</p>
+    </div>
+    <div class="header-controls">
+      <app-select-dropdown
+        label="Application Type"
+        [options]="applicationTypeOptions"
+        [selectedValue]="selectedApplicationType"
+        (selectionChange)="onApplicationTypeSelectChange($event)">
+      </app-select-dropdown>
+      <app-view-toggle
+        [currentView]="viewMode"
+        (viewChange)="toggleView($event)">
+      </app-view-toggle>
     </div>
   </div>
   <!-- Grid View -->
-  <div *ngIf="viewMode === 'grid'" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div *ngIf="viewMode === 'grid'" class="responsive-grid">
     <app-preview-card 
-      *ngFor="let app of filteredApplications"
+      *ngFor="let app of paginatedApplications"
       [className]="applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : ''"
       [showShadow]="!applicationAssignmentService.isLocked(app)"
-      class="cursor-pointer hover:shadow-lg transition-shadow"
+      class="application-card"
+      [class.locked]="applicationAssignmentService.isLocked(app)"
       (click)="navigateToDetail(app.id)">
       
-      <div class="mb-4 flex items-center justify-between">
+      <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
         <app-status-badge
           [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
           [variant]="applicationStatusService.getStatusVariant(app.status)"
-          [className]="app.stage === 'Closed' && app.status !== 'Certified' ? '!bg-gray-400 !text-black' : ''"
+          [className]="getStatusBadgeClassName(app)"
           size="sm"
           [autoWidth]="true">
         </app-status-badge>
@@ -119,97 +86,92 @@
         </app-icon>
       </div>
 
-      <h3 class="text-sm font-bold text-primary-on-surface mb-4">{{ app.id }}</h3>
+      <div class="card-content">
+        <h3>{{ app.id }}</h3>
+        
+        <h4>{{ app.companyName }}</h4>
+        <p class="card-type">{{ getApplicationTypeLabel(app.companyType) }}</p>
 
-      <h4 class="text-sm font-bold text-primary-on-surface mb-1">{{ app.companyName }}</h4>
-      <p class="text-xs text-gray-700 mb-6">{{ getApplicationTypeLabel(app.companyType) }}</p>
+        <div class="card-categories">
+          <app-status-badge
+            *ngFor="let category of getApplicationCategories(app)"
+            [text]="applicationStatusService.getCategoryInitial(category)"
+            variant="category"
+            size="xs">
+          </app-status-badge>
+        </div>
 
-      <div class="mb-6 flex gap-2">
-        <app-status-badge
-          *ngFor="let category of (app.category || 'Electricity').split(',')"
-          [text]="applicationStatusService.getCategoryInitial(category.trim())"
-          variant="category"
-          size="xs">
-        </app-status-badge>
+        <div class="card-progress">
+          <app-progress-bar
+            [progress]="app.progress"
+            [deadline]="getProgressDeadlineText(app)"
+            [urgent]="isSLAViolation(app)">
+          </app-progress-bar>
+        </div>
       </div>
 
-      <div class="mb-6">
-        <app-progress-bar
-          [progress]="app.progress"
-          [deadline]="'Deadline: ' + (app.deadline || app.date)"
-          [urgent]="isSLAViolation(app)">
-        </app-progress-bar>
-      </div>
-
-      <app-application-footer
-        [certifyingBody]="app.certifyingBody || 'Abu Dhabi Certification Body'"
-        [showAlert]="false"
+      <app-assignee-info
         [assignee]="app.assignee"
         [hasNotifications]="hasNotifications(app)">
-      </app-application-footer>
+      </app-assignee-info>
+
     </app-preview-card>
   </div>
 
+  <!-- Grid Pagination -->
+  <app-table-pagination 
+    *ngIf="viewMode === 'grid' && totalItems > perPage"
+    [currentPage]="currentPage"
+    [perPage]="perPage"
+    [totalItems]="totalItems"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-table-pagination>
+
   <!-- Table View -->
-  <div *ngIf="viewMode === 'table'">
-    <app-table [showPagination]="true" [totalItems]="filteredApplications.length">
-      <app-table-header [columns]="tableColumns"></app-table-header>
-      <app-table-body>
-        <app-table-row *ngFor="let app of filteredApplications" [ngClass]="applicationAssignmentService.isLocked(app) ? 'bg-gray-50' : ''">
-          <app-table-cell>
-            <div class="flex items-center gap-2">
-              {{ app.id }}
-              <app-icon 
-                *ngIf="isSLAViolation(app)" 
-                name="alert-circle" 
-                [size]="16" 
-                className="text-red">
-              </app-icon>
-            </div>
-          </app-table-cell>
-          <app-table-cell>
-            <div>
-              <div class="font-semibold text-primary-on-surface">{{ app.companyName }}</div>
-              <div class="text-xs text-gray-700">{{ getApplicationTypeLabel(app.companyType) }}</div>
-            </div>
-          </app-table-cell>
-          <app-table-cell>
-            <app-status-badge
-              [text]="app.stage"
-              variant="pending"
-              size="sm"
-              [autoWidth]="true">
-            </app-status-badge>
-          </app-table-cell>
-          <app-table-cell>
-            <app-status-badge
-              [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
-              [variant]="applicationStatusService.getStatusVariant(app.status)"
-              [className]="app.stage === 'Closed' && app.status !== 'Certified' ? '!bg-gray-400 !text-black' : ''"
-              size="sm"
-              [autoWidth]="true">
-            </app-status-badge>
-          </app-table-cell>
-          <app-table-cell>
-            <div class="flex items-center gap-2">
-              <div class="w-20 bg-gray-200 rounded-full h-2">
-                <div 
-                  class="h-2 rounded-full"
-                  [class]="isSLAViolation(app) ? 'bg-red-500' : 'bg-primary'"
-                  [style.width.%]="app.progress">
-                </div>
-              </div>
-              <span class="text-xs text-gray-600">{{ app.progress }}%</span>
-            </div>
-          </app-table-cell>
-          <app-table-cell>
-            <span class="text-sm">{{ app.assignee }}</span>
-          </app-table-cell>
-          <app-table-cell>
-            <span class="text-sm">{{ app.deadline || app.date }}</span>
-          </app-table-cell>
-        </app-table-row>
-      </app-table-body>
-    </app-table>
-  </div>
+  <app-table *ngIf="viewMode === 'table'" [showPagination]="true" [totalItems]="filteredApplications.length">
+    <app-table-header [columns]="tableColumns"></app-table-header>
+    <app-table-body>
+      <app-table-row *ngFor="let app of filteredApplications" 
+                     [class.locked]="applicationAssignmentService.isLocked(app)"
+                     (click)="navigateToDetail(app.id)"
+                     class="cursor-pointer hover:bg-gray-50">
+        <app-table-cell>
+          {{ app.id }}
+          <app-icon 
+            *ngIf="isSLAViolation(app)" 
+            name="alert-circle" 
+            [size]="16" 
+            className="text-red ml-2">
+          </app-icon>
+        </app-table-cell>
+        <app-table-cell>
+          <div class="font-semibold">{{ app.companyName }}</div>
+          <div class="text-xs text-gray-600">{{ getApplicationTypeLabel(app.companyType) }}</div>
+        </app-table-cell>
+        <app-table-cell>
+          <app-status-badge
+            [text]="app.stage"
+            variant="pending"
+            size="sm">
+          </app-status-badge>
+        </app-table-cell>
+        <app-table-cell>
+          <app-status-badge
+            [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
+            [variant]="applicationStatusService.getStatusVariant(app.status)"
+            size="sm">
+          </app-status-badge>
+        </app-table-cell>
+        <app-table-cell>
+          <app-progress-bar
+            [progress]="app.progress"
+            [urgent]="isSLAViolation(app)">
+          </app-progress-bar>
+        </app-table-cell>
+        <app-table-cell>{{ app.assignee }}</app-table-cell>
+        <app-table-cell>{{ app.deadline || app.date }}</app-table-cell>
+      </app-table-row>
+    </app-table-body>
+  </app-table>
 </div>

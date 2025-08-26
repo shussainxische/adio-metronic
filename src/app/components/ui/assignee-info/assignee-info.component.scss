@@ -1,0 +1,19 @@
+.assignee-info {
+  @apply flex items-center justify-between;
+}
+
+.assignee-content {
+  @apply flex items-center gap-1;
+}
+
+.assignee-icon {
+  @apply text-gray-500;
+}
+
+.assignee-text {
+  @apply text-xs text-gray-600;
+}
+
+.notification-icon {
+  @apply text-primary;
+}

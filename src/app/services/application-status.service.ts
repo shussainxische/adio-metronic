@@ -85,4 +85,8 @@ export class ApplicationStatusService {
     { name: 'Review', description: 'Applications in review process', icon: 'rate_review', color: 'text-green-600' },
     { name: 'Closed', description: 'Completed applications', icon: 'check_circle', color: 'text-gray-600' }
   ];
+
+  isClosedAndNotCertified(stage: string, status: string): boolean {
+    return stage === 'Closed' && status !== 'Certified';
+  }
 }

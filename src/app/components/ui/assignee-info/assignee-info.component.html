@@ -1,0 +1,16 @@
+<div class="assignee-info">
+  <div class="assignee-content">
+    <app-icon 
+      [name]="getAssigneeIcon()" 
+      [size]="16" 
+      className="assignee-icon">
+    </app-icon>
+    <span class="assignee-text">{{ assignee }}</span>
+  </div>
+  <app-icon 
+    *ngIf="hasNotifications" 
+    name="bell" 
+    [size]="16" 
+    className="notification-icon">
+  </app-icon>
+</div>
