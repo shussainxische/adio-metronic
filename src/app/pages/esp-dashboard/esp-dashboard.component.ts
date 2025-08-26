@@ -22,14 +22,14 @@ interface Application {
 }
 
 @Component({
-  selector: 'app-esp',
+  selector: 'app-esp-dashboard',
   standalone: true,
   imports: [CommonModule, TranslateModule, CardComponent],
-  templateUrl: './esp.component.html',
-  styleUrl: './esp.component.scss'
+  templateUrl: './esp-dashboard.component.html',
+  styleUrl: './esp-dashboard.component.scss'
 })
 
-export class EspComponent {
+export class EspDashboardComponent {
   selectedFilter: string = 'All';
   filteredApplications: Application[] = [];
 

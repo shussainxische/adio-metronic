@@ -3,7 +3,7 @@ import KTComponents from '../../../metronic/core/index';
 import KTLayout from '../../../metronic/app/layouts/demo1';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-// import { NavItem } from '../../models/auth.model';
+import { NavItem } from '../../models/auth.model';
 // import { NavigationService } from '../../navigation.service';
 import { IconWrapperComponent } from "../ui/icon-wrapper/icon-wrapper.component";
 import { PageWrapperComponent } from "../../wrappers/page-wrapper/page-wrapper.component";
@@ -28,7 +28,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isDarkMode = false;
   launcherActive = false;
   launcherHover = false;
-  // sideNavPages: NavItem[] = [];
+  sideNavPages: NavItem[] = [];
   selectedApplication: Application | null = null;
   private selectedApplicationSubscription: Subscription;
 
@@ -58,7 +58,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private loadAndFilterNavigationMenu(): void {
     const menu = JSON.parse(localStorage.getItem("navigationMenu"));
-    // this.sideNavPages = this.filterLeafNodes(menu);
+    this.sideNavPages = this.filterLeafNodes(menu);
   }
 
   private filterLeafNodes(items: any[]): any[] {
