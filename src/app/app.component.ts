@@ -34,6 +34,8 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
     //this.langService.initLanguage(); // Call the initialization function
   }
 }

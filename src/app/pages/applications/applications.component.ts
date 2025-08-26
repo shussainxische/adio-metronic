@@ -14,12 +14,17 @@ import { DropdownFilterComponent } from '../../components/ui/dropdown-filter/dro
 import { AdioButtonComponent } from '../../components/ui/adio-button/adio-button.component';
 import { ApplicationStatusService, Application } from '../../services/application-status.service';
 import { ApplicationAssignmentService } from '../../services/application-assignment.service';
+import { TableComponent } from '../../components/ui/table/table/table.component';
+import { TableHeaderComponent } from '../../components/ui/table/table-header/table-header.component';
+import { TableBodyComponent } from '../../components/ui/table/table-body/table-body.component';
+import { TableRowComponent } from '../../components/ui/table/table-row/table-row.component';
+import { TableCellComponent } from '../../components/ui/table/table-cell/table-cell.component';
 
 
 @Component({
   selector: 'app-applications',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, ApplicationFooterComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, ApplicationFooterComponent, TableComponent, TableHeaderComponent, TableBodyComponent, TableRowComponent, TableCellComponent],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.scss'
 })
@@ -29,6 +34,7 @@ export class ApplicationsComponent {
   selectedSubStatus: string = '';
   selectedApplicationType: string = 'all';
   filteredApplications: Application[] = [];
+  viewMode: 'grid' | 'table' = 'grid';
 
   applicationTypeOptions = [
     { label: 'All Types', value: 'all' },
@@ -39,22 +45,22 @@ export class ApplicationsComponent {
   ];
 
   applications: Application[] = [
-    { id: 'ESP001', companyName: 'Al Dhafra Manufacturing', companyType: 'Renewal', stage: 'RFQ', status: 'Pending', progress: 15, date: '1 Jan 2025', deadline: '1/20/2025', category: 'Electricity,Gas', certifyingBody: 'Abu Dhabi Certification Body', assignee: 'Certifying Body' },
-    { id: 'ESP002', companyName: 'Emirates Steel', stage: 'RFQ', status: 'Pending', progress: 10, date: '15 Jan 2025', assignee: 'Certifying Body', category: 'Electricity' },
-    { id: 'ESP003', companyName: 'Green Energy Solutions', stage: 'RFQ', status: 'Submitted', progress: 35, date: '2 Jan 2025', assignee: 'Applicant' },
-    { id: 'ESP004', companyName: 'Dubai Manufacturing Co', stage: 'RFQ', status: 'Submitted', progress: 25, date: '10 Jan 2025', assignee: 'Applicant', category: 'Gas' },
-    { id: 'ESP005', companyName: 'Solar Power Corp', stage: 'Evaluation', status: 'In Progress', progress: 65, date: '5 Jan 2025', assignee: 'Certifying Body', category: 'Gas,Water' },
-    { id: 'ESP006', companyName: 'National Industries', stage: 'Evaluation', status: 'In Progress', progress: 55, date: '12 Jan 2025', assignee: 'Certifying Body', category: 'Electricity,Gas' },
-    { id: 'ESP007', companyName: 'Advanced Materials Inc', stage: 'Evaluation', status: 'Returned', progress: 40, date: '3 Jan 2025', assignee: 'Certifying Body' },
-    { id: 'ESP008', companyName: 'Petrochemicals LLC', stage: 'Evaluation', status: 'Returned', progress: 30, date: '8 Jan 2025', assignee: 'Certifying Body', category: 'Gas' },
-    { id: 'ESP009', companyName: 'Industrial Systems Co', stage: 'Review', status: 'Initial Review', progress: 75, date: '6 Jan 2025', assignee: 'ADIO' },
-    { id: 'ESP010', companyName: 'Maritime Solutions Ltd', stage: 'Review', status: 'Initial Review', progress: 70, date: '7 Jan 2025', assignee: 'AD Ports' },
-    { id: 'ESP011', companyName: 'Energy Infrastructure Co', stage: 'Review', status: 'Initial Review', progress: 68, date: '8 Jan 2025', assignee: 'TAQA' },
-    { id: 'ESP012', companyName: 'Logistics Partners LLC', stage: 'Review', status: 'Final Review', progress: 90, date: '4 Jan 2025', assignee: 'ADIO' },
-    { id: 'ESP013', companyName: 'Certified Company Alpha', stage: 'Closed', status: 'Certified', progress: 100, date: '20 Dec 2024', assignee: 'ADIO' },
-    { id: 'ESP014', companyName: 'Rejected Company Beta', stage: 'Closed', status: 'Not Certified', progress: 100, date: '18 Dec 2024', assignee: 'ADIO' },
-    { id: 'ESP015', companyName: 'Expired Company Gamma', stage: 'Closed', status: 'Expired', progress: 100, date: '15 Dec 2024', assignee: 'ADIO' },
-    { id: 'ESP016', companyName: 'Canceled Company Delta', stage: 'Closed', status: 'Canceled', progress: 60, date: '12 Dec 2024', assignee: 'ADIO' }
+    { id: 'ESP001', companyName: 'Al Dhafra Manufacturing', companyType: 'renewal', stage: 'RFQ', status: 'Pending', progress: 15, date: '1 Jan 2025', deadline: '1/20/2025', category: 'Electricity,Gas', certifyingBody: 'Abu Dhabi Certification Body', assignee: 'Certifying Body' },
+    { id: 'ESP002', companyName: 'Emirates Steel', companyType: 'new-manufacturing', stage: 'RFQ', status: 'Pending', progress: 10, date: '15 Jan 2025', assignee: 'Certifying Body', category: 'Electricity' },
+    { id: 'ESP003', companyName: 'Green Energy Solutions', companyType: 'enrollment', stage: 'RFQ', status: 'Submitted', progress: 35, date: '2 Jan 2025', assignee: 'Applicant' },
+    { id: 'ESP004', companyName: 'Dubai Manufacturing Co', companyType: 'existing-manufacturing', stage: 'RFQ', status: 'Submitted', progress: 25, date: '10 Jan 2025', assignee: 'Applicant', category: 'Gas' },
+    { id: 'ESP005', companyName: 'Solar Power Corp', companyType: 'enrollment', stage: 'Evaluation', status: 'In Progress', progress: 65, date: '5 Jan 2025', assignee: 'Certifying Body', category: 'Gas,Water' },
+    { id: 'ESP006', companyName: 'National Industries', companyType: 'renewal', stage: 'Evaluation', status: 'In Progress', progress: 55, date: '12 Jan 2025', assignee: 'Certifying Body', category: 'Electricity,Gas' },
+    { id: 'ESP007', companyName: 'Advanced Materials Inc', companyType: 'new-manufacturing', stage: 'Evaluation', status: 'Returned', progress: 40, date: '3 Jan 2025', assignee: 'Certifying Body' },
+    { id: 'ESP008', companyName: 'Petrochemicals LLC', companyType: 'existing-manufacturing', stage: 'Evaluation', status: 'Returned', progress: 30, date: '8 Jan 2025', assignee: 'Certifying Body', category: 'Gas' },
+    { id: 'ESP009', companyName: 'Industrial Systems Co', companyType: 'enrollment', stage: 'Review', status: 'Initial Review', progress: 75, date: '6 Jan 2025', assignee: 'ADIO' },
+    { id: 'ESP010', companyName: 'Maritime Solutions Ltd', companyType: 'renewal', stage: 'Review', status: 'Initial Review', progress: 70, date: '7 Jan 2025', assignee: 'AD Ports' },
+    { id: 'ESP011', companyName: 'Energy Infrastructure Co', companyType: 'new-manufacturing', stage: 'Review', status: 'Initial Review', progress: 68, date: '8 Jan 2025', assignee: 'TAQA' },
+    { id: 'ESP012', companyName: 'Logistics Partners LLC', companyType: 'existing-manufacturing', stage: 'Review', status: 'Final Review', progress: 90, date: '4 Jan 2025', assignee: 'ADIO' },
+    { id: 'ESP013', companyName: 'Certified Company Alpha', companyType: 'enrollment', stage: 'Closed', status: 'Certified', progress: 100, date: '20 Dec 2024', assignee: 'ADIO' },
+    { id: 'ESP014', companyName: 'Rejected Company Beta', companyType: 'renewal', stage: 'Closed', status: 'Not Certified', progress: 100, date: '18 Dec 2024', assignee: 'ADIO' },
+    { id: 'ESP015', companyName: 'Expired Company Gamma', companyType: 'new-manufacturing', stage: 'Closed', status: 'Expired', progress: 100, date: '15 Dec 2024', assignee: 'ADIO' },
+    { id: 'ESP016', companyName: 'Canceled Company Delta', companyType: 'existing-manufacturing', stage: 'Closed', status: 'Canceled', progress: 60, date: '12 Dec 2024', assignee: 'ADIO' }
   ];
 
   constructor(
@@ -81,9 +87,17 @@ export class ApplicationsComponent {
   }
 
   private updateFilteredApplications() {
-    this.filteredApplications = this.applicationStatusService.filterApplications(
+    // First apply stage and sub-status filtering
+    let filtered = this.applicationStatusService.filterApplications(
       this.applications, this.selectedFilter, this.selectedSubStatus
     );
+    
+    // Then apply application type filtering
+    if (this.selectedApplicationType !== 'all') {
+      filtered = filtered.filter(app => app.companyType === this.selectedApplicationType);
+    }
+    
+    this.filteredApplications = filtered;
   }
 
   onApplicationTypeSelectChange(event: any) {
@@ -113,4 +127,23 @@ export class ApplicationsComponent {
   isFilterActive = (stage: string) => this.selectedFilter === stage;
   getSubStatuses = (stage: string) => this.applicationStatusService.getSubStatuses(this.applications, stage);
   shouldShowSubStatus = (stage: string) => stage !== 'All' && this.getSubStatuses(stage).length > 0;
+
+  toggleView(mode: 'grid' | 'table') {
+    this.viewMode = mode;
+  }
+
+  tableColumns = [
+    { field: 'id', label: 'Application ID', sortable: true },
+    { field: 'companyName', label: 'Company Name', sortable: true },
+    { field: 'stage', label: 'Stage', sortable: true },
+    { field: 'status', label: 'Status', sortable: true },
+    { field: 'progress', label: 'Progress', sortable: true },
+    { field: 'assignee', label: 'Assignee', sortable: true },
+    { field: 'deadline', label: 'Deadline', sortable: true }
+  ];
+
+  getApplicationTypeLabel(value: string): string {
+    const typeOption = this.applicationTypeOptions.find(option => option.value === value);
+    return typeOption ? typeOption.label : value || 'Unknown';
+  }
 }
