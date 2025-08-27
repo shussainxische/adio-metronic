@@ -1,0 +1,133 @@
+<div class="mb-4">
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Quotation Status</h3>
+      <p class="text-sm text-gray-600" 
+         [ngSwitch]="statusData.type">
+        <span *ngSwitchCase="'under-approval'">Your quotation has been submitted successfully</span>
+        <span *ngSwitchCase="'awarded'">Your quotation has been submitted successfully</span>
+        <span *ngSwitchCase="'not-awarded'">Your quotation has been submitted successfully</span>
+        <span *ngSwitchCase="'missed-deadline'">RFQ submission period has ended</span>
+      </p>
+    </div>
+
+    <div class="text-center mb-6">
+      <!-- Status Icon -->
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+           [ngClass]="statusConfig.iconBg">
+        <app-icon [name]="statusConfig.icon" [size]="24" [className]="statusConfig.iconColor"></app-icon>
+      </div>
+      
+      <!-- Status Title -->
+      <h4 class="text-lg font-semibold text-gray-900 mb-1">{{ statusConfig.title }}</h4>
+      <p class="text-sm text-gray-600 mb-4">{{ statusConfig.description }}</p>
+      
+      <!-- Status Badge -->
+      <div class="mb-4">
+        <app-status-badge
+          [text]="statusConfig.badge.text"
+          [variant]="statusConfig.badge.variant"
+          size="sm"
+          [autoWidth]="true">
+        </app-status-badge>
+      </div>
+    </div>
+
+    <!-- Divider (only show if we have details to show) -->
+    <div *ngIf="statusData.type !== 'missed-deadline'" class="border-b border-gray-200 mb-6"></div>
+    
+    <!-- Details Grid - Under Approval & Not Awarded -->
+    <div *ngIf="statusData.type === 'under-approval' || statusData.type === 'not-awarded'" 
+         class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <p class="text-gray-600 text-xs mb-1">Quotation Submitted On:</p>
+        <p class="text-gray-900 font-medium text-sm">{{ statusData.submissionDate }}</p>
+      </div>
+      <div *ngIf="statusData.type === 'under-approval'">
+        <p class="text-gray-600 text-xs mb-1">Quotation Amount:</p>
+        <p class="text-gray-900 font-medium text-sm">AED {{ statusData.submittedAmount }}</p>
+      </div>
+      <div *ngIf="statusData.type === 'not-awarded'">
+        <p class="text-gray-600 text-xs mb-1">Decision Date:</p>
+        <p class="text-gray-900 font-medium text-sm">{{ statusData.decisionDate }}</p>
+      </div>
+    </div>
+
+    <!-- Details Grid - Awarded -->
+    <div *ngIf="statusData.type === 'awarded'" class="mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div>
+          <p class="text-gray-600 text-xs mb-1">Quotation Submitted On:</p>
+          <p class="text-gray-900 font-medium text-sm">{{ statusData.submissionDate }}</p>
+        </div>
+        <div>
+          <p class="text-gray-600 text-xs mb-1">Awarded On:</p>
+          <p class="text-gray-900 font-medium text-sm">{{ statusData.awardedDate }}</p>
+        </div>
+      </div>
+      <div class="mb-6">
+        <p class="text-gray-600 text-xs mb-1">Quotation Amount:</p>
+        <p class="text-gray-900 font-medium text-sm">AED {{ statusData.submittedAmount }}</p>
+      </div>
+    </div>
+
+    <!-- Details Grid - Missed Deadline -->
+    <div *ngIf="statusData.type === 'missed-deadline'" 
+         class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 border-t border-gray-200 pt-6">
+      <div>
+        <p class="text-gray-600 text-xs mb-1">RFQ Deadline:</p>
+        <p class="text-gray-900 font-medium text-sm">{{ statusData.rfqDeadline }}</p>
+      </div>
+      <div>
+        <p class="text-gray-600 text-xs mb-1">Opportunity:</p>
+        <p class="text-gray-900 font-medium text-sm">Closed</p>
+      </div>
+    </div>
+    
+    <!-- Uploaded Document (only for submitted quotations) -->
+    <div *ngIf="statusData.type !== 'missed-deadline'" 
+         class="file-download-row bg-gray-50 rounded-lg p-3 flex items-center justify-between mb-6 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+         (click)="onDownloadFile()">
+      <div class="flex items-center gap-3">
+        <app-icon name="file-text" [size]="18" className="text-gray-600"></app-icon>
+        <span class="file-name text-gray-900 font-medium">{{ statusData.uploadedFileName || 'Energy_Audit_Proposal.pdf' }}</span>
+      </div>
+      <div class="flex items-center gap-2 text-gray-600">
+        <span class="file-size text-xs">2.4 MB</span>
+        <app-icon name="download" [size]="16" className="download-icon"></app-icon>
+      </div>
+    </div>
+
+    <!-- Start Evaluation Button (Awarded only) -->
+    <div *ngIf="statusConfig.showButton" class="mb-6">
+      <app-button 
+        (click)="onStartEvaluation()"
+        className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-medium hover:bg-green-700">
+        Start Evaluation
+      </app-button>
+    </div>
+
+    <!-- Information/Alert Notice -->
+    <div *ngIf="statusConfig.alertMessage" 
+         class="rounded-lg p-3"
+         [ngClass]="{
+           'bg-blue-50 border border-blue-200': statusConfig.alertType === 'info',
+           'bg-green-50 border border-green-200': statusConfig.alertType === 'success',
+           'bg-yellow-50 border border-yellow-200': statusConfig.alertType === 'warning'
+         }">
+      <div class="flex gap-3">
+        <app-icon [name]="statusConfig.alertType === 'info' ? 'info' : statusConfig.alertType === 'success' ? 'check-circle' : 'alert-triangle'" 
+                  [size]="16" 
+                  [className]="(statusConfig.alertType === 'info' ? 'text-blue-600' : statusConfig.alertType === 'success' ? 'text-green-600' : 'text-yellow-600') + ' mt-0.5 flex-shrink-0'"></app-icon>
+        <p class="text-sm"
+           [ngClass]="{
+             'text-blue-700': statusConfig.alertType === 'info',
+             'text-green-700': statusConfig.alertType === 'success',
+             'text-yellow-700': statusConfig.alertType === 'warning'
+           }">
+          {{ statusConfig.alertMessage }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

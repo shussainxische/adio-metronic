@@ -1,4 +1,65 @@
-<div class="rfq-stage">
-  <h3 class="text-lg font-semibold text-gray-800 mb-4">RFQ Stage</h3>
-  <p class="text-gray-600">This is the RFQ stage content area.</p>
+<!-- Form View -->
+<div *ngIf="!isSubmitted" class="mb-4">
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Submit Quotation</h3>
+      <p class="text-sm text-gray-600">Enter quotation details and accept standardized terms</p>
+    </div>
+    
+    <div class="space-y-6">
+      <!-- Quotation Amount -->
+      <div>
+        <app-input 
+          [control]="quotationAmountControl"
+          label="Quotation Amount"
+          labelStyle="standard"
+          placeholder="0.00"
+          type="text"
+          validationType="number">
+          <span iconBefore class="text-gray-500 text-sm px-2">AED</span>
+        </app-input>
+        <p class="text-xs text-gray-500 mt-1">VAT Exclusive</p>
+      </div>
+
+      <!-- File Upload -->
+      <div>
+        <app-file-input
+          [control]="proposalDocumentControl"
+          label="Upload Proposal Document"
+          accept=".pdf,.doc,.docx"
+          [maxFileSize]="10485760">
+        </app-file-input>
+        <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB</p>
+      </div>
+
+      <!-- Terms Acceptance -->
+      <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="acceptTerms"
+          class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+        <label class="text-sm text-gray-700">
+          I hereby confirm that all information provided in this quotation is accurate and complete. I acknowledge that I have reviewed and accept all terms and conditions of the ADIO Energy Support Program.
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="pt-4">
+        <app-button 
+          [disabled]="!quotationAmountControl.value || !acceptTerms"
+          (click)="onSubmitQuotation()"
+          className="w-full bg-gray-900 text-white py-4 px-6 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+          Submit Quotation
+        </app-button>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Success Notification View -->
+<app-quotation-status 
+  *ngIf="isSubmitted"
+  [statusData]="statusData"
+  (backToForm)="resetForm()"
+  (startEvaluation)="onStartEvaluation()">
+</app-quotation-status>

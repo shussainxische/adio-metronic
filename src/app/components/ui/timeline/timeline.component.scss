@@ -1,0 +1,36 @@
+.timeline-container {
+  max-width: 100%;
+}
+
+.timeline-steps {
+  @apply relative;
+}
+
+.timeline-step {
+  @apply relative;
+}
+
+.timeline-line {
+  @apply transition-colors duration-200;
+}
+
+.timeline-indicator {
+  @apply relative z-10;
+}
+
+.timeline-details {
+  @apply break-words;
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .timeline-content {
+    @apply gap-3;
+  }
+  
+  .timeline-details {
+    .flex.justify-between {
+      @apply flex-col gap-2;
+    }
+  }
+}

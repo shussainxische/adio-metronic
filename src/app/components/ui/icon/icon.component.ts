@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { LucideAngularModule, Mail, AlertCircle, FileText, Users, Calendar, Clock, CheckCircle, Filter, FileCheck, Search, Award, Archive, LayoutGrid, List, Building, User, Building2, Bell, ArrowLeft, Check, ChevronLeft, ChevronRight, Download, ShieldCheck, ClipboardCheck, ThumbsUp, DollarSign, FilePlus, Eye, Send, Quote, Folder, Inbox } from 'lucide-angular';
+import { LucideAngularModule, Mail, AlertCircle, FileText, Users, Calendar, Clock, CheckCircle, Filter, FileCheck, Search, Award, Archive, LayoutGrid, List, Building, User, Building2, Bell, ArrowLeft, Check, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Download, ShieldCheck, ClipboardCheck, ThumbsUp, DollarSign, FilePlus, Eye, Send, Quote, Folder, Inbox, AlertTriangle, Info, X } from 'lucide-angular';
 
 @Component({
   selector: 'app-icon',
@@ -42,6 +42,8 @@ export class IconComponent {
     'check': Check,
     'chevron-left': ChevronLeft,
     'chevron-right': ChevronRight,
+    'chevron-down': ChevronDown,
+    'chevron-up': ChevronUp,
     'download': Download,
     'shield-check': ShieldCheck,
     'clipboard-check': ClipboardCheck,
@@ -52,7 +54,10 @@ export class IconComponent {
     'send': Send,
     'quote': Quote,
     'folder': Folder,
-    'inbox': Inbox
+    'inbox': Inbox,
+    'alert-triangle': AlertTriangle,
+    'info': Info,
+    'x': X
   };
 
   getIcon() {

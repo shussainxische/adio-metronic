@@ -4,7 +4,7 @@
   </div> -->
   <div class="flex">
     <div class="flex-1 bg-gray-50">
-      <div class="container-fixed">
+      <div class="container-fixed pb-12">
         <div class="flex justify-between items-center my-4">
           <app-button 
             (click)="goBack()"
@@ -41,15 +41,14 @@
         </div>
 
         <!-- Step Content -->
-        <div *ngIf="currentStageData" class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-8">
+        <div *ngIf="currentStageData">
           
-          <!-- Step Progress - Inside Container -->
-          <div *ngIf="hasMultipleSteps" class="bg-gray-50 border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+          <!-- Step Progress - For stages with multiple steps -->
+          <div *ngIf="hasMultipleSteps" class="bg-gray-50 border border-gray-200 px-6 py-4 rounded-2xl mb-8">
             <div class="flex items-center flex-wrap text-sm">
               <span *ngFor="let step of currentStageSteps; let i = index; let last = last" 
                     class="flex items-center">
                 
-                <!-- Step Name -->
                 <span 
                   [class]="getContainerStepClasses(i)"
                   [style.cursor]="canAccessStep(i) ? 'pointer' : 'not-allowed'"
@@ -57,7 +56,6 @@
                   {{ step.label }}
                 </span>
                 
-                <!-- Chevron Arrow -->
                 <app-icon 
                   *ngIf="!last"
                   name="chevron-right" 
@@ -68,32 +66,31 @@
             </div>
           </div>
 
-          <!-- Stage Content Area -->
-          <div class="p-6">
-            <!-- Application Stage -->
+          <!-- Stage Content Area - No container for Application and RFQ stages -->
+          <div>
             <app-tamm-application-stage *ngIf="currentStage === 'Application'"></app-tamm-application-stage>
-            
-            <!-- RFQ Stage -->
             <app-rfq-stage *ngIf="currentStage === 'RFQ'"></app-rfq-stage>
             
-            <!-- Evaluation Stage with Sub-Stages -->
-            <div *ngIf="currentStage === 'Evaluation'">
-              <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
-              <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
-              <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
-              <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
-              <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
-              <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
+            <!-- Other stages keep their container -->
+            <div *ngIf="currentStage !== 'Application' && currentStage !== 'RFQ'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              
+              <div *ngIf="currentStage === 'Evaluation'">
+                <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
+                <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
+                <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
+                <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
+                <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
+                <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
+              </div>
+              
+              <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
+              <app-closed-stage *ngIf="currentStage === 'Closed'"></app-closed-stage>
             </div>
-            
-            <!-- Review Stage -->
-            <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
-            
-            <!-- Closed Stage -->
-            <app-closed-stage *ngIf="currentStage === 'Closed'"></app-closed-stage>
           </div>
 
         </div>
+        
+        <div class="h-12"></div>
       </div>
     </div>
 

@@ -1,3 +1,8 @@
-.rfq-stage {
-  @apply p-6;
+:host {
+  ::ng-deep app-input label,
+  ::ng-deep app-file-input label {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.25rem !important;
+  }
 }

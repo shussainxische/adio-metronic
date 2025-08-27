@@ -1,4 +1,21 @@
-<div class="tamm-application-stage">
-  <h3 class="text-lg font-semibold text-gray-800 mb-4">Tamm Application Stage</h3>
-  <p class="text-gray-600">This is the Tamm Application stage content area.</p>
+<div class="mb-8">
+  <app-data-table-simple
+    title="Company & License Details"
+    [data]="companyLicenseData">
+  </app-data-table-simple>
+</div>
+
+<div class="mb-8">
+  <app-data-table-simple
+    title="Company Contact"
+    [data]="companyContactData">
+  </app-data-table-simple>
+</div>
+
+<div class="mb-4">
+  <app-timeline
+    title="Production Timeline"
+    subtitle="Time taken from initial planning to production"
+    [steps]="timelineData">
+  </app-timeline>
 </div>
