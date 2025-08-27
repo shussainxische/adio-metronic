@@ -48,9 +48,8 @@
         <div class="row-cell score">{{ row.score }}</div>
       </div>
 
-      <div *ngIf="row.isExpanded && row.subRows" class="sub-rows-container">
-        <div class="sub-table-wrapper">
-          <div class="sub-table">
+      <div *ngIf="row.isExpanded && row.subRows" class="sub-rows-full-width">
+        <div class="sub-table">
           <div class="sub-header-row">
             <div class="sub-header-cell breakdown">BREAKDOWN</div>
             <div class="sub-header-cell score">SCORE</div>
@@ -76,7 +75,6 @@
               {{ row.finalScore.value }}
             </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
