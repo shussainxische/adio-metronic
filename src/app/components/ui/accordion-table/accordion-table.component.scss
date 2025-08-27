@@ -67,13 +67,6 @@
       @apply text-left;
     }
     
-    &.value {
-      min-width: 100px;
-    }
-    
-    &.weight, &.score {
-      min-width: 60px;
-    }
   }
 }
 
@@ -137,7 +130,6 @@
       }
       
       &.score, &.weight, &.weighted {
-        min-width: 60px;
         @apply font-medium;
       }
     }
@@ -149,7 +141,7 @@
   
   .final-score-row {
     display: grid;
-    grid-template-columns: 1fr auto auto auto;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 1rem;
     @apply pt-3 mt-3 border-t border-gray-300 items-center;
     
