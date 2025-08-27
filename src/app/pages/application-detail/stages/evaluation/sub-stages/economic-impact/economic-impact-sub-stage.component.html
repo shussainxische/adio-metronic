@@ -1,4 +1,143 @@
-<div class="economic-impact-sub-stage">
-  <h4 class="text-md font-semibold text-gray-800 mb-3">Economic Impact Sub-Stage</h4>
-  <p class="text-gray-600">This is the Economic Impact sub-stage content area.</p>
+<!-- Investment Section -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{investmentData.title}}</h3>
+  </div>
+  <div class="grid grid-cols-2 gap-6">
+    <app-input 
+      [control]="grossBookValueAbuDhabiControl" 
+      [label]="investmentData.fields.grossBookValueAbuDhabi.label" 
+      [placeholder]="investmentData.fields.grossBookValueAbuDhabi.placeholder">
+    </app-input>
+    <app-input 
+      [control]="totalGrossBookValueControl" 
+      [label]="investmentData.fields.totalGrossBookValue.label" 
+      [placeholder]="investmentData.fields.totalGrossBookValue.placeholder">
+    </app-input>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-6">
+    <app-input-calculated 
+      [label]="investmentData.calculatedFields.investmentScore.label" 
+      [value]="investmentScore"
+      [tooltip]="investmentData.calculatedFields.investmentScore.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      [label]="investmentData.calculatedFields.investmentTopUpScore.label" 
+      [value]="investmentTopUpScore"
+      [tooltip]="investmentData.calculatedFields.investmentTopUpScore.tooltip">
+    </app-input-calculated>
+  </div>
+</div>
+
+<!-- Manpower & Emiratisation Section -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{manpowerData.title}}</h3>
+  </div>
+  <div class="grid grid-cols-2 gap-6">
+    <app-input 
+      [control]="salaryBenefitsEmiratiControl" 
+      [label]="manpowerData.fields.salaryBenefitsEmirati.label" 
+      [placeholder]="manpowerData.fields.salaryBenefitsEmirati.placeholder">
+    </app-input>
+    <app-input 
+      [control]="totalSpentManpowerControl" 
+      [label]="manpowerData.fields.totalSpentManpower.label" 
+      [placeholder]="manpowerData.fields.totalSpentManpower.placeholder">
+    </app-input>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-6">
+    <app-input 
+      [control]="originalEmiratiNumberControl" 
+      [label]="manpowerData.fields.originalEmiratiNumber.label" 
+      [placeholder]="manpowerData.fields.originalEmiratiNumber.placeholder">
+    </app-input>
+    <app-input 
+      [control]="growthEmiratiNumberControl" 
+      [label]="manpowerData.fields.growthEmiratiNumber.label" 
+      [placeholder]="manpowerData.fields.growthEmiratiNumber.placeholder">
+    </app-input>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-6">
+    <app-input 
+      [control]="totalStaffControl" 
+      [label]="manpowerData.fields.totalStaff.label" 
+      [placeholder]="manpowerData.fields.totalStaff.placeholder">
+    </app-input>
+    <app-input 
+      [control]="skilledStaffControl" 
+      [label]="manpowerData.fields.skilledStaff.label" 
+      [placeholder]="manpowerData.fields.skilledStaff.placeholder">
+    </app-input>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-6">
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.emiratisationSalaryScore.label" 
+      [value]="emiratisationSalaryScore"
+      [tooltip]="manpowerData.calculatedFields.emiratisationSalaryScore.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.emiratisationGrowthScore.label" 
+      [value]="emiratisationGrowthScore"
+      [tooltip]="manpowerData.calculatedFields.emiratisationGrowthScore.tooltip">
+    </app-input-calculated>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-6">
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.skilledLabourScore.label" 
+      [value]="skilledLabourScore"
+      [tooltip]="manpowerData.calculatedFields.skilledLabourScore.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<!-- Logistics Section -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{logisticsData.title}}</h3>
+  </div>
+  <div class="grid grid-cols-2 gap-6">
+    <app-input 
+      [control]="adLogisticsFeesControl" 
+      [label]="logisticsData.fields.adLogisticsFees.label" 
+      [placeholder]="logisticsData.fields.adLogisticsFees.placeholder">
+    </app-input>
+    <app-input 
+      [control]="uaeLogisticsFeesControl" 
+      [label]="logisticsData.fields.uaeLogisticsFees.label" 
+      [placeholder]="logisticsData.fields.uaeLogisticsFees.placeholder">
+    </app-input>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-6">
+    <app-input-calculated 
+      [label]="logisticsData.calculatedFields.supplyChainScore.label" 
+      [value]="supplyChainScore"
+      [tooltip]="logisticsData.calculatedFields.supplyChainScore.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<!-- Economic Impact Score Summary -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+  <div class="mb-6 flex justify-between items-center">
+    <h3 class="text-lg font-semibold text-gray-900">{{scoreSummaryData.title}}</h3>
+    <div class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-lg">
+      {{ totalEconomicImpactScore.toFixed(1) }}
+    </div>
+  </div>
+  
+  <div class="economic-score-table">
+    <div class="score-table-header">
+      <div class="score-header-cell" *ngFor="let header of scoreSummaryData.headers">{{ header }}</div>
+    </div>
+    
+    <div *ngFor="let row of scoreSummaryTableData" class="score-table-row">
+      <div class="score-cell-component">{{ row.component }}</div>
+      <div class="score-cell-score">{{ row.score }}</div>
+      <div class="score-cell-weight">{{ row.weight }}</div>
+      <div class="score-cell-result">{{ row.result }}</div>
+    </div>
+  </div>
 </div>

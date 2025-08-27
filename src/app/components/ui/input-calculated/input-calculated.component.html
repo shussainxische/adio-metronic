@@ -1,0 +1,21 @@
+<div class="form-field" [ngClass]="className">
+  <div class="relative">
+    <div class="calculated-input-wrapper">
+      <div class="calculated-input-label">{{ label }}</div>
+      <div class="calculated-input-value-container">
+        <span class="calculated-input-value">{{ value }}</span>
+        <span *ngIf="unit" class="calculated-input-unit">{{ unit }}</span>
+      </div>
+      <div class="calculated-input-icon" 
+           (mouseenter)="onMouseEnter()" 
+           (mouseleave)="onMouseLeave()">
+        <app-icon name="info" [size]="14" className="text-blue-600"></app-icon>
+      </div>
+    </div>
+    
+    <!-- Tooltip -->
+    <div *ngIf="showTooltip && tooltip" class="calculated-tooltip">
+      {{ tooltip }}
+    </div>
+  </div>
+</div>

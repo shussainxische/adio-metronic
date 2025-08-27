@@ -1,3 +1,88 @@
-.economic-impact-sub-stage {
-  @apply p-4;
+// Field label styling - smaller and bold
+:host ::ng-deep app-input label {
+  @apply text-sm font-semibold text-gray-900 mb-2 !important;
+}
+
+// Economic Impact Score Summary Table
+.economic-score-table {
+  @apply w-full;
+  
+  .score-table-header {
+    @apply grid grid-cols-4 gap-4 pb-4 mb-4 border-b border-gray-200;
+    
+    .score-header-cell {
+      @apply text-sm font-semibold text-gray-700;
+    }
+  }
+  
+  .score-table-row {
+    @apply grid grid-cols-4 gap-4 py-3 border-b border-gray-100 items-center;
+    
+    &:last-child {
+      @apply border-b-0;
+    }
+    
+    &:hover {
+      @apply bg-gray-50 rounded-lg -mx-2 px-2;
+      transition: all 0.2s ease;
+    }
+  }
+  
+  .score-cell-component {
+    @apply text-sm font-medium text-gray-900;
+  }
+  
+  .score-cell-score, .score-cell-weight, .score-cell-result {
+    @apply text-sm text-gray-700 font-mono text-center;
+  }
+  
+  .score-cell-result {
+    @apply font-semibold;
+  }
+}
+
+// Responsive design for smaller screens
+@media (max-width: 768px) {
+  .economic-score-table {
+    .score-table-header,
+    .score-table-row {
+      @apply grid-cols-1 gap-2;
+    }
+    
+    .score-header-cell {
+      @apply hidden;
+    }
+    
+    .score-table-row {
+      @apply bg-gray-50 rounded-lg p-4 mb-4 border border-gray-200;
+      
+      &:hover {
+        @apply bg-white shadow-sm;
+      }
+      
+      > div {
+        @apply flex justify-between items-center;
+        
+        &:before {
+          @apply font-semibold text-gray-600 text-sm;
+        }
+        
+        &.score-cell-component:before {
+          content: "Component:";
+        }
+        
+        &.score-cell-score:before {
+          content: "Score:";
+        }
+        
+        &.score-cell-weight:before {
+          content: "Weight:";
+        }
+        
+        &.score-cell-result:before {
+          content: "Result:";
+        }
+      }
+    }
+  }
 }
