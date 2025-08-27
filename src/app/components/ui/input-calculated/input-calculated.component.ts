@@ -12,10 +12,11 @@ import { IconComponent } from '../icon/icon.component';
 export class InputCalculatedComponent {
   @Input() label: string = '';
   @Input() value: string | number = '';
-  @Input() unit: string = ''; // Optional currency/unit symbol (e.g., 'AED', '%', 'K')
+  @Input() unit: string = '';
   @Input() tooltip: string = '';
   @Input() className: string = '';
   @Input() required: boolean = false;
+  @Input() variant: 'blue' | 'mid-calculation' = 'blue';
 
   showTooltip = false;
 

@@ -1,6 +1,6 @@
 <div class="form-field" [ngClass]="className">
   <div class="relative">
-    <div class="calculated-input-wrapper">
+    <div class="calculated-input-wrapper" [ngClass]="{'mid-calculation-variant': variant === 'mid-calculation'}">
       <div class="calculated-input-label">{{ label }}</div>
       <div class="calculated-input-value-container">
         <span class="calculated-input-value">{{ value }}</span>
@@ -9,7 +9,7 @@
       <div class="calculated-input-icon" 
            (mouseenter)="onMouseEnter()" 
            (mouseleave)="onMouseLeave()">
-        <app-icon name="info" [size]="14" className="text-blue-600"></app-icon>
+        <app-icon name="info" [size]="14" [className]="variant === 'mid-calculation' ? 'text-gray-600' : 'text-blue-600'"></app-icon>
       </div>
     </div>
     

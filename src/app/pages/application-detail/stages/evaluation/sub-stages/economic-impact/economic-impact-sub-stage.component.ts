@@ -13,20 +13,20 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
 })
 export class EconomicImpactSubStageComponent {
   // Investment Form Controls
-  grossBookValueAbuDhabiControl = new FormControl('');
-  totalGrossBookValueControl = new FormControl('');
+  grossBookValueAbuDhabiControl = new FormControl('0');
+  totalGrossBookValueControl = new FormControl('0');
   
   // Manpower & Emiratisation Form Controls
-  salaryBenefitsEmiratiControl = new FormControl('');
-  totalSpentManpowerControl = new FormControl('');
-  originalEmiratiNumberControl = new FormControl('');
-  growthEmiratiNumberControl = new FormControl('');
-  totalStaffControl = new FormControl('');
-  skilledStaffControl = new FormControl('');
+  salaryBenefitsEmiratiControl = new FormControl('0');
+  totalSpentManpowerControl = new FormControl('0');
+  originalEmiratiNumberControl = new FormControl('0');
+  growthEmiratiNumberControl = new FormControl('0');
+  totalStaffControl = new FormControl('0');
+  skilledStaffControl = new FormControl('0');
   
   // Logistics Form Controls
-  adLogisticsFeesControl = new FormControl('');
-  uaeLogisticsFeesControl = new FormControl('');
+  adLogisticsFeesControl = new FormControl('0');
+  uaeLogisticsFeesControl = new FormControl('0');
 
   // Investment Section Data
   investmentData = {
