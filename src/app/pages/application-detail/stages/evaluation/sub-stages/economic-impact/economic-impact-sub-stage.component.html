@@ -1,21 +1,22 @@
-<!-- Investment Section -->
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-  <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{investmentData.title}}</h3>
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{investmentData.title}}</h3>
   </div>
-  <div class="grid grid-cols-2 gap-6">
+  <div class="field-grid">
     <app-input 
       [control]="grossBookValueAbuDhabiControl" 
       [label]="investmentData.fields.grossBookValueAbuDhabi.label" 
       [placeholder]="investmentData.fields.grossBookValueAbuDhabi.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
     </app-input>
     <app-input 
       [control]="totalGrossBookValueControl" 
       [label]="investmentData.fields.totalGrossBookValue.label" 
       [placeholder]="investmentData.fields.totalGrossBookValue.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
     </app-input>
   </div>
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="field-grid with-spacing">
     <app-input-calculated 
       [label]="investmentData.calculatedFields.investmentScore.label" 
       [value]="investmentScore"
@@ -29,24 +30,25 @@
   </div>
 </div>
 
-<!-- Manpower & Emiratisation Section -->
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-  <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{manpowerData.title}}</h3>
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{manpowerData.title}}</h3>
   </div>
-  <div class="grid grid-cols-2 gap-6">
+  <div class="field-grid">
     <app-input 
       [control]="salaryBenefitsEmiratiControl" 
       [label]="manpowerData.fields.salaryBenefitsEmirati.label" 
       [placeholder]="manpowerData.fields.salaryBenefitsEmirati.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
     </app-input>
     <app-input 
       [control]="totalSpentManpowerControl" 
       [label]="manpowerData.fields.totalSpentManpower.label" 
       [placeholder]="manpowerData.fields.totalSpentManpower.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
     </app-input>
   </div>
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="field-grid with-spacing">
     <app-input 
       [control]="originalEmiratiNumberControl" 
       [label]="manpowerData.fields.originalEmiratiNumber.label" 
@@ -58,7 +60,7 @@
       [placeholder]="manpowerData.fields.growthEmiratiNumber.placeholder">
     </app-input>
   </div>
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="field-grid with-spacing">
     <app-input 
       [control]="totalStaffControl" 
       [label]="manpowerData.fields.totalStaff.label" 
@@ -70,7 +72,7 @@
       [placeholder]="manpowerData.fields.skilledStaff.placeholder">
     </app-input>
   </div>
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="field-grid with-spacing">
     <app-input-calculated 
       [label]="manpowerData.calculatedFields.emiratisationSalaryScore.label" 
       [value]="emiratisationSalaryScore"
@@ -82,7 +84,7 @@
       [tooltip]="manpowerData.calculatedFields.emiratisationGrowthScore.tooltip">
     </app-input-calculated>
   </div>
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="field-grid with-spacing">
     <app-input-calculated 
       [label]="manpowerData.calculatedFields.skilledLabourScore.label" 
       [value]="skilledLabourScore"
@@ -92,24 +94,25 @@
   </div>
 </div>
 
-<!-- Logistics Section -->
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-  <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{logisticsData.title}}</h3>
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{logisticsData.title}}</h3>
   </div>
-  <div class="grid grid-cols-2 gap-6">
+  <div class="field-grid">
     <app-input 
       [control]="adLogisticsFeesControl" 
       [label]="logisticsData.fields.adLogisticsFees.label" 
       [placeholder]="logisticsData.fields.adLogisticsFees.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
     </app-input>
     <app-input 
       [control]="uaeLogisticsFeesControl" 
       [label]="logisticsData.fields.uaeLogisticsFees.label" 
       [placeholder]="logisticsData.fields.uaeLogisticsFees.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
     </app-input>
   </div>
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="field-grid with-spacing">
     <app-input-calculated 
       [label]="logisticsData.calculatedFields.supplyChainScore.label" 
       [value]="supplyChainScore"
@@ -119,11 +122,10 @@
   </div>
 </div>
 
-<!-- Economic Impact Score Summary -->
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-  <div class="mb-6 flex justify-between items-center">
-    <h3 class="text-lg font-semibold text-gray-900">{{scoreSummaryData.title}}</h3>
-    <div class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-lg">
+<div class="score-summary-container">
+  <div class="score-summary-header">
+    <h3 class="section-title">{{scoreSummaryData.title}}</h3>
+    <div class="total-score-badge">
       {{ totalEconomicImpactScore.toFixed(1) }}
     </div>
   </div>
@@ -137,7 +139,9 @@
       <div class="score-cell-component">{{ row.component }}</div>
       <div class="score-cell-score">{{ row.score }}</div>
       <div class="score-cell-weight">{{ row.weight }}</div>
-      <div class="score-cell-result">{{ row.result }}</div>
+      <div class="score-cell-result">
+        <span class="result-badge">{{ row.result }}</span>
+      </div>
     </div>
   </div>
 </div>
