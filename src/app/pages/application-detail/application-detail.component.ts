@@ -449,6 +449,7 @@ export class ApplicationDetailComponent implements OnInit {
         { label: 'Application Date', value: '8/1/2025' },
         { label: 'Company', value: this.application?.companyName || 'Al Dhafra Manufacturing' },
         { label: 'Type', value: 'Renewal' },
+        { label: 'Entity Type', value: 'Existing Manufacturing Entity' },
         { label: 'Services', value: ['Electricity', 'Gas'], type: 'status-badges', allowWrap: true },
         { label: 'Progress', value: '', type: 'progress', progress: this.application?.progress || 45 },
         { label: 'Compliance', value: 'Application Overdue', type: 'compliance' }

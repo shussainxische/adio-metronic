@@ -53,9 +53,7 @@ export class ApplicationsComponent {
   applicationTypeOptions: SelectOption[] = [
     { label: 'All Types', value: 'all' },
     { label: 'Enrollment', value: 'enrollment' },
-    { label: 'Renewal', value: 'renewal' },
-    { label: 'New Manufacturing Entity', value: 'new-manufacturing' },
-    { label: 'Existing Manufacturing Entity', value: 'existing-manufacturing' }
+    { label: 'Renewal', value: 'renewal' }
   ];
 
   applications: Application[] = [
