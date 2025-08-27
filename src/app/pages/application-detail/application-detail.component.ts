@@ -393,8 +393,7 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   canAccessStep(stepIndex: number): boolean {
-    // Can access current step or any step before it
-    return stepIndex <= this.currentStep;
+    return true; // All steps are accessible
   }
 
   onStepClick(stepIndex: number): void {
@@ -418,14 +417,14 @@ export class ApplicationDetailComponent implements OnInit {
 
   getContainerStepClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
-      // Completed step - black instead of green
-      return 'text-black font-medium hover:text-gray-800';
+      // Completed step - black, not bold
+      return 'text-black font-normal hover:text-gray-800 cursor-pointer text-sm';
     } else if (stepIndex === this.currentStep) {
       // Active step
-      return 'text-primary font-semibold';
+      return 'text-primary font-semibold cursor-pointer text-sm';
     } else {
-      // Locked step - more visible in container
-      return 'text-gray-600';
+      // Pending step - more visible in container
+      return 'text-gray-600 cursor-pointer text-sm';
     }
   }
 
