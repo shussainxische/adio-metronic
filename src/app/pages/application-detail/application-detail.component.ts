@@ -469,28 +469,4 @@ export class ApplicationDetailComponent implements OnInit {
     };
   }
 
-  // Make all steps clickable - no restrictions
-  canAccessStep(stepIndex: number): boolean {
-    return true;
-  }
-
-  onStepClick(stepIndex: number) {
-    if (this.canAccessStep(stepIndex)) {
-      this.onStepChange(stepIndex);
-    }
-  }
-
-  getContainerStepClasses(stepIndex: number): string {
-    const isActive = stepIndex === this.currentStep;
-    const canAccess = this.canAccessStep(stepIndex);
-    
-    return `px-3 py-2 rounded-md font-medium transition-colors ${
-      isActive 
-        ? 'bg-blue-600 text-white' 
-        : canAccess 
-          ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
-          : 'bg-gray-100 text-gray-400'
-    }`;
-  }
-
 }
