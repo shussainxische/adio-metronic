@@ -69,6 +69,8 @@
           
           <div *ngIf="row.finalScore" class="final-score-row">
             <div class="final-score-label">{{ row.finalScore.label }}</div>
+            <div></div>
+            <div></div>
             <div class="final-score-value" [class.highlighted]="row.finalScore.isHighlighted">
               {{ row.finalScore.value }}
             </div>

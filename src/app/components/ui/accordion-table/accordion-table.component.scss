@@ -149,7 +149,7 @@
   
   .final-score-row {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto auto;
     gap: 1rem;
     @apply pt-3 mt-3 border-t border-gray-300 items-center;
     
