@@ -33,7 +33,7 @@
   @apply mb-6 flex justify-between items-center;
   
   .total-score-badge {
-    @apply bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-base;
+    @apply bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold text-sm;
   }
 }
 
@@ -66,7 +66,7 @@
     @apply pb-4 mb-4 border-b border-gray-200;
     
     .score-header-cell {
-      @apply text-sm font-semibold text-gray-700 text-right;
+      @apply text-xs font-semibold text-gray-700 text-right;
       
       &:first-child {
         @apply text-left;
@@ -91,16 +91,16 @@
   }
   
   .score-cell-component {
-    @apply text-sm font-medium text-gray-900;
+    @apply text-xs font-semibold text-gray-900;
   }
   
   .score-cell-score, .score-cell-weight {
-    @apply text-sm text-gray-700 font-mono text-right;
+    @apply text-xs text-gray-700 font-mono text-right font-semibold;
     min-width: 60px;
   }
   
   .score-cell-result {
-    @apply text-sm font-semibold text-gray-800 text-right;
+    @apply text-xs font-semibold text-gray-800 text-right;
     min-width: 60px;
     
     .result-badge {
