@@ -186,13 +186,14 @@
       [tooltip]="valueAddedData.calculatedFields.totalIntermediateConsumption.tooltip">
     </app-input-calculated>
   </div>
-  <div class="field-grid with-spacing single-column">
+  <div class="field-grid with-spacing">
     <app-input-calculated 
       [label]="valueAddedData.calculatedFields.valueAdded.label" 
       [value]="valueAdded | number:'1.0-0'"
       [unit]="'AED'"
       [tooltip]="valueAddedData.calculatedFields.valueAdded.tooltip">
     </app-input-calculated>
+    <div></div>
   </div>
 </div>
 
