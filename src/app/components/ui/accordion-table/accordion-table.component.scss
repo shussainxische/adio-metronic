@@ -25,6 +25,10 @@
 .accordion-table {
   @apply w-full;
   
+  /* Debug: Ensure no overflow constraints */
+  overflow-x: visible !important;
+  min-width: 100% !important;
+  
   .table-header-row {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
