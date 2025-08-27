@@ -66,23 +66,23 @@
             </div>
           </div>
 
-          <!-- Stage Content Area - No container for Application and RFQ stages -->
+          <!-- Stage Content Area - No container for Application, RFQ, and Evaluation stages -->
           <div>
             <app-tamm-application-stage *ngIf="currentStage === 'Application'"></app-tamm-application-stage>
             <app-rfq-stage *ngIf="currentStage === 'RFQ'"></app-rfq-stage>
             
+            <!-- Evaluation stage without container wrapper -->
+            <div *ngIf="currentStage === 'Evaluation'">
+              <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
+              <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
+              <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
+              <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
+              <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
+              <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
+            </div>
+            
             <!-- Other stages keep their container -->
-            <div *ngIf="currentStage !== 'Application' && currentStage !== 'RFQ'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              
-              <div *ngIf="currentStage === 'Evaluation'">
-                <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
-                <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
-                <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
-                <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
-                <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
-                <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
-              </div>
-              
+            <div *ngIf="currentStage !== 'Application' && currentStage !== 'RFQ' && currentStage !== 'Evaluation'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
               <app-closed-stage *ngIf="currentStage === 'Closed'"></app-closed-stage>
             </div>

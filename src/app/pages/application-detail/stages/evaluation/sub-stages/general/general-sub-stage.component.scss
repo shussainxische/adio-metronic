@@ -1,3 +1,61 @@
-.general-sub-stage {
-  @apply p-4;
+:host {
+  ::ng-deep app-input label,
+  ::ng-deep app-file-input label,
+  ::ng-deep app-date-input label {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  ::ng-deep app-input,
+  ::ng-deep app-file-input,
+  ::ng-deep app-date-input {
+    width: 100%;
+  }
+}
+
+.certificate-files-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.certificate-file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+  }
+}
+
+.certificate-file-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.certificate-file-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.certificate-file-name {
+  font-size: 0.875rem;
+  color: #1a202c;
+  font-weight: 500;
+}
+
+.certificate-download-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

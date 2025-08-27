@@ -64,6 +64,7 @@ export class InputComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() errorMessage: string = '';
   @Input() tooltip: string = '';
   @Input() tooltipPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
+  @Input() variant: 'default' | 'locked' = 'default';
   
   // New validation inputs
 @Input() validationType: 'email' | 'mobile' | 'name' | 'number' | 'text' | 'arabic' = 'text';
@@ -123,6 +124,10 @@ private inputRestrictionPatterns = {
 
   get hasIconAfter(): boolean {
     return !!this.iconAfterContent;
+  }
+
+  get isLocked(): boolean {
+    return this.variant === 'locked';
   }
 
 get inputPattern(): string {
