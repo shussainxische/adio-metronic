@@ -137,6 +137,10 @@
       gap: 1rem;
       @apply py-2 items-center;
       
+      &.two-column {
+        grid-template-columns: 1fr 1fr;
+      }
+      
       .sub-cell {
         @apply text-xs text-gray-700 text-right;
         
@@ -146,6 +150,10 @@
         
         &.score, &.weight, &.weighted {
           @apply font-medium;
+        }
+        
+        &.value-only {
+          @apply font-medium text-right;
         }
       }
     }
@@ -160,12 +168,16 @@
       gap: 1rem;
       @apply pt-3 mt-3 border-t border-gray-300 items-center;
       
+      &.two-column {
+        grid-template-columns: 1fr 1fr;
+      }
+      
       .final-score-label {
         @apply text-xs font-semibold text-gray-900;
       }
       
       .final-score-value {
-        @apply text-xs font-bold text-gray-900;
+        @apply text-xs font-bold text-gray-900 text-right;
         
         &.highlighted {
           @apply text-blue-600;

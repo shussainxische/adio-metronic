@@ -130,8 +130,8 @@
   --p-editor-toolbar-background: rbga(0, 0, 0, 0) !important;
   --p-editor-content-color: var(--tw-gray-800) !important;
   // date
-  --p-datepicker-date-selected-background: var(--tw-blue2-active) !important;
-  --p-datepicker-date-hover-background: var(--tw-blue2) !important;
+  --p-datepicker-date-selected-background: #d97706 !important;
+  --p-datepicker-date-hover-background: #f59e0b !important;
   --p-datepicker-today-color: var(--tw-primary-on-surface) !important;
   --p-datepicker-header-background: var(--tw-surface) !important;
   --p-datepicker-date-color: var(--tw-primary-on-surface) !important;
@@ -148,13 +148,9 @@
   --p-datepicker-select-month-color: var(--tw-primary-on-surface) !important;
   --p-datepicker-select-year-color: var(--tw-primary-on-surface) !important;
   --p-datepicker-header-color: var(--tw-primary-on-surface) !important;
-  --p-datepicker-select-month-hover-background: var(
-    --tw-blue2-active
-  ) !important;
+  --p-datepicker-select-month-hover-background: #d97706 !important;
   --p-datepicker-select-month-hover-color: var(--tw-gray-200) !important;
-  --p-datepicker-select-year-hover-background: var(
-    --tw-blue2-active
-  ) !important;
+  --p-datepicker-select-year-hover-background: #d97706 !important;
   --p-datepicker-select-year-hover-color: var(--tw-gray-200) !important;
 }
 

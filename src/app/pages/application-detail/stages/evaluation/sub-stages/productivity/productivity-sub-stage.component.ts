@@ -19,6 +19,7 @@ export class ProductivitySubStageComponent {
   workInProgressEndControl = new FormControl('0');
   otherMiscellaneousIncomeControl = new FormControl('0');
   rentalsOfBuildingControl = new FormControl('0');
+  averageEmployeesControl = new FormControl('108');
 
   totalCostOfProductionControl = new FormControl('0');
   wagesSalariesBonusesCogsControl = new FormControl('0');
@@ -143,6 +144,16 @@ export class ProductivitySubStageComponent {
       valueAdded: {
         label: 'Value Added',
         tooltip: 'Total Revenue minus Total Intermediate Consumption'
+      }
+    }
+  };
+
+  averageEmployeesData = {
+    title: 'Average Employees',
+    fields: {
+      averageEmployees: {
+        label: 'Average Employees',
+        placeholder: '108'
       }
     }
   };

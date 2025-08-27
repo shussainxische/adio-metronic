@@ -32,11 +32,21 @@ export class InputValidationComponent {
   }
 
   get validationStatus(): 'valid' | 'invalid' | 'none' {
-    if (!this.control.value || this.control.value === '') return 'none';
+    const value = this.control.value;
+    if (!value || value === '') {
+      // For empty values, always show as invalid (Not Applicable)
+      return 'invalid';
+    }
     return this.isValid ? 'valid' : 'invalid';
   }
 
   get statusBadgeText(): string {
+    const value = this.control.value;
+    if (!value || value === '') {
+      // Show "Not Applicable" for empty values
+      return this.invalidMessage;
+    }
+    
     switch (this.validationStatus) {
       case 'valid': return this.validationMessage;
       case 'invalid': return this.invalidMessage;

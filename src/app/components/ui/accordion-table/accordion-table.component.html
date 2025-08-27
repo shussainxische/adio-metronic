@@ -50,27 +50,28 @@
 
       <div *ngIf="row.isExpanded && row.subRows" class="sub-rows-full-width">
         <div class="sub-table">
-          <div class="sub-header-row">
+          <div *ngIf="!row.hideSubHeaders" class="sub-header-row">
             <div class="sub-header-cell breakdown">BREAKDOWN</div>
             <div class="sub-header-cell score">SCORE</div>
             <div class="sub-header-cell weight">WEIGHT</div>
             <div class="sub-header-cell weighted">WEIGHTED</div>
           </div>
           
-          <div *ngFor="let subRow of row.subRows" class="sub-row">
+          <div *ngFor="let subRow of row.subRows" class="sub-row" [class.two-column]="row.hideSubHeaders">
             <div class="sub-cell breakdown">
               <span class="sub-bullet">•</span>
               {{ subRow.component }}
             </div>
-            <div class="sub-cell score">{{ subRow.score }}</div>
-            <div class="sub-cell weight">{{ subRow.weight }}</div>
-            <div class="sub-cell weighted">{{ subRow.weighted }}</div>
+            <div *ngIf="!row.hideSubHeaders" class="sub-cell score">{{ subRow.score }}</div>
+            <div *ngIf="!row.hideSubHeaders" class="sub-cell weight">{{ subRow.weight }}</div>
+            <div *ngIf="!row.hideSubHeaders" class="sub-cell weighted">{{ subRow.weighted }}</div>
+            <div *ngIf="row.hideSubHeaders" class="sub-cell value-only">{{ subRow.value }}</div>
           </div>
           
-          <div *ngIf="row.finalScore" class="final-score-row">
+          <div *ngIf="row.finalScore" class="final-score-row" [class.two-column]="row.hideSubHeaders">
             <div class="final-score-label">{{ row.finalScore.label }}</div>
-            <div></div>
-            <div></div>
+            <div *ngIf="!row.hideSubHeaders"></div>
+            <div *ngIf="!row.hideSubHeaders"></div>
             <div class="final-score-value" [class.highlighted]="row.finalScore.isHighlighted">
               {{ row.finalScore.value }}
             </div>

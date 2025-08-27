@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { FileInputComponent } from '../../../../components/ui/file-input/file-input.component';
+import { FileUploadComponent } from '../../../../components/ui/file-upload/file-upload.component';
 import { InputComponent } from '../../../../components/ui/input/input.component';
 import { ButtonComponent } from '../../../../components/ui/button/button.component';
 import { QuotationStatusComponent, QuotationStatusData } from './quotation-status/quotation-status.component';
@@ -9,13 +9,13 @@ import { QuotationStatusComponent, QuotationStatusData } from './quotation-statu
 @Component({
   selector: 'app-rfq-stage',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, FileInputComponent, InputComponent, ButtonComponent, QuotationStatusComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, FileUploadComponent, InputComponent, ButtonComponent, QuotationStatusComponent],
   templateUrl: './rfq-stage.component.html',
   styleUrl: './rfq-stage.component.scss'
 })
 export class RfqStageComponent {
   quotationAmountControl = new FormControl('');
-  proposalDocumentControl = new FormControl(null);
+  proposalDocumentControl = new FormControl([]);
   acceptTerms: boolean = false;
   isSubmitted: boolean = false;
   statusData: QuotationStatusData = { type: 'under-approval' };
@@ -54,7 +54,7 @@ export class RfqStageComponent {
   }
 
   private getUploadedFileName(): string {
-    const file = this.proposalDocumentControl.value;
-    return file ? file.name : 'Energy_Audit_Proposal.pdf';
+    const files = this.proposalDocumentControl.value;
+    return (files && files.length > 0) ? files[0].name : 'Energy_Audit_Proposal.pdf';
   }
 }

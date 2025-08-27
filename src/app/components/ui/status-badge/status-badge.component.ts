@@ -21,14 +21,21 @@ export class StatusBadgeComponent {
   @Input() size: StatusBadgeSize = 'md';
   @Input() variant: StatusBadgeVariant = 'pending';
   @Input() autoWidth: boolean = false;
+  @Input() allowWrap: boolean = false;
   @Input() className: string = '';
 
   get sizeClasses(): string {
-    // Special handling for category badges - make them square for single letters
+    // Special handling for category badges - make them square for single letters, or allow wrapping
     if (this.variant === 'category') {
-      return this.size === 'xs' 
-        ? 'h-6 w-6 text-xs leading-6 flex items-center justify-center' // Square for categories
-        : 'h-6 w-8 text-xs leading-6 flex items-center justify-center';
+      if (this.allowWrap) {
+        // Full text category badges that can wrap
+        return 'min-h-6 px-3 py-1 text-xs leading-4 flex items-center justify-center';
+      } else {
+        // Square category badges for single letters
+        return this.size === 'xs' 
+          ? 'h-6 w-6 text-xs leading-6 flex items-center justify-center'
+          : 'h-6 w-8 text-xs leading-6 flex items-center justify-center';
+      }
     }
     
     const widthPrefix = this.autoWidth ? 'min-w-' : 'w-';

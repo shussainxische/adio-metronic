@@ -13,7 +13,7 @@ import { TammApplicationStageComponent } from './stages/tamm-application/tamm-ap
 import { RfqStageComponent } from './stages/rfq/rfq-stage.component';
 import { EvaluationStageComponent } from './stages/evaluation/evaluation-stage.component';
 import { ReviewStageComponent } from './stages/review/review-stage.component';
-import { ClosedStageComponent } from './stages/closed/closed-stage.component';
+import { CompletedStageComponent } from './stages/completed/completed-stage.component';
 
 // Evaluation Sub-Stage Components
 import { GeneralSubStageComponent } from './stages/evaluation/sub-stages/general/general-sub-stage.component';
@@ -53,7 +53,7 @@ interface ApplicationStep {
     RfqStageComponent,
     EvaluationStageComponent,
     ReviewStageComponent,
-    ClosedStageComponent,
+    CompletedStageComponent,
     // Evaluation Sub-Stage Components
     GeneralSubStageComponent,
     EconomicImpactSubStageComponent,
@@ -108,9 +108,9 @@ export class ApplicationDetailComponent implements OnInit {
       steps: [] // No sub-steps
     },
     {
-      id: 'Closed',
-      name: 'Closed',
-      icon: 'folder',
+      id: 'Completed',
+      name: 'Certified',
+      icon: 'award',
       status: 'pending',
       steps: [] // No sub-steps - single final state
     }
@@ -449,7 +449,7 @@ export class ApplicationDetailComponent implements OnInit {
         { label: 'Application Date', value: '8/1/2025' },
         { label: 'Company', value: this.application?.companyName || 'Al Dhafra Manufacturing' },
         { label: 'Type', value: 'Renewal' },
-        { label: 'Services', value: ['Electricity'], type: 'status-badges' },
+        { label: 'Services', value: ['Electricity', 'Gas'], type: 'status-badges', allowWrap: true },
         { label: 'Progress', value: '', type: 'progress', progress: this.application?.progress || 45 },
         { label: 'Compliance', value: 'Application Overdue', type: 'compliance' }
       ]

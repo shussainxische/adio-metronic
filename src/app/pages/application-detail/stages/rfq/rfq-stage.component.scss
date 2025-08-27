@@ -6,3 +6,21 @@
     margin-bottom: 0.25rem !important;
   }
 }
+
+// AED currency styling - full height coverage
+:host ::ng-deep .aed-currency {
+  @apply bg-gray-100 text-gray-700 text-xs font-bold px-3 border-r border-gray-200;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+// Add left padding to input when it has AED currency
+:host ::ng-deep app-input:has(.aed-currency) input {
+  padding-left: 4rem !important;
+}

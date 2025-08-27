@@ -3,187 +3,154 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../components/ui/page-header/page-header.component';
 import { IconComponent } from '../../components/ui/icon/icon.component';
-import { StatusBadgeComponent } from '../../components/ui/status-badge/status-badge.component';
+import { TablePaginationComponent } from '../../components/ui/table/table-pagination/table-pagination.component';
+import { NotificationCardComponent, NotificationData } from '../../components/ui/notification-card/notification-card.component';
+import { TabNavigationComponent, Tab } from '../../components/ui/tab-navigation/tab-navigation.component';
+import { TableNoDataComponent } from '../../components/ui/table/table/table-no-data/table-no-data.component';
 
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error' | 'system';
-  isRead: boolean;
-  timestamp: Date;
-  applicationId?: string;
-  actionRequired?: boolean;
-}
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, TranslateModule, PageHeaderComponent, IconComponent, StatusBadgeComponent],
+  imports: [CommonModule, TranslateModule, PageHeaderComponent, IconComponent, TablePaginationComponent, NotificationCardComponent, TabNavigationComponent, TableNoDataComponent],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss'
 })
 export class NotificationsComponent {
-  notifications: Notification[] = [
+  // Tab configuration
+  tabs: Tab[] = [
+    { id: 'all', label: 'All' },
+    { id: 'unread', label: 'Unread' },
+    { id: 'read', label: 'Read' }
+  ];
+  activeTabId: string = 'all';
+
+  notifications: NotificationData[] = [
     {
       id: '1',
       title: 'Application ESP001 Status Update',
-      message: 'Your application has moved to Evaluation stage. Review required documents have been uploaded.',
-      type: 'info',
+      message: 'Your application has moved to Evaluation stage.',
+      type: 'application',
       isRead: false,
       timestamp: new Date('2025-01-20T10:30:00'),
-      applicationId: 'ESP001',
-      actionRequired: false
+      isActionable: true
     },
     {
       id: '2',
       title: 'Document Submission Required',
-      message: 'Additional financial documents are required for application ESP002. Please submit before the deadline.',
-      type: 'warning',
+      message: 'Additional financial documents required for ESP002.',
+      type: 'alert',
       isRead: false,
       timestamp: new Date('2025-01-19T14:45:00'),
-      applicationId: 'ESP002',
-      actionRequired: true
+      isActionable: true
     },
     {
       id: '3',
       title: 'Application ESP013 Certified',
-      message: 'Congratulations! Your application has been successfully certified and approved.',
-      type: 'success',
+      message: 'Your application has been successfully certified.',
+      type: 'application',
       isRead: true,
       timestamp: new Date('2025-01-18T09:15:00'),
-      applicationId: 'ESP013',
-      actionRequired: false
+      isActionable: true
     },
     {
       id: '4',
       title: 'System Maintenance Scheduled',
-      message: 'The system will undergo maintenance on January 25, 2025 from 2:00 AM to 4:00 AM.',
+      message: 'Maintenance on January 25, 2025 from 2:00 AM to 4:00 AM.',
       type: 'system',
       isRead: false,
       timestamp: new Date('2025-01-17T16:00:00'),
-      actionRequired: false
+      isActionable: false
     },
     {
       id: '5',
       title: 'Application Deadline Approaching',
-      message: 'Application ESP005 review deadline is approaching. Please complete your review by January 22, 2025.',
-      type: 'warning',
+      message: 'ESP005 review deadline approaching.',
+      type: 'alert',
       isRead: true,
       timestamp: new Date('2025-01-16T11:20:00'),
-      applicationId: 'ESP005',
-      actionRequired: true
-    },
-    {
-      id: '6',
-      title: 'New Resource Available',
-      message: 'Updated ESP Application Guidelines (v2.1) are now available in the Resources section.',
-      type: 'info',
-      isRead: true,
-      timestamp: new Date('2025-01-15T13:30:00'),
-      actionRequired: false
+      isActionable: true
     }
   ];
 
-  selectedFilter = 'all';
-  filteredNotifications: Notification[] = [...this.notifications];
+  filteredNotifications: NotificationData[] = [...this.notifications];
+  paginatedNotifications: NotificationData[] = [];
+  
+  // Pagination
+  currentPage: number = 1;
+  perPage: number = 10;
+  totalItems: number = 0;
 
   get unreadCount(): number {
     return this.notifications.filter(n => !n.isRead).length;
   }
 
-  get filterOptions() {
-    return [
-      { value: 'all', label: 'All', count: this.notifications.length },
-      { value: 'unread', label: 'Unread', count: this.unreadCount },
-      { value: 'action', label: 'Action Required', count: this.notifications.filter(n => n.actionRequired).length },
-      { value: 'applications', label: 'Applications', count: this.notifications.filter(n => n.applicationId).length }
-    ];
-  }
-
   ngOnInit() {
-    this.filterNotifications('all');
+    this.filterByTab();
+    this.updatePagination();
   }
 
-  filterNotifications(filter: string) {
-    this.selectedFilter = filter;
-    
-    switch (filter) {
-      case 'unread':
-        this.filteredNotifications = this.notifications.filter(n => !n.isRead);
-        break;
-      case 'action':
-        this.filteredNotifications = this.notifications.filter(n => n.actionRequired);
-        break;
-      case 'applications':
-        this.filteredNotifications = this.notifications.filter(n => n.applicationId);
-        break;
-      default:
-        this.filteredNotifications = [...this.notifications];
+  onTabSelected(tabId: string) {
+    this.activeTabId = tabId;
+    this.currentPage = 1;
+    this.filterByTab();
+    this.updatePagination();
+  }
+
+  onNotificationClick(notification: NotificationData) {
+    if (!notification.isRead) {
+      notification.isRead = true;
+      this.filterByTab(); // Refresh filtered list after marking as read
+      this.updatePagination();
     }
+    console.log('Notification clicked:', notification);
   }
 
-  markAsRead(notification: Notification) {
+  onMarkAsRead(notification: NotificationData) {
     notification.isRead = true;
+    this.filterByTab(); // Refresh filtered list after marking as read
+    this.updatePagination();
   }
 
-  markAllAsRead() {
-    this.notifications.forEach(n => n.isRead = true);
-    this.filterNotifications(this.selectedFilter);
-  }
-
-  getNotificationIcon(type: string): string {
-    switch (type) {
-      case 'success': return 'check-circle';
-      case 'warning': return 'alert-triangle';
-      case 'error': return 'alert-circle';
-      case 'system': return 'settings';
-      default: return 'info';
-    }
-  }
-
-  getNotificationVariant(type: string): 'success' | 'warning' | 'pending' | 'active' {
-    switch (type) {
-      case 'success': return 'success';
-      case 'warning': return 'warning';
-      case 'error': return 'warning';
-      default: return 'active';
-    }
-  }
-
-  getTimeAgo(date: Date): string {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+  private filterByTab() {
+    let filtered: NotificationData[] = [];
     
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d ago`;
-    
-    return date.toLocaleDateString();
-  }
-
-  navigateToApplication(applicationId?: string) {
-    if (applicationId) {
-      // Navigate to application detail
-      console.log('Navigating to application:', applicationId);
-    }
-  }
-
-  getEmptyStateMessage(): string {
-    switch (this.selectedFilter) {
+    switch (this.activeTabId) {
       case 'unread':
-        return 'All notifications have been read.';
-      case 'action':
-        return 'No actions are required at this time.';
-      case 'applications':
-        return 'No application-related notifications.';
-      default:
-        return 'You don\'t have any notifications yet.';
+        filtered = this.notifications.filter(n => !n.isRead);
+        break;
+      case 'read':
+        filtered = this.notifications.filter(n => n.isRead);
+        break;
+      default: // 'all'
+        filtered = [...this.notifications];
+        break;
     }
+    
+    // Sort by newest first (most recent timestamp first)
+    this.filteredNotifications = filtered.sort((a, b) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateB - dateA;
+    });
+    
+    this.totalItems = this.filteredNotifications.length;
+  }
+
+  private updatePagination() {
+    const startIndex = (this.currentPage - 1) * this.perPage;
+    const endIndex = startIndex + this.perPage;
+    this.paginatedNotifications = this.filteredNotifications.slice(startIndex, endIndex);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  onPerPageChange(perPage: number) {
+    this.perPage = perPage;
+    this.currentPage = 1;
+    this.updatePagination();
   }
 }

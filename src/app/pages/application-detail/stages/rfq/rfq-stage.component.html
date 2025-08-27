@@ -14,18 +14,19 @@
           placeholder="0.00"
           type="text"
           validationType="number">
-          <span iconBefore class="text-gray-500 text-sm px-2">AED</span>
+          <span iconBefore class="aed-currency">AED</span>
         </app-input>
         <p class="text-xs text-gray-500 mt-1">VAT Exclusive</p>
       </div>
 
       <div>
-        <app-file-input
-          [control]="proposalDocumentControl"
+        <app-file-upload
           label="Upload Proposal Document"
-          accept=".pdf,.doc,.docx"
-          [maxFileSize]="10485760">
-        </app-file-input>
+          [accept]="'.pdf,.doc,.docx'"
+          [allowedTypes]="['.pdf', '.doc', '.docx']"
+          [maxSize]="10485760"
+          [(ngModel)]="proposalDocumentControl.value">
+        </app-file-upload>
         <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB</p>
       </div>
 

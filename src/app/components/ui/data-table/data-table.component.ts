@@ -39,7 +39,7 @@ export interface DataTableColumn {
     </div>
     
     <app-table-pagination 
-      *ngIf="showPagination && totalItems > 0"
+      *ngIf="showPagination"
       [currentPage]="currentPage"
       [perPage]="perPage" 
       [totalItems]="totalItems"

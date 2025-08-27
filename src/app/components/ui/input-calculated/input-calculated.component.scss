@@ -1,7 +1,9 @@
 .calculated-input-wrapper {
-  @apply relative flex items-center bg-blue-50 border border-blue-200 rounded-lg min-h-[48px];
+  @apply relative flex items-center bg-blue-50 border border-blue-200 rounded-lg;
+  height: 48px !important;
   padding: 12px 40px 12px 16px;
   transition: all 0.2s ease;
+  /* Fixed height: 48px */
   
   &:hover {
     @apply bg-blue-100 border-blue-300;

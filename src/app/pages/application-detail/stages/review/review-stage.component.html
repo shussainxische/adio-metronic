@@ -1,4 +1,55 @@
-<div class="review-stage">
-  <h3 class="text-lg font-semibold text-gray-800 mb-4">Review Stage</h3>
-  <p class="text-gray-600">This is the Review stage content area.</p>
+<div class="review-stage-container">
+  <!-- Multi-Entity Review Status -->
+  <div class="section-card">
+    <div class="section-header">
+      <h3 class="section-title">Multi-Entity Review Status</h3>
+    </div>
+    
+    <div class="entity-cards">
+      <div class="entity-card">
+        <div class="entity-info">
+          <h4 class="entity-name">TAQA Review</h4>
+        </div>
+        <div class="entity-status">
+          <app-status-badge 
+            text="Submitted" 
+            variant="success" 
+            size="sm">
+          </app-status-badge>
+        </div>
+      </div>
+      
+      <div class="entity-card">
+        <div class="entity-info">
+          <h4 class="entity-name">AD Ports Review</h4>
+        </div>
+        <div class="entity-status">
+          <app-status-badge 
+            text="Pending" 
+            variant="pending" 
+            size="sm">
+          </app-status-badge>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certificate Issuance -->
+  <div class="section-card">
+    <div class="section-header">
+      <h3 class="section-title">Certificate Issuance</h3>
+    </div>
+    
+    <p class="section-description">Certificate will be issued once all entities have approved</p>
+    
+    <!-- Pending Approvals Alert -->
+    <div class="alert-card">
+      <div class="alert-header">
+        <span class="alert-title">Pending Approvals</span>
+      </div>
+      <p class="alert-message">
+        Certificate can only be issued after AD Ports completes their review. TAQA has already submitted their evaluation.
+      </p>
+    </div>
+  </div>
 </div>

@@ -11,6 +11,7 @@ export interface AccordionTableRow {
   isExpandable?: boolean;
   isExpanded?: boolean;
   subRows?: AccordionSubRow[];
+  hideSubHeaders?: boolean;
   finalScore?: {
     label: string;
     value: string | number;

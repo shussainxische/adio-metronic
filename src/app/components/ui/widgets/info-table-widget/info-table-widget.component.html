@@ -42,7 +42,8 @@
               *ngFor="let badge of getArrayValue(row.value)" 
               [text]="badge"
               variant="category"
-              size="sm">
+              size="sm"
+              [allowWrap]="row.allowWrap || false">
             </app-status-badge>
           </div>
           

@@ -197,6 +197,20 @@
   </div>
 </div>
 
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{averageEmployeesData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <app-input 
+      [control]="averageEmployeesControl" 
+      [label]="averageEmployeesData.fields.averageEmployees.label" 
+      [placeholder]="averageEmployeesData.fields.averageEmployees.placeholder">
+    </app-input>
+    <div></div>
+  </div>
+</div>
+
 <div class="score-summary-container">
   <div class="score-summary-header">
     <h3 class="section-title">{{scoreSummaryData.title}}</h3>

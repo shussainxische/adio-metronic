@@ -10,6 +10,7 @@ export interface InfoTableRow {
   type?: 'text' | 'status-badge' | 'status-badges' | 'progress' | 'compliance';
   statusVariant?: StatusBadgeVariant;
   progress?: number;
+  allowWrap?: boolean;
 }
 
 export interface InfoTableData {

@@ -2,6 +2,18 @@
   min-height: 100vh;
 }
 
+// Force proper spacing between notification cards
+.notifications-list {
+  > app-notification-card {
+    display: block;
+    margin-bottom: 0.75rem; // 12px spacing
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .notification-item {
   transition: all 0.2s ease-in-out;
   position: relative;

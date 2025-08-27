@@ -2,106 +2,41 @@
   <div class="flex items-center justify-between">
     <app-page-header
       title="Notifications"
-      subtitle="Stay updated with the latest application updates and system messages">
+      subtitle="Stay updated with application updates and system messages">
     </app-page-header>
-    
-    <button 
-      *ngIf="unreadCount > 0"
-      class="px-4 py-2 text-sm text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
-      (click)="markAllAsRead()">
-      Mark all as read
-    </button>
   </div>
 
-  <!-- Filter Tabs -->
-  <div class="flex gap-1 border-b border-gray-200">
-    <button
-      *ngFor="let option of filterOptions"
-      class="px-4 py-2 text-sm font-medium border-b-2 transition-colors"
-      [class]="selectedFilter === option.value 
-        ? 'border-primary text-primary' 
-        : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'"
-      (click)="filterNotifications(option.value)">
-      {{ option.label }}
-      <span *ngIf="option.count > 0" class="ml-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-        {{ option.count }}
-      </span>
-    </button>
-  </div>
+  <!-- Notification Tabs -->
+  <app-tab-navigation
+    [tabs]="tabs"
+    [activeTabId]="activeTabId"
+    variant="pills"
+    (tabSelected)="onTabSelected($event)">
+  </app-tab-navigation>
 
   <!-- Notifications List -->
-  <div class="space-y-4">
-    <div 
-      *ngFor="let notification of filteredNotifications"
-      class="bg-white border rounded-lg p-4 transition-all hover:shadow-md cursor-pointer"
-      [class.border-l-4]="!notification.isRead"
-      [class.border-l-primary]="!notification.isRead"
-      [class.bg-gray-50]="notification.isRead"
-      (click)="markAsRead(notification)">
-      
-      <div class="flex items-start gap-3">
-        <!-- Notification Icon -->
-        <div class="flex-shrink-0 mt-1">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center"
-               [class]="notification.isRead ? 'bg-gray-100' : 'bg-primary/10'">
-            <app-icon 
-              [name]="getNotificationIcon(notification.type)" 
-              [size]="16"
-              [className]="notification.isRead ? 'text-gray-500' : 'text-primary'">
-            </app-icon>
-          </div>
-        </div>
-
-        <!-- Notification Content -->
-        <div class="flex-1 min-w-0">
-          <div class="flex items-start justify-between mb-1">
-            <h3 class="text-sm font-semibold text-gray-900" 
-                [class.font-bold]="!notification.isRead">
-              {{ notification.title }}
-            </h3>
-            
-            <div class="flex items-center gap-2 ml-4">
-              <!-- Action Required Badge -->
-              <app-status-badge
-                *ngIf="notification.actionRequired"
-                text="Action Required"
-                variant="warning"
-                size="xs">
-              </app-status-badge>
-              
-              <!-- Unread Indicator -->
-              <div *ngIf="!notification.isRead" 
-                   class="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                   
-              <!-- Timestamp -->
-              <span class="text-xs text-gray-500 whitespace-nowrap">
-                {{ getTimeAgo(notification.timestamp) }}
-              </span>
-            </div>
-          </div>
-          
-          <p class="text-sm text-gray-600 mb-2" [class.text-gray-500]="notification.isRead">
-            {{ notification.message }}
-          </p>
-          
-          <!-- Application Link -->
-          <div *ngIf="notification.applicationId" 
-               class="flex items-center gap-2 text-xs text-primary hover:text-primary-dark">
-            <app-icon name="external-link" [size]="12"></app-icon>
-            <button (click)="navigateToApplication(notification.applicationId); $event.stopPropagation()"
-                    class="hover:underline">
-              View Application {{ notification.applicationId }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="notifications-list" *ngIf="filteredNotifications.length > 0">
+    <app-notification-card
+      *ngFor="let notification of paginatedNotifications"
+      [notification]="notification"
+      (cardClick)="onNotificationClick($event)"
+      (markAsRead)="onMarkAsRead($event)">
+    </app-notification-card>
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="filteredNotifications.length === 0" class="text-center py-12">
-    <app-icon name="bell" [size]="48" className="text-gray-400 mb-4"></app-icon>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">No notifications</h3>
-    <p class="text-gray-600" [innerHTML]="getEmptyStateMessage()"></p>
-  </div>
+  <app-table-no-data
+    *ngIf="filteredNotifications.length === 0"
+    title="No notifications"
+    description="You don't have any notifications yet.">
+  </app-table-no-data>
+
+  <!-- Pagination -->
+  <app-table-pagination 
+    [currentPage]="currentPage"
+    [perPage]="perPage"
+    [totalItems]="totalItems"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-table-pagination>
 </div>

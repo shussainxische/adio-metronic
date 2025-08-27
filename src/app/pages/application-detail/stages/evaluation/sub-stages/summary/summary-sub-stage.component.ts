@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AccordionTableComponent, AccordionTableRow } from '../../../../../components/ui/accordion-table/accordion-table.component';
+import { AccordionTableComponent, AccordionTableRow } from '../../../../../../components/ui/accordion-table/accordion-table.component';
 
 @Component({
   selector: 'app-summary-sub-stage',
@@ -38,9 +38,10 @@ export class SummarySubStageComponent {
       score: '27.75',
       isExpandable: true,
       isExpanded: false,
+      hideSubHeaders: true,
       subRows: [
         { id: 'value-added', component: 'Value Added', value: '10,000,000 AED' },
-        { id: 'average-employees', component: '÷ Average Employees', value: '108' }
+        { id: 'average-employees', component: 'Average Employees', value: '108' }
       ],
       finalScore: { label: 'Final Productivity Score', value: '92.5', isHighlighted: true }
     },
@@ -89,9 +90,10 @@ export class SummarySubStageComponent {
       score: '32.38',
       isExpandable: true,
       isExpanded: false,
+      hideSubHeaders: true,
       subRows: [
         { id: 'value-added-gas', component: 'Value Added', value: '10,000,000 AED' },
-        { id: 'average-employees-gas', component: '÷ Average Employees', value: '108' }
+        { id: 'average-employees-gas', component: 'Average Employees', value: '108' }
       ],
       finalScore: { label: 'Final Productivity Score', value: '92.5', isHighlighted: true }
     },

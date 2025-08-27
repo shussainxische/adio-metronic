@@ -81,11 +81,11 @@
               <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
             </div>
             
-            <!-- Other stages keep their container -->
-            <div *ngIf="currentStage !== 'Application' && currentStage !== 'RFQ' && currentStage !== 'Evaluation'" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
-              <app-closed-stage *ngIf="currentStage === 'Closed'"></app-closed-stage>
-            </div>
+            <!-- Review stage without container wrapper -->
+            <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
+            
+            <!-- Certified stage without container wrapper -->
+            <app-completed-stage *ngIf="currentStage === 'Completed'"></app-completed-stage>
           </div>
 
         </div>

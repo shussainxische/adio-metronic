@@ -1,0 +1,55 @@
+<div class="file-upload-container">
+  <div class="upload-field-container">
+    <label *ngIf="label" class="field-label">{{ label }}</label>
+    <p *ngIf="helperText" class="helper-text">{{ helperText }}</p>
+    
+    <!-- File Upload Area -->
+    <div 
+      class="upload-area" 
+      [class.disabled]="disabled"
+      (click)="!disabled && fileInput.click()"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)">
+      <div class="upload-content">
+        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+        </svg>
+        <p class="upload-primary-text">Click to upload or drag and drop</p>
+        <p class="upload-secondary-text">{{ allowedTypes.join(', ') | uppercase }} up to {{ (maxSize / (1024 * 1024)) }}MB</p>
+      </div>
+      <input 
+        #fileInput 
+        type="file" 
+        class="sr-only" 
+        [multiple]="multiple" 
+        [accept]="accept" 
+        [disabled]="disabled"
+        (change)="onFileSelect($event)">
+    </div>
+    
+    <!-- Uploaded Files List -->
+    <div *ngIf="uploadedFiles.length > 0" class="uploaded-files-list">
+      <div *ngFor="let file of uploadedFiles" class="file-item">
+        <div class="file-info">
+          <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <div class="file-details">
+            <span class="file-name">{{ file.name }}</span>
+            <span class="file-size">({{ formatFileSize(file.size) }})</span>
+          </div>
+        </div>
+        <button 
+          *ngIf="!disabled"
+          (click)="removeFile(file)" 
+          class="remove-file-btn"
+          type="button">
+          <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

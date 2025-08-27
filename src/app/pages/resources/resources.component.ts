@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../components/ui/page-header/page-header.component';
 import { IconComponent } from '../../components/ui/icon/icon.component';
-import { PreviewCardComponent } from '../../components/ui/preview-card/preview-card.component';
 
 @Component({
   selector: 'app-resources',
   standalone: true,
-  imports: [CommonModule, TranslateModule, PageHeaderComponent, IconComponent, PreviewCardComponent],
+  imports: [CommonModule, TranslateModule, PageHeaderComponent, IconComponent],
   templateUrl: './resources.component.html',
   styleUrl: './resources.component.scss'
 })
@@ -16,74 +15,41 @@ export class ResourcesComponent {
   resources = [
     {
       id: 1,
-      title: 'ESP Application Guidelines',
-      description: 'Complete guide for Energy Support Program applications',
+      title: 'Energy Support Program Overview',
+      description: 'Comprehensive overview of the ESP program, benefits, and eligibility criteria',
       type: 'PDF',
-      size: '2.5 MB',
-      downloadUrl: '/assets/resources/esp-guidelines.pdf',
-      category: 'Guidelines',
+      size: '1.5 MB',
+      downloadUrl: '/assets/resources/esp-overview.pdf',
+      category: 'Program Information',
       icon: 'file-text'
     },
     {
       id: 2,
-      title: 'Technical Requirements',
-      description: 'Technical specifications and requirements documentation',
-      type: 'PDF',
-      size: '1.8 MB',
-      downloadUrl: '/assets/resources/technical-requirements.pdf',
-      category: 'Technical',
-      icon: 'settings'
+      title: 'Submission Requirements Checklist',
+      description: 'Detailed checklist of all required documents and information for ESP applications',
+      type: 'DOCX',
+      size: '856 KB',
+      downloadUrl: '/assets/resources/submission-checklist.docx',
+      category: 'Application Guides',
+      icon: 'file-text'
     },
     {
       id: 3,
-      title: 'Financial Templates',
-      description: 'Excel templates for financial reporting',
-      type: 'XLSX',
-      size: '0.5 MB',
-      downloadUrl: '/assets/resources/financial-templates.xlsx',
-      category: 'Templates',
-      icon: 'calculator'
-    },
-    {
-      id: 4,
-      title: 'Compliance Checklist',
-      description: 'Comprehensive checklist for regulatory compliance',
+      title: 'Technical Evaluation Criteria',
+      description: 'Technical standards and evaluation criteria used by certifying bodies',
       type: 'PDF',
       size: '1.2 MB',
-      downloadUrl: '/assets/resources/compliance-checklist.pdf',
-      category: 'Compliance',
-      icon: 'check-square'
-    },
-    {
-      id: 5,
-      title: 'FAQ Document',
-      description: 'Frequently asked questions and answers',
-      type: 'PDF',
-      size: '0.8 MB',
-      downloadUrl: '/assets/resources/faq.pdf',
-      category: 'Support',
-      icon: 'help-circle'
-    },
-    {
-      id: 6,
-      title: 'Video Tutorial',
-      description: 'Step-by-step application process walkthrough',
-      type: 'Video',
-      size: '25 MB',
-      downloadUrl: '/assets/resources/tutorial.mp4',
-      category: 'Training',
-      icon: 'play-circle'
+      downloadUrl: '/assets/resources/technical-criteria.pdf',
+      category: 'Technical Standards',
+      icon: 'file-text'
     }
   ];
 
   categories = [
     { name: 'All', count: this.resources.length },
-    { name: 'Guidelines', count: this.resources.filter(r => r.category === 'Guidelines').length },
-    { name: 'Technical', count: this.resources.filter(r => r.category === 'Technical').length },
-    { name: 'Templates', count: this.resources.filter(r => r.category === 'Templates').length },
-    { name: 'Compliance', count: this.resources.filter(r => r.category === 'Compliance').length },
-    { name: 'Support', count: this.resources.filter(r => r.category === 'Support').length },
-    { name: 'Training', count: this.resources.filter(r => r.category === 'Training').length }
+    { name: 'Program Information', count: this.resources.filter(r => r.category === 'Program Information').length },
+    { name: 'Application Guides', count: this.resources.filter(r => r.category === 'Application Guides').length },
+    { name: 'Technical Standards', count: this.resources.filter(r => r.category === 'Technical Standards').length }
   ];
 
   selectedCategory = 'All';
