@@ -1,4 +1,49 @@
-<div class="ems-dms-sub-stage">
-  <h4 class="text-md font-semibold text-gray-800 mb-3">EMS/DMS Sub-Stage</h4>
-  <p class="text-gray-600">This is the EMS/DMS sub-stage content area.</p>
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{emsData.title}}</h3>
+  </div>
+  
+  <div class="field-grid">
+    <app-input-validation
+      [control]="connectionLoadMeterControl"
+      [label]="emsData.fields.connectionLoadMeter.label"
+      [placeholder]="emsData.fields.connectionLoadMeter.placeholder"
+      [helperText]="emsData.fields.connectionLoadMeter.helperText"
+      [validationRule]="emsData.fields.connectionLoadMeter.validationRule"
+      [validationMessage]="emsData.fields.connectionLoadMeter.validationMessage"
+      [invalidMessage]="emsData.fields.connectionLoadMeter.invalidMessage"
+      [unit]="emsData.fields.connectionLoadMeter.unit">
+    </app-input-validation>
+    
+    <app-input-validation
+      [control]="emsAvailabilityControl"
+      [label]="emsData.fields.emsAvailability.label"
+      [variant]="'dropdown'"
+      [options]="emsData.fields.emsAvailability.options"
+      [validationRule]="emsData.fields.emsAvailability.validationRule"
+      [validationMessage]="emsData.fields.emsAvailability.validationMessage"
+      [invalidMessage]="emsData.fields.emsAvailability.invalidMessage">
+    </app-input-validation>
+  </div>
+  
+  <div class="consumption-section with-spacing">
+    <label class="section-label">{{emsData.fields.demandSideConsumption.label}}</label>
+    <div class="horizontal-fields">
+      <select 
+        class="consumption-dropdown" 
+        [formControl]="demandSideConsumptionControl">
+        <option value="">{{emsData.fields.demandSideConsumption.placeholder}}</option>
+        <option *ngFor="let option of emsData.fields.demandSideConsumption.options" [value]="option.value">
+          {{option.label}}
+        </option>
+      </select>
+      
+      <app-input-calculated
+        variant="blue"
+        [label]="emsData.calculatedFields.dmsScore.label"
+        [value]="dmsScore"
+        [tooltip]="emsData.calculatedFields.dmsScore.tooltip">
+      </app-input-calculated>
+    </div>
+  </div>
 </div>

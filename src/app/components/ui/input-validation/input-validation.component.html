@@ -1,0 +1,35 @@
+<div class="validation-input-container">
+  <div class="validation-input-header">
+    <label class="validation-input-label">{{ label }}</label>
+    <div class="validation-status-badge" 
+         [class.valid]="validationStatus === 'valid'"
+         [class.invalid]="validationStatus === 'invalid'"
+         [class.none]="validationStatus === 'none'">
+      {{ statusBadgeText }}
+    </div>
+  </div>
+  
+  <div class="validation-input-wrapper">
+    <input 
+      *ngIf="variant === 'input'"
+      type="text"
+      class="validation-input"
+      [formControl]="control"
+      [placeholder]="placeholder">
+    
+    <select
+      *ngIf="variant === 'dropdown'"
+      class="validation-input"
+      [formControl]="control">
+      <option *ngFor="let option of options" [value]="option.value">
+        {{option.label}}
+      </option>
+    </select>
+    
+    <span class="validation-input-unit" *ngIf="unit && variant === 'input'">{{ unit }}</span>
+  </div>
+  
+  <div class="validation-helper-text" *ngIf="helperText">
+    {{ helperText }}
+  </div>
+</div>
