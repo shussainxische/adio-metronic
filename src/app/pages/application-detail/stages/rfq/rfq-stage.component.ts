@@ -45,37 +45,6 @@ export class RfqStageComponent {
     console.log('Starting evaluation...');
   }
 
-  // Demo methods to test different status scenarios
-  showAwardedStatus() {
-    this.statusData = {
-      type: 'awarded',
-      submittedAmount: '35000',
-      submissionDate: '8/21/2025',
-      awardedDate: '8/26/2025',
-      uploadedFileName: 'Energy_Audit_Proposal.pdf'
-    };
-    this.isSubmitted = true;
-  }
-
-  showNotAwardedStatus() {
-    this.statusData = {
-      type: 'not-awarded',
-      submittedAmount: '35000',
-      submissionDate: '8/24/2025',
-      decisionDate: '8/27/2025',
-      uploadedFileName: 'Energy_Audit_Proposal.pdf'
-    };
-    this.isSubmitted = true;
-  }
-
-  showMissedDeadlineStatus() {
-    this.statusData = {
-      type: 'missed-deadline',
-      rfqDeadline: '8/25/2025'
-    };
-    this.isSubmitted = true;
-  }
-
   private formatCurrentDate(): string {
     const now = new Date();
     const month = now.getMonth() + 1;
@@ -87,11 +56,5 @@ export class RfqStageComponent {
   private getUploadedFileName(): string {
     const file = this.proposalDocumentControl.value;
     return file ? file.name : 'Energy_Audit_Proposal.pdf';
-  }
-
-  private generateSubmissionId(): string {
-    const timestamp = Date.now().toString().slice(-6);
-    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
-    return `${timestamp}${random}`;
   }
 }

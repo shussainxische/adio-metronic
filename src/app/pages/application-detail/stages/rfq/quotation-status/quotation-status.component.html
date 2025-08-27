@@ -12,17 +12,13 @@
     </div>
 
     <div class="text-center mb-6">
-      <!-- Status Icon -->
       <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
            [ngClass]="statusConfig.iconBg">
         <app-icon [name]="statusConfig.icon" [size]="24" [className]="statusConfig.iconColor"></app-icon>
       </div>
       
-      <!-- Status Title -->
       <h4 class="text-lg font-semibold text-gray-900 mb-1">{{ statusConfig.title }}</h4>
       <p class="text-sm text-gray-600 mb-4">{{ statusConfig.description }}</p>
-      
-      <!-- Status Badge -->
       <div class="mb-4">
         <app-status-badge
           [text]="statusConfig.badge.text"
@@ -33,10 +29,7 @@
       </div>
     </div>
 
-    <!-- Divider (only show if we have details to show) -->
     <div *ngIf="statusData.type !== 'missed-deadline'" class="border-b border-gray-200 mb-6"></div>
-    
-    <!-- Details Grid - Under Approval & Not Awarded -->
     <div *ngIf="statusData.type === 'under-approval' || statusData.type === 'not-awarded'" 
          class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <div>
@@ -53,7 +46,6 @@
       </div>
     </div>
 
-    <!-- Details Grid - Awarded -->
     <div *ngIf="statusData.type === 'awarded'" class="mb-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
         <div>
@@ -71,7 +63,6 @@
       </div>
     </div>
 
-    <!-- Details Grid - Missed Deadline -->
     <div *ngIf="statusData.type === 'missed-deadline'" 
          class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 border-t border-gray-200 pt-6">
       <div>
@@ -84,9 +75,8 @@
       </div>
     </div>
     
-    <!-- Uploaded Document (only for submitted quotations) -->
     <div *ngIf="statusData.type !== 'missed-deadline'" 
-         class="file-download-row bg-gray-50 rounded-lg p-3 flex items-center justify-between mb-6 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+         class="bg-gray-50 rounded-lg p-3 flex items-center justify-between mb-6 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
          (click)="onDownloadFile()">
       <div class="flex items-center gap-3">
         <app-icon name="file-text" [size]="18" className="text-gray-600"></app-icon>
@@ -98,7 +88,6 @@
       </div>
     </div>
 
-    <!-- Start Evaluation Button (Awarded only) -->
     <div *ngIf="statusConfig.showButton" class="mb-6">
       <app-button 
         (click)="onStartEvaluation()"
@@ -107,7 +96,6 @@
       </app-button>
     </div>
 
-    <!-- Information/Alert Notice -->
     <div *ngIf="statusConfig.alertMessage" 
          class="rounded-lg p-3"
          [ngClass]="{
