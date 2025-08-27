@@ -43,6 +43,10 @@
 
 .table-row-group {
   @apply border-b border-gray-100 last:border-b-0;
+  
+  /* Debug: Force full width for the entire row group */
+  width: 100% !important;
+  display: block !important;
 }
 
 .main-row {
@@ -95,10 +99,18 @@
 }
 
 .sub-rows-full-width {
-  @apply w-full py-2;
+  @apply py-2;
+  
+  /* Debug: Force absolute positioning to break out of constraints */
+  position: relative;
+  width: 100% !important;
+  left: 0;
+  right: 0;
   
   .sub-table {
-    @apply bg-gray-50 rounded-lg p-4 w-full;
+    @apply bg-gray-50 rounded-lg p-4;
+    width: 100% !important;
+    box-sizing: border-box;
   
     .sub-header-row {
       display: grid;
