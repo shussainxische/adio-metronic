@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADIO Design System - Component Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        :root {
+            --primary-color: #A57737;
+            --primary-light-color: #B98843;
+            --primary-dark-color: #845E2B;
+            --primary-active: #A57737;
+            --primary-on-surface: #1f2937;
+            --stroke-container: #e5e7eb;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
+
+        .sidebar {
+            width: 280px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            max-width: calc(100vw - 280px);
+        }
+
+        .component-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .nav-item {
+            display: block;
+            padding: 8px 16px;
+            color: #6b7280;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 2px 0;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f3f4f6;
+            color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding: 0 16px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Component-specific styles */
+        .rounded-xl { border-radius: 12px; }
+        .shadow-0-1 { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
+        .border-stroke-container { border-color: var(--stroke-container); }
+        .text-primary-active { color: var(--primary-active); }
+        .text-primary-on-surface { color: var(--primary-on-surface); }
+        .bg-primary { background-color: var(--primary-color); }
+        .border-primary { border-color: var(--primary-color); }
+        .text-primary { color: var(--primary-color); }
+        .ring-primary { --tw-ring-color: var(--primary-color); }
+
+        /* Status badge styles - EXACT from ADIO app */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            height: 24px;
+            padding: 0 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 24px;
+            min-width: 96px;
+            justify-content: center;
+        }
+        .status-badge.success { background: #E6FFF3; color: #090909; }
+        .status-badge.warning { background: #FEF6D8; color: #090909; }
+        .status-badge.info { background: #E3EFFF; color: #090909; }
+        .status-badge.error { background: #FFDFDF; color: #090909; }
+        .status-badge.pending { background: #F9FAFB; color: #090909; }
+
+        /* Notification card styles */
+        .notification-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .notification-card:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        .notification-card.unread {
+            position: relative;
+        }
+        .notification-card.unread:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--primary-color);
+            border-radius: 8px 0 0 8px;
+        }
+        .notification-card:not(.unread) {
+            background-color: #f9fafb;
+            border: none;
+        }
+
+        /* Form field styles */
+        .form-field {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #6b7280;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-light-color);
+            box-shadow: 0 0 0 3px rgb(165 119 55 / 0.1);
+        }
+        .form-input:hover {
+            border-color: #1f2937;
+        }
+        .form-input.locked {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        /* Calculated input styles - EXACT from app */
+        .calculated-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            height: 48px;
+            padding: 12px 40px 12px 16px;
+            transition: all 0.2s ease;
+        }
+        .calculated-input-wrapper:hover {
+            background-color: #dbeafe;
+            border-color: #93c5fd;
+        }
+        .calculated-input-wrapper.mid-calculation-variant {
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+        }
+        .calculated-input-wrapper.mid-calculation-variant:hover {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+        .calculated-input-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #2563eb;
+            width: 80%;
+            text-align: left;
+            line-height: 1.3;
+            padding-right: 12px;
+        }
+        .calculated-input-wrapper.mid-calculation-variant .calculated-input-label {
+            color: #374151;
+            width: 70%;
+        }
+        .calculated-input-value-container {
+            width: 20%;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+        }
+        .calculated-input-wrapper.mid-calculation-variant .calculated-input-value-container {
+            width: 30%;
+        }
+        .calculated-input-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e40af;
+            line-height: 1.4;
+        }
+        .calculated-input-wrapper.mid-calculation-variant .calculated-input-value {
+            color: #1f2937;
+        }
+        .calculated-input-unit {
+            font-size: 12px;
+            font-weight: 500;
+            color: #2563eb;
+            line-height: 1.4;
+        }
+        .calculated-input-wrapper.mid-calculation-variant .calculated-input-unit {
+            color: #6b7280;
+        }
+        .calculated-input-icon {
+            flex-shrink: 0;
+            cursor: help;
+            transition: all 0.2s ease;
+            position: absolute;
+            right: 12px;
+        }
+
+        /* Activity log styles */
+        .activity-item {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .activity-icon.success { background: #dcfce7; color: #166534; }
+        .activity-icon.warning { background: #fef3c7; color: #b45309; }
+        .activity-icon.info { background: #dbeafe; color: #1e40af; }
+
+        /* Tab styles */
+        .tab-nav {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 24px;
+            padding: 4px;
+            margin-bottom: 2rem;
+        }
+        .tab-item {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6b7280;
+        }
+        .tab-item.active {
+            background: white;
+            color: var(--primary-on-surface);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        /* Data table styles */
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+        .data-table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .data-table-row {
+            display: flex;
+            padding: 1.5rem;
+        }
+        .data-table-row:not(:last-child) {
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .data-table-cell {
+            flex: 1;
+            padding-right: 1.5rem;
+        }
+        .data-table-cell:last-child {
+            padding-right: 0;
+            text-align: right;
+        }
+
+        /* File upload styles */
+        .file-upload {
+            border: 2px dashed #6b7280;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload:hover {
+            border-color: #1f2937;
+        }
+        .file-upload.has-file {
+            border-style: solid;
+            border-color: var(--primary-color);
+        }
+
+        /* Checkbox styles */
+        .custom-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            position: relative;
+        }
+        .custom-checkbox.checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="p-6 border-b border-gray-200">
+            <h1 class="text-xl font-bold text-gray-900">ADIO Design System</h1>
+            <p class="text-sm text-gray-600 mt-1">Component Library</p>
+        </div>
+        
+        <div class="p-4">
+            <a href="#cards" class="nav-item">Cards</a>
+            <a href="#form-fields" class="nav-item">Form Fields</a>
+            <a href="#notifications" class="nav-item">Badges & Alerts</a>
+            <a href="#tabs" class="nav-item">Navigation</a>
+            <a href="#tables" class="nav-item">Data Tables</a>
+            <a href="#sidebar" class="nav-item">Widgets</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">ADIO Design System</h1>
+            <p class="text-gray-600">Complete component library showing all states and variants used in the ADIO Energy Support Program application.</p>
+        </div>
+
+        <!-- Cards -->
+        <section id="cards" class="component-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Cards</h2>
+            
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Application Preview Cards</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Blue - In Progress -->
+                    <div class="rounded-xl border border-stroke-container p-6 h-full shadow-0-1 cursor-pointer transition-all duration-200 hover:shadow-md">
+                        <!-- Header: Status Badge + SLA Alert -->
+                        <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
+                            <span class="status-badge info">In Progress</span>
+                            <button class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors" title="SLA Violation">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-red-600"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="card-content space-y-3 mb-4">
+                            <h3 class="text-base font-semibold text-primary-on-surface">Title</h3>
+                            <p class="text-xs text-gray-600">Description text</p>
+                            <div class="card-categories mb-3">
+                                <span class="inline-flex items-center justify-center h-6 w-6 bg-gray-200 text-gray-700 rounded text-xs font-bold">A</span>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="h-2 rounded-full transition-all duration-300" style="width: 75%; background-color: #A57737;"></div>
+                                </div>
+                                <span class="text-xs font-bold text-primary-on-surface">75%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer: Assignee + Notifications -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                                <span class="text-xs text-gray-600">Assignee Name</span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors relative" title="Notifications">
+                                <i data-lucide="bell" class="w-4 h-4 text-gray-700"></i>
+                                <div class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Green - Approved -->
+                    <div class="rounded-xl border border-stroke-container p-6 h-full shadow-0-1 cursor-pointer transition-all duration-200 hover:shadow-md">
+                        <!-- Header: Status Badge -->
+                        <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
+                            <span class="status-badge success">Approved</span>
+                            <div class="w-8 h-8"></div> <!-- Spacer when no SLA -->
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="card-content space-y-3 mb-4">
+                            <h3 class="text-base font-semibold text-primary-on-surface">Title</h3>
+                            <p class="text-xs text-gray-600">Description text</p>
+                            <div class="card-categories mb-3">
+                                <span class="inline-flex items-center justify-center h-6 w-6 bg-gray-200 text-gray-700 rounded text-xs font-bold">A</span>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="h-2 rounded-full transition-all duration-300" style="width: 100%; background-color: #A57737;"></div>
+                                </div>
+                                <span class="text-xs font-bold text-primary-on-surface">100%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer: Assignee + Notifications -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                                <span class="text-xs text-gray-600">Assignee Name</span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors" title="Notifications">
+                                <i data-lucide="bell" class="w-4 h-4 text-gray-700"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Red - Action Required -->
+                    <div class="rounded-xl border border-stroke-container p-6 h-full shadow-0-1 cursor-pointer transition-all duration-200 hover:shadow-md">
+                        <!-- Header: Status Badge + SLA Alert -->
+                        <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
+                            <span class="status-badge error">Action Required</span>
+                            <button class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors" title="SLA Violation">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-red-600"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="card-content space-y-3 mb-4">
+                            <h3 class="text-base font-semibold text-primary-on-surface">Title</h3>
+                            <p class="text-xs text-gray-600">Description text</p>
+                            <div class="card-categories mb-3">
+                                <span class="inline-flex items-center justify-center h-6 w-6 bg-gray-200 text-gray-700 rounded text-xs font-bold">A</span>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="h-2 rounded-full transition-all duration-300" style="width: 35%; background-color: #A57737;"></div>
+                                </div>
+                                <span class="text-xs font-bold text-primary-on-surface">35%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer: Assignee + Notifications -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="user-check" class="w-4 h-4 text-gray-500"></i>
+                                <span class="text-xs text-gray-600">Unassigned</span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors relative" title="Notifications">
+                                <i data-lucide="bell" class="w-4 h-4 text-gray-700"></i>
+                                <div class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Yellow - Under Review -->
+                    <div class="rounded-xl border border-stroke-container p-6 h-full shadow-0-1 cursor-pointer transition-all duration-200 hover:shadow-md">
+                        <!-- Header: Status Badge -->
+                        <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
+                            <span class="status-badge warning">Under Review</span>
+                            <div class="w-8 h-8"></div> <!-- Spacer when no SLA -->
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="card-content space-y-3 mb-4">
+                            <h3 class="text-base font-semibold text-primary-on-surface">Title</h3>
+                            <p class="text-xs text-gray-600">Description text</p>
+                            <div class="card-categories mb-3">
+                                <span class="inline-flex items-center justify-center h-6 w-6 bg-gray-200 text-gray-700 rounded text-xs font-bold">A</span>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="flex items-center gap-3">
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="h-2 rounded-full transition-all duration-300" style="width: 60%; background-color: #A57737;"></div>
+                                </div>
+                                <span class="text-xs font-bold text-primary-on-surface">60%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer: Assignee + Notifications -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="users" class="w-4 h-4 text-gray-500"></i>
+                                <span class="text-xs text-gray-600">Team Name</span>
+                            </div>
+                            <button class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors" title="Notifications">
+                                <i data-lucide="bell" class="w-4 h-4 text-gray-700"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Container Cards</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Primary Title Card -->
+                    <div class="rounded-xl border border-stroke-container p-6 h-full shadow-0-1">
+                        <div class="text-primary-active text-2xl mb-6">Primary Title</div>
+                        <div class="text-gray-600">
+                            This card uses the primary title style with larger font size and primary color.
+                        </div>
+                    </div>
+
+                    <!-- Secondary Title Card -->
+                    <div class="rounded-xl border border-stroke-container p-6 h-full shadow-0-1">
+                        <div class="text-xl font-bold text-primary-on-surface mb-6">Secondary Title</div>
+                        <div class="text-gray-600">
+                            This card uses the secondary title style with bold weight and darker color.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- KPI Cards -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">KPI Cards</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Standard KPI -->
+                    <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm">Total Applications</span>
+                            <i data-lucide="file-text" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <span class="text-3xl font-bold text-primary-on-surface">142</span>
+                        </div>
+                    </div>
+
+                    <!-- With Alert -->
+                    <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm">Pending Reviews</span>
+                            <i data-lucide="clock" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <span class="text-3xl font-bold text-primary-on-surface">23</span>
+                            <div class="flex items-center text-red-500 text-sm">
+                                <i data-lucide="alert-circle" class="w-4 h-4 mr-1"></i>
+                                5 overdue
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- High Numbers -->
+                    <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm">Total Revenue</span>
+                            <i data-lucide="dollar-sign" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <span class="text-3xl font-bold text-primary-on-surface">2.45M</span>
+                        </div>
+                    </div>
+
+                    <!-- Zero State -->
+                    <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm">New Registrations</span>
+                            <i data-lucide="user-plus" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <span class="text-3xl font-bold text-primary-on-surface">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion Cards -->
+            <div class="mb-8 mt-12">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Accordion Cards</h3>
+                <div class="space-y-4">
+                    <!-- Expanded Accordion -->
+                    <div class="border border-gray-200 bg-white rounded-lg w-full">
+                        <div class="flex justify-between items-center gap-3 text-gray-800 py-4 px-6 cursor-pointer">
+                            <div class="text-base font-semibold">Economic Impact Assessment</div>
+                            <i data-lucide="chevron-up" class="w-5 h-5 text-gray-600"></i>
+                        </div>
+                        <div class="px-6 pb-6">
+                            <div class="space-y-4 text-gray-900">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Investment Score:</span>
+                                        <span class="text-sm font-medium">8.5</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Investment Top-up Score:</span>
+                                        <span class="text-sm font-medium">7.2</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Emiratisation Salary Score:</span>
+                                        <span class="text-sm font-medium">9.1</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Supply Chain Score:</span>
+                                        <span class="text-sm font-medium">6.8</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsed Accordion -->
+                    <div class="border border-gray-200 bg-white rounded-lg w-full">
+                        <div class="flex justify-between items-center gap-3 text-gray-800 py-4 px-6 cursor-pointer hover:bg-gray-50">
+                            <div class="text-base font-semibold">Productivity Enhancement</div>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Fields -->
+        <section id="form-fields" class="component-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Form Fields</h2>
+            
+            <!-- Row 1: Standard Fields and Interactive Components -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Standard Fields</h3>
+                    <div class="space-y-6">
+                        <!-- Text Input -->
+                        <div class="form-field">
+                            <label class="form-label">Text Input <span class="text-red-500">*</span></label>
+                            <input type="text" class="form-input" placeholder="| Enter text here" value="">
+                        </div>
+
+                        <!-- Locked Field -->
+                        <div class="form-field">
+                            <label class="form-label">Locked Input</label>
+                            <div class="relative">
+                                <input type="text" class="form-input locked" placeholder="| Locked field" value="LIC-2024-001234" readonly>
+                                <i data-lucide="lock" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- Validated Field (moved above error) -->
+                        <div class="form-field">
+                            <label class="form-label">Valid Input</label>
+                            <div class="relative">
+                                <input type="tel" class="form-input border-green-500" placeholder="| +971 XX XXX XXXX" value="+971 50 123 4567">
+                                <i data-lucide="check-circle" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500"></i>
+                            </div>
+                            <div class="text-green-600 text-sm mt-1">Valid mobile number format</div>
+                        </div>
+
+                        <!-- Error Field -->
+                        <div class="form-field">
+                            <label class="form-label text-red-500">Invalid Input <span class="text-red-500">*</span></label>
+                            <input type="email" class="form-input border-red-500" placeholder="| Enter email address" value="invalid-email">
+                            <div class="text-red-500 text-sm mt-1">Please enter a valid email address</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Interactive Components</h3>
+                    <div class="space-y-6">
+                        <!-- Dropdown Input -->
+                        <div class="form-field">
+                            <label class="form-label">Dropdown Input</label>
+                            <div class="relative">
+                                <select class="form-input appearance-none">
+                                    <option>| Select category</option>
+                                    <option>Option A</option>
+                                    <option>Option B</option>
+                                    <option>Option C</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+
+                        <!-- Date Picker Input -->
+                        <div class="form-field">
+                            <label class="form-label">Date Input</label>
+                            <input type="date" class="form-input" value="2024-12-27">
+                        </div>
+
+                        <!-- AED Input -->
+                        <div class="form-field">
+                            <label class="form-label">AED Input</label>
+                            <div class="border rounded-md border-gray-300 relative group flex items-center w-full bg-white">
+                                <div class="px-3 py-3 bg-gray-50 rounded-l-md border-r border-gray-300">
+                                    <span class="text-gray-600 font-medium text-sm">AED</span>
+                                </div>
+                                <input type="number" class="border-0 w-full outline-none py-3 px-3 rounded-r-md text-sm bg-white text-gray-800 placeholder:text-gray-400" placeholder="0.00" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Auto-Calculated Fields and Controls & File Upload -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Auto-Calculated Fields</h3>
+                    <div class="space-y-6">
+                        <!-- Mid Calculation (Gray variant) - moved to top -->
+                        <div class="form-field">
+                            <div class="calculated-input-wrapper mid-calculation-variant">
+                                <div class="calculated-input-label">Mid Calculated Input</div>
+                                <div class="calculated-input-value-container">
+                                    <span class="calculated-input-value">8.5</span>
+                                </div>
+                                <div class="calculated-input-icon">
+                                    <i data-lucide="info" class="w-3.5 h-3.5 text-gray-600"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AED Calculation (Blue variant) -->
+                        <div class="form-field">
+                            <div class="calculated-input-wrapper">
+                                <div class="calculated-input-label">AED Calculated Input</div>
+                                <div class="calculated-input-value-container">
+                                    <span class="calculated-input-value">2,450,000</span>
+                                    <span class="calculated-input-unit">AED</span>
+                                </div>
+                                <div class="calculated-input-icon">
+                                    <i data-lucide="info" class="w-3.5 h-3.5 text-blue-600"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Score Calculation (Blue variant) -->
+                        <div class="form-field">
+                            <div class="calculated-input-wrapper">
+                                <div class="calculated-input-label">Score Calculated Input</div>
+                                <div class="calculated-input-value-container">
+                                    <span class="calculated-input-value">85</span>
+                                    <span class="calculated-input-unit">%</span>
+                                </div>
+                                <div class="calculated-input-icon">
+                                    <i data-lucide="info" class="w-3.5 h-3.5 text-blue-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Controls & File Upload</h3>
+                    
+                    <!-- Checkbox -->
+                    <div class="mb-6">
+                        <h4 class="text-base font-semibold text-gray-800 mb-3">Checkbox</h4>
+                        <div class="space-y-2">
+                            <!-- Checked -->
+                            <div class="form-field">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <div class="custom-checkbox border border-gray-900 checked bg-primary border-primary flex items-center justify-center">
+                                        <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                                    </div>
+                                    <span class="text-sm text-primary-on-surface">Checked Checkbox</span>
+                                </label>
+                            </div>
+                            
+                            <!-- Unchecked -->
+                            <div class="form-field">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <div class="custom-checkbox border border-gray-900 flex items-center justify-center">
+                                        
+                                    </div>
+                                    <span class="text-sm text-primary-on-surface">Unchecked Checkbox</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RFQ File Upload Component -->
+                    <div class="form-field">
+                        <label class="form-label">Upload Proposal Document</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer">
+                            <div class="flex flex-col items-center">
+                                <svg class="w-8 h-8 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="text-sm font-medium text-gray-900 mb-1">Click to upload or drag and drop</p>
+                                <p class="text-xs text-gray-500">PDF, DOC, DOCX up to 10MB</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB</p>
+                    </div>
+
+                    <!-- Uploaded File Preview -->
+                    <div class="form-field">
+                        <label class="form-label">Uploaded File Preview</label>
+                        <div class="mt-4 space-y-2">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm font-medium text-gray-900">company-proposal.pdf</span>
+                                        <span class="text-xs text-gray-500">(2.1 MB)</span>
+                                    </div>
+                                </div>
+                                <button class="text-red-500 hover:text-red-700 p-1 rounded transition-colors duration-200 hover:bg-red-50">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Badges & Alerts -->
+        <section id="notifications" class="component-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Badges & Alerts</h2>
+            
+            <!-- Notifications Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Notifications</h3>
+                <div class="space-y-4">
+                    <!-- Read Notification -->
+                    <div class="notification-card">
+                        <div class="notification-content flex-1">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="file-text" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-gray-600">Application Status Update. Your application <strong>ESP12345</strong> has been approved and is ready for the next stage</p>
+                                    <span class="text-xs text-gray-500">15m</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center ml-3">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Unread Notification (with gold border and white background) -->
+                    <div class="notification-card bg-white border border-primary">
+                        <div class="notification-content flex-1">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="file-text" class="w-4 h-4 text-primary flex-shrink-0"></i>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-gray-900 font-medium">Application Status Update. Your application <strong>ESP98765</strong> has been approved and is ready for the next stage</p>
+                                    <span class="text-xs text-gray-500">30m</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center ml-3">
+                            <button class="text-xs px-2 py-1 bg-primary text-white rounded hover:opacity-80 transition-colors">
+                                Mark as read
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Alerts</h3>
+                <div class="space-y-4">
+                    <!-- Success Alert -->
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
+                            <div>
+                                <h4 class="text-sm font-medium text-green-800">Application Submitted Successfully</h4>
+                                <p class="text-sm text-green-700 mt-1">Your application ESP12345 has been submitted and is now under review.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Warning Alert -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-600"></i>
+                            <div>
+                                <h4 class="text-sm font-medium text-yellow-800">Additional Documents Required</h4>
+                                <p class="text-sm text-yellow-700 mt-1">Please upload the missing documents to complete your application.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="x-circle" class="w-5 h-5 text-red-600"></i>
+                            <div>
+                                <h4 class="text-sm font-medium text-red-800">Submission Failed</h4>
+                                <p class="text-sm text-red-700 mt-1">There was an error submitting your application. Please try again.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- States Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">States</h3>
+                <div class="flex flex-wrap gap-3">
+                    <span class="status-badge success">Approved</span>
+                    <span class="status-badge info">In Progress</span>
+                    <span class="status-badge warning">Under Review</span>
+                    <span class="status-badge error">Action Required</span>
+                    <span class="status-badge" style="background: #f3f4f6; color: #6b7280;">Draft</span>
+                </div>
+            </div>
+
+            <!-- Activity Log Section -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Activity Log</h3>
+                <div class="space-y-0">
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-medium text-sm text-gray-900">Application Approved</div>
+                            <div class="text-sm text-gray-600">Your application ESP12345 has been approved by the review committee</div>
+                            <div class="text-xs text-gray-500 mt-1">Dec 20, 2024 at 2:30 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon info">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-medium text-sm text-gray-900">Under Review</div>
+                            <div class="text-sm text-gray-600">Application is currently being reviewed by Ahmad Al-Mansouri</div>
+                            <div class="text-xs text-gray-500 mt-1">Dec 18, 2024 at 10:15 AM</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon warning">
+                            <i data-lucide="upload" class="w-4 h-4"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-medium text-sm text-gray-900">Documents Uploaded</div>
+                            <div class="text-sm text-gray-600">Additional supporting documents were uploaded</div>
+                            <div class="text-xs text-gray-500 mt-1">Dec 17, 2024 at 4:45 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Navigation -->
+        <section id="tabs" class="component-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Navigation</h2>
+            
+            <!-- Standard ADIO Tabs -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Standard Tabs</h3>
+                <div class="flex border-b border-gray-200">
+                    <div class="me-5 cursor-pointer relative">
+                        <div class="flex items-center gap-2 pt-3 px-4">
+                            <a class="inline-block py-2 text-base flex items-center gap-2 text-primary font-semibold">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                                Application
+                            </a>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-primary"></div>
+                    </div>
+                    <div class="me-5 cursor-pointer relative">
+                        <div class="flex items-center gap-2 pt-3 px-4">
+                            <a class="inline-block py-2 text-base flex items-center gap-2 text-gray-900 hover:text-primary">
+                                <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                                RFQ
+                            </a>
+                        </div>
+                    </div>
+                    <div class="me-5 cursor-pointer relative">
+                        <div class="flex items-center gap-2 pt-3 px-4">
+                            <a class="inline-block py-2 text-base flex items-center gap-2 text-gray-900 hover:text-primary">
+                                <i data-lucide="chart-bar" class="w-4 h-4"></i>
+                                Evaluation
+                            </a>
+                        </div>
+                    </div>
+                    <div class="me-5 cursor-pointer relative">
+                        <div class="flex items-center gap-2 pt-3 px-4">
+                            <a class="inline-block py-2 text-base flex items-center gap-2 text-gray-900 hover:text-primary">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                Review
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rounded Pills (Evaluation Sub-tabs) -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Rounded Pills</h3>
+                <div class="flex gap-2">
+                    <button class="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium bg-primary text-white">
+                        <i data-lucide="info" class="w-4 h-4"></i>
+                        General
+                    </button>
+                    <button class="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        Economic Impact
+                    </button>
+                    <button class="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+                        <i data-lucide="activity" class="w-4 h-4"></i>
+                        Productivity
+                    </button>
+                    <button class="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                        EMS/DMS
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stepper Tool -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Stepper</h3>
+                <div class="w-full mt-6">
+                    <div class="relative flex justify-between w-full h-full">
+                        <!-- Step 1 - Completed -->
+                        <div class="relative z-10 flex flex-col flex-1 items-baseline">
+                            <div class="flex justify-center w-full items-center">
+                                <!-- Progress line -->
+                                <div class="absolute z-0 w-full translate-x-1/2">
+                                    <div class="w-full h-0.5">
+                                        <div class="h-full w-full bg-primary"></div>
+                                    </div>
+                                </div>
+                                <!-- Step indicator -->
+                                <div class="absolute h-[50%] flex items-center">
+                                    <div class="p-2 border rounded-full shadow-sm bg-white border-primary">
+                                        <div class="w-3 h-3 flex-shrink-0 flex items-center justify-center bg-primary rounded-full text-white">
+                                            <i data-lucide="check" class="w-2 h-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="text-xs text-center mx-auto mt-6 font-medium text-primary cursor-pointer">
+                                Application
+                            </h4>
+                        </div>
+
+                        <!-- Step 2 - Active -->
+                        <div class="relative z-10 flex flex-col flex-1 items-baseline">
+                            <div class="flex justify-center w-full items-center">
+                                <!-- Progress line -->
+                                <div class="absolute z-0 w-full translate-x-1/2">
+                                    <div class="w-full h-0.5">
+                                        <div class="h-full w-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                                <!-- Step indicator -->
+                                <div class="absolute h-[50%] flex items-center">
+                                    <div class="p-2 border rounded-full shadow-sm bg-white border-primary">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="text-xs text-center mx-auto mt-6 font-medium text-primary cursor-pointer">
+                                RFQ
+                            </h4>
+                        </div>
+
+                        <!-- Step 3 - Pending -->
+                        <div class="relative z-10 flex flex-col flex-1 items-baseline">
+                            <div class="flex justify-center w-full items-center">
+                                <!-- Step indicator -->
+                                <div class="absolute h-[50%] flex items-center">
+                                    <div class="p-2 border rounded-full shadow-sm bg-white border-gray-300">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="text-xs text-center mx-auto mt-6 font-normal text-gray-500 cursor-not-allowed">
+                                Evaluation
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Tables -->
+        <section id="tables" class="component-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Data Tables</h2>
+            
+            <!-- Bilingual Data -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Bilingual Data</h3>
+                <div class="data-table">
+                    <div class="data-table-header">
+                        <h3 class="text-lg font-semibold text-gray-900">Application Details</h3>
+                        <p class="text-sm text-gray-600 mt-1">Basic information about the application</p>
+                    </div>
+                    <div class="data-table-row">
+                        <div class="data-table-cell">
+                            <div class="text-xs text-gray-500 mb-1">Application ID</div>
+                            <div class="text-sm text-gray-900">ESP12345</div>
+                        </div>
+                        <div class="data-table-cell text-right">
+                            <div class="text-xs text-gray-500 mb-1">رقم الطلب</div>
+                            <div class="text-sm text-gray-900">ESP12345</div>
+                        </div>
+                    </div>
+                    <div class="data-table-row">
+                        <div class="data-table-cell">
+                            <div class="text-xs text-gray-500 mb-1">Company Name</div>
+                            <div class="text-sm text-gray-900">Advanced Manufacturing LLC</div>
+                        </div>
+                        <div class="data-table-cell text-right">
+                            <div class="text-xs text-gray-500 mb-1">اسم الشركة</div>
+                            <div class="text-sm text-gray-900">شركة التصنيع المتقدم ذ.م.م</div>
+                        </div>
+                    </div>
+                    <div class="data-table-row">
+                        <div class="data-table-cell">
+                            <div class="text-xs text-gray-500 mb-1">Status</div>
+                            <div class="text-sm text-gray-900">Under Review</div>
+                        </div>
+                        <div class="data-table-cell text-right">
+                            <div class="text-xs text-gray-500 mb-1">الحالة</div>
+                            <div class="text-sm text-gray-900">قيد المراجعة</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complex List View -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Complex List View</h3>
+                <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 overflow-x-auto">
+                    <!-- Table Header -->
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 min-w-[900px]">
+                        <div class="grid grid-cols-12 gap-2 text-xs font-medium text-gray-700 uppercase tracking-wider">
+                            <div class="col-span-2">Application ID</div>
+                            <div class="col-span-3">Company Name</div>
+                            <div class="col-span-2">Status</div>
+                            <div class="col-span-1">Categories</div>
+                            <div class="col-span-2">Progress</div>
+                            <div class="col-span-1">Assignee</div>
+                            <div class="col-span-1">Actions</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Table Rows -->
+                    <div class="divide-y divide-gray-200 min-w-[900px]">
+                        <div class="px-4 py-3 hover:bg-gray-50 cursor-pointer">
+                            <div class="grid grid-cols-12 gap-2 items-center">
+                                <div class="col-span-2">
+                                    <span class="text-sm font-medium text-gray-900">ESP12345</span>
+                                </div>
+                                <div class="col-span-3">
+                                    <div class="text-sm font-medium text-gray-900 truncate">Advanced Manufacturing LLC</div>
+                                    <div class="text-xs text-gray-600">Large Enterprise</div>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="status-badge info">In Progress</span>
+                                </div>
+                                <div class="col-span-1">
+                                    <div class="flex gap-1">
+                                        <span class="inline-flex items-center justify-center h-5 w-5 bg-gray-200 text-gray-700 rounded text-xs font-bold">A</span>
+                                        <span class="inline-flex items-center justify-center h-5 w-5 bg-gray-200 text-gray-700 rounded text-xs font-bold">B</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full transition-all duration-300" style="width: 75%; background-color: #A57737;"></div>
+                                        </div>
+                                        <span class="text-xs font-bold text-gray-700 whitespace-nowrap">75%</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-1">
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="user" class="w-4 h-4 text-gray-500 flex-shrink-0"></i>
+                                        <span class="text-xs text-gray-600 truncate">Ahmed</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-1">
+                                    <div class="flex items-center justify-start gap-1">
+                                        <button class="w-7 h-7 min-w-[1.75rem] min-h-[1.75rem] rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors" title="SLA Violation">
+                                            <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-600"></i>
+                                        </button>
+                                        <button class="w-7 h-7 min-w-[1.75rem] min-h-[1.75rem] rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors relative" title="Notifications">
+                                            <i data-lucide="bell" class="w-3.5 h-3.5 text-gray-700"></i>
+                                            <div class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full"></div>
+                                        </button>
+                                        <button class="w-7 h-7 min-w-[1.75rem] min-h-[1.75rem] rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors" title="View Details">
+                                            <i data-lucide="eye" class="w-3.5 h-3.5 text-gray-700"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="px-4 py-3 hover:bg-gray-50 cursor-pointer">
+                            <div class="grid grid-cols-12 gap-2 items-center">
+                                <div class="col-span-2">
+                                    <span class="text-sm font-medium text-gray-900">ESP12346</span>
+                                </div>
+                                <div class="col-span-3">
+                                    <div class="text-sm font-medium text-gray-900 truncate">Solar Energy Solutions</div>
+                                    <div class="text-xs text-gray-600">Medium Enterprise</div>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="status-badge success">Approved</span>
+                                </div>
+                                <div class="col-span-1">
+                                    <div class="flex gap-1">
+                                        <span class="inline-flex items-center justify-center h-5 w-5 bg-gray-200 text-gray-700 rounded text-xs font-bold">C</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full transition-all duration-300" style="width: 100%; background-color: #A57737;"></div>
+                                        </div>
+                                        <span class="text-xs font-bold text-gray-700 whitespace-nowrap">100%</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-1">
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="users" class="w-4 h-4 text-gray-500 flex-shrink-0"></i>
+                                        <span class="text-xs text-gray-600 truncate">Sara</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-1">
+                                    <div class="flex items-center justify-start gap-1">
+                                        <div class="w-7 h-7"></div> <!-- Spacer when no SLA -->
+                                        <button class="w-7 h-7 min-w-[1.75rem] min-h-[1.75rem] rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors" title="Notifications">
+                                            <i data-lucide="bell" class="w-3.5 h-3.5 text-gray-700"></i>
+                                        </button>
+                                        <button class="w-7 h-7 min-w-[1.75rem] min-h-[1.75rem] rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors" title="View Details">
+                                            <i data-lucide="eye" class="w-3.5 h-3.5 text-gray-700"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Summary Table -->
+            <div class="mt-12">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Score Summary Table</h3>
+                <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 p-6">
+                    <!-- Table Header -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900">Assessment Summary</h4>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600">Total Score:</span>
+                            <div class="bg-primary text-white px-4 py-2 rounded-lg font-bold text-lg">
+                                8.2
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Score Table -->
+                    <div class="overflow-x-auto">
+                        <div class="min-w-[600px]">
+                            <!-- Table Headers -->
+                            <div class="grid grid-cols-6 gap-4 py-3 px-4 bg-gray-50 rounded-t-lg text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                <div class="col-span-3">Component</div>
+                                <div class="text-right">Score</div>
+                                <div class="text-right">Weight</div>
+                                <div class="text-right">Result</div>
+                            </div>
+                            
+                            <!-- Table Rows -->
+                            <div class="divide-y divide-gray-200 border border-t-0 rounded-b-lg">
+                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center hover:bg-gray-50">
+                                    <div class="col-span-3 font-medium text-gray-900">Economic Impact</div>
+                                    <div class="text-right text-sm">
+                                        8.5
+                                    </div>
+                                    <div class="text-right text-sm">
+                                        40%
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary text-white ml-auto">
+                                            3.4
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center hover:bg-gray-50">
+                                    <div class="col-span-3 font-medium text-gray-900">Productivity Enhancement</div>
+                                    <div class="text-right text-sm">
+                                        7.8
+                                    </div>
+                                    <div class="text-right text-sm">
+                                        30%
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary text-white ml-auto">
+                                            2.3
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center hover:bg-gray-50">
+                                    <div class="col-span-3 font-medium text-gray-900">Environmental Management</div>
+                                    <div class="text-right text-sm">
+                                        9.1
+                                    </div>
+                                    <div class="text-right text-sm">
+                                        20%
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary text-white ml-auto">
+                                            1.8
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center hover:bg-gray-50">
+                                    <div class="col-span-3 font-medium text-gray-900">Data Management System</div>
+                                    <div class="text-right text-sm">
+                                        6.9
+                                    </div>
+                                    <div class="text-right text-sm">
+                                        10%
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary text-white ml-auto">
+                                            0.7
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Widgets -->
+        <section id="sidebar" class="component-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Widgets</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Application Summary Widget -->
+                <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Application Summary</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Total Applications</span>
+                            <span class="font-semibold text-gray-900">245</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">In Progress</span>
+                            <span class="font-semibold text-blue-600">89</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Approved</span>
+                            <span class="font-semibold text-green-600">156</span>
+                        </div>
+                        <div class="border-t pt-3 mt-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-gray-900">Success Rate</span>
+                                <span class="font-bold text-primary">63.7%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Widget -->
+                <div class="bg-white rounded-xl border border-stroke-container shadow-0-1 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full flex items-center gap-3 p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i data-lucide="plus-circle" class="w-5 h-5 text-primary"></i>
+                            <span class="text-sm font-medium text-gray-900">New Application</span>
+                        </button>
+                        <button class="w-full flex items-center gap-3 p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i data-lucide="download" class="w-5 h-5 text-gray-600"></i>
+                            <span class="text-sm font-medium text-gray-900">Export Report</span>
+                        </button>
+                        <button class="w-full flex items-center gap-3 p-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i data-lucide="settings" class="w-5 h-5 text-gray-600"></i>
+                            <span class="text-sm font-medium text-gray-900">Settings</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Smooth scroll to sections
+        document.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Scroll to section
+                const target = this.getAttribute('href');
+                if (target) {
+                    const element = document.querySelector(target);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Set initial active link
+        document.querySelector('.nav-item').classList.add('active');
+    </script>
+</body>
+</html>
