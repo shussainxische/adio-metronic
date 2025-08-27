@@ -96,10 +96,15 @@
 
 .sub-rows-container {
   @apply py-2;
+  grid-column: 1 / -1;
+}
+
+.sub-table-wrapper {
+  @apply w-full;
 }
 
 .sub-table {
-  @apply bg-gray-50 rounded-lg p-4;
+  @apply bg-gray-50 rounded-lg p-4 w-full;
   
   .sub-header-row {
     display: grid;
