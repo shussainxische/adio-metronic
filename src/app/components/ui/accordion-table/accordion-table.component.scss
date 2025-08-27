@@ -27,7 +27,7 @@
   
   .table-header-row {
     display: grid;
-    grid-template-columns: 1fr auto auto auto;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 1rem;
     @apply pb-4 mb-2 border-b border-gray-200;
     
@@ -47,7 +47,7 @@
 
 .main-row {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 1rem;
   @apply py-3 items-center;
   
@@ -110,7 +110,7 @@
   
   .sub-header-row {
     display: grid;
-    grid-template-columns: 1fr auto auto auto;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 1rem;
     @apply pb-2 mb-3 border-b border-gray-300;
     
@@ -125,7 +125,7 @@
   
   .sub-row {
     display: grid;
-    grid-template-columns: 1fr auto auto auto;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 1rem;
     @apply py-2 items-center;
     
