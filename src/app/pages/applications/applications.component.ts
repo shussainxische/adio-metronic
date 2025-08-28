@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopCardComponent } from '../../components/ui/top-card/top-card.component';
 import { PreviewCardComponent } from '../../components/ui/preview-card/preview-card.component';
@@ -37,7 +38,7 @@ import { DataTableComponent, DataTableColumn } from '../../components/ui/data-ta
   styleUrl: './applications.component.scss'
 })
 
-export class ApplicationsComponent {
+export class ApplicationsComponent implements OnInit {
   selectedFilter: string = 'All';
   selectedSubStatus: string = '';
   selectedApplicationType: string = 'all';
@@ -50,37 +51,28 @@ export class ApplicationsComponent {
   perPage: number = 12; // 12 items per page for grid view (3x4 grid)
   totalItems: number = 0;
 
-  applicationTypeOptions: SelectOption[] = [
-    { label: 'All Types', value: 'all' },
-    { label: 'Enrollment', value: 'enrollment' },
-    { label: 'Renewal', value: 'renewal' }
-  ];
+  applicationTypeOptions: SelectOption[] = [];
 
-  applications: Application[] = [
-    { id: 'ESP001', companyName: 'Al Dhafra Manufacturing', companyType: 'renewal', stage: 'RFQ', status: 'Pending', progress: 15, date: '1 Jan 2025', deadline: '1/20/2025', category: 'Electricity,Gas', certifyingBody: 'Abu Dhabi Certification Body', assignee: 'Certifying Body' },
-    { id: 'ESP002', companyName: 'Emirates Steel', companyType: 'new-manufacturing', stage: 'RFQ', status: 'Pending', progress: 10, date: '15 Jan 2025', assignee: 'Certifying Body', category: 'Electricity' },
-    { id: 'ESP003', companyName: 'Green Energy Solutions', companyType: 'enrollment', stage: 'RFQ', status: 'Submitted', progress: 35, date: '2 Jan 2025', assignee: 'Applicant' },
-    { id: 'ESP004', companyName: 'Dubai Manufacturing Co', companyType: 'existing-manufacturing', stage: 'RFQ', status: 'Submitted', progress: 25, date: '10 Jan 2025', assignee: 'Applicant', category: 'Gas' },
-    { id: 'ESP005', companyName: 'Solar Power Corp', companyType: 'enrollment', stage: 'Evaluation', status: 'In Progress', progress: 65, date: '5 Jan 2025', assignee: 'Certifying Body', category: 'Gas' },
-    { id: 'ESP006', companyName: 'National Industries', companyType: 'renewal', stage: 'Evaluation', status: 'In Progress', progress: 55, date: '12 Jan 2025', assignee: 'Certifying Body', category: 'Electricity,Gas' },
-    { id: 'ESP007', companyName: 'Advanced Materials Inc', companyType: 'new-manufacturing', stage: 'Evaluation', status: 'Returned', progress: 40, date: '3 Jan 2025', assignee: 'Certifying Body' },
-    { id: 'ESP008', companyName: 'Petrochemicals LLC', companyType: 'existing-manufacturing', stage: 'Evaluation', status: 'Returned', progress: 30, date: '8 Jan 2025', assignee: 'Certifying Body', category: 'Gas' },
-    { id: 'ESP009', companyName: 'Industrial Systems Co', companyType: 'enrollment', stage: 'Review', status: 'Initial Review', progress: 75, date: '6 Jan 2025', assignee: 'ADIO' },
-    { id: 'ESP010', companyName: 'Maritime Solutions Ltd', companyType: 'renewal', stage: 'Review', status: 'Initial Review', progress: 70, date: '7 Jan 2025', assignee: 'AD Ports' },
-    { id: 'ESP011', companyName: 'Energy Infrastructure Co', companyType: 'new-manufacturing', stage: 'Review', status: 'Initial Review', progress: 68, date: '8 Jan 2025', assignee: 'TAQA' },
-    { id: 'ESP012', companyName: 'Logistics Partners LLC', companyType: 'existing-manufacturing', stage: 'Review', status: 'Final Review', progress: 90, date: '4 Jan 2025', assignee: 'ADIO' },
-    { id: 'ESP013', companyName: 'Certified Company Alpha', companyType: 'enrollment', stage: 'Closed', status: 'Certified', progress: 100, date: '20 Dec 2024', assignee: 'ADIO' },
-    { id: 'ESP014', companyName: 'Rejected Company Beta', companyType: 'renewal', stage: 'Closed', status: 'Not Certified', progress: 100, date: '18 Dec 2024', assignee: 'ADIO' },
-    { id: 'ESP015', companyName: 'Expired Company Gamma', companyType: 'new-manufacturing', stage: 'Closed', status: 'Expired', progress: 100, date: '15 Dec 2024', assignee: 'ADIO' },
-    { id: 'ESP016', companyName: 'Canceled Company Delta', companyType: 'existing-manufacturing', stage: 'Closed', status: 'Canceled', progress: 60, date: '12 Dec 2024', assignee: 'ADIO' }
-  ];
+  applications: Application[] = [];
 
   constructor(
     private router: Router,
+    private http: HttpClient,
     public applicationStatusService: ApplicationStatusService,
     public applicationAssignmentService: ApplicationAssignmentService
-  ) {
-    this.updateFilteredApplications();
+  ) {}
+
+  ngOnInit() {
+    this.loadApplicationsData();
+  }
+
+  private loadApplicationsData() {
+    this.http.get<{applicationTypeOptions: SelectOption[], applications: Application[], applicationStages?: any[]}>('assets/mock-data/applications.json')
+      .subscribe(data => {
+        this.applicationTypeOptions = data.applicationTypeOptions;
+        this.applications = data.applications;
+        this.updateFilteredApplications();
+      });
   }
 
   get applicationTypes() {

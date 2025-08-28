@@ -3,6 +3,7 @@ import KTComponents from '../../../metronic/core/index';
 import KTLayout from '../../../metronic/app/layouts/demo1';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { NavItem } from '../../models/auth.model';
 // import { NavigationService } from '../../navigation.service';
 import { IconWrapperComponent } from "../ui/icon-wrapper/icon-wrapper.component";
@@ -34,7 +35,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     // public nav: NavigationService,
-    private appLauncherService: AppLauncherService
+    private appLauncherService: AppLauncherService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -61,59 +63,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (menu) {
       this.sideNavPages = this.filterLeafNodes(menu);
     } else {
-      // Create a test menu structure for development
-      this.sideNavPages = [
-        {
-          id: 1,
-          label: 'ENERGY_SUPPORT_PROGRAM',
-          icon: 'dashboard',
-          parentId: null,
-          children: [
-            // {
-            //   id: 3,
-            //   label: 'TENDER',
-            //   icon: 'assignment',
-            //   parentId: 1,
-            //   pageCode: '/tender',
-            //   applications: [{id: 'musataha', name: 'Musataha'}]
-            // },
-            {
-              id: 3,
-              label: 'DASHBOARD',
-              icon: 'apps',
-              parentId: 1,
-              pageCode: '/applications',
-              applications: [{id: 'musataha', name: 'Musataha'}]
-            },
-            {
-              id: 4,
-              label: 'RESOURCES',
-              icon: 'folder',
-              parentId: 1,
-              pageCode: '/resources',
-              applications: [{id: 'musataha', name: 'Musataha'}]
-            },
-            {
-              id: 5,
-              label: 'NOTIFICATIONS',
-              icon: 'notifications',
-              parentId: 1,
-              pageCode: '/notifications',
-              applications: [{id: 'musataha', name: 'Musataha'}]
-            },
-            {
-              id: 6,
-              label: 'PROFILE_SETTINGS',
-              icon: 'settings',
-              parentId: 1,
-              pageCode: '/profile-settings',
-              applications: [{id: 'musataha', name: 'Musataha'}]
-            }
-          ],
-          applications: [{id: 'musataha', name: 'Musataha'}]
-        }
-      ];
+      // Load menu from JSON file
+      this.loadMenuFromFile();
     }
+  }
+
+  private loadMenuFromFile(): void {
+    this.http.get<{sideNavPages: NavItem[]}>('assets/mock-data/sidebar-menu.json')
+      .subscribe({
+        next: (data) => {
+          this.sideNavPages = this.filterLeafNodes(data.sideNavPages);
+        },
+        error: (error) => {
+          console.error('Error loading sidebar menu:', error);
+          // Fallback to empty array if loading fails
+          this.sideNavPages = [];
+        }
+      });
   }
 
   private filterLeafNodes(items: any[]): any[] {

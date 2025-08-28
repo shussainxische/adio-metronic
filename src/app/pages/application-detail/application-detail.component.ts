@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { TabNavigationComponent } from '../../components/ui/tab-navigation/tab-navigation.component';
 import { IconComponent } from '../../components/ui/icon/icon.component';
 import { ButtonComponent } from '../../components/ui/button/button.component';
@@ -71,99 +72,111 @@ export class ApplicationDetailComponent implements OnInit {
   currentStage: string = 'Application';
   currentStep: number = 0;
 
-  stages: ApplicationStage[] = [
-    {
-      id: 'Application',
-      name: 'Application',
-      icon: 'inbox',
-      status: 'active',
-      steps: [] // No sub-steps
-    },
-    {
-      id: 'RFQ',
-      name: 'RFQ',
-      icon: 'file-text',
-      status: 'pending',
-      steps: [] // No sub-steps
-    },
-    {
-      id: 'Evaluation',
-      name: 'Evaluation',
-      icon: 'search',
-      status: 'pending',
-      steps: [
-        { id: 'general', name: 'General', description: 'General information and requirements', status: 'pending', required: true },
-        { id: 'economic-impact', name: 'Economic Impact', description: 'Economic impact assessment', status: 'pending', required: true },
-        { id: 'productivity', name: 'Productivity', description: 'Productivity analysis', status: 'pending', required: true },
-        { id: 'ems-dms', name: 'EMS/DMS', description: 'Environmental and Data Management Systems', status: 'pending', required: true },
-        { id: 'summary', name: 'Summary', description: 'Application summary and overview', status: 'pending', required: true },
-        { id: 'review-submit', name: 'Review & Submit', description: 'Final review and submission', status: 'pending', required: true }
-      ]
-    },
-    {
-      id: 'Review',
-      name: 'Review',
-      icon: 'users',
-      status: 'pending',
-      steps: [] // No sub-steps
-    },
-    {
-      id: 'Completed',
-      name: 'Certified',
-      icon: 'award',
-      status: 'pending',
-      steps: [] // No sub-steps - single final state
-    }
-  ];
+  stages: ApplicationStage[] = [];
+  private applicationDetailData: any = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private http: HttpClient,
     public applicationStatusService: ApplicationStatusService
   ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.applicationId = params['id'];
-      this.loadApplication();
-    });
+    this.loadStagesData().then(() => {
+      this.route.params.subscribe(params => {
+        this.applicationId = params['id'];
+        this.loadApplication();
+      });
 
-    this.route.queryParams.subscribe(params => {
-      if (params['stage']) {
-        this.currentStage = params['stage'];
-      } else {
-        // Default to Application stage if no query param
-        this.currentStage = 'Application';
-        this.updateUrl();
-      }
-      if (params['step']) {
-        this.currentStep = parseInt(params['step'], 10);
-      } else {
-        // Default to first step
-        this.currentStep = 0;
-      }
+      this.route.queryParams.subscribe(params => {
+        if (params['stage']) {
+          this.currentStage = params['stage'];
+        } else {
+          // Default to Application stage if no query param
+          this.currentStage = 'Application';
+          this.updateUrl();
+        }
+        if (params['step']) {
+          this.currentStep = parseInt(params['step'], 10);
+        } else {
+          // Default to first step
+          this.currentStep = 0;
+        }
+      });
+    });
+  }
+
+  private async loadStagesData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.http.get<{applicationStages: ApplicationStage[], applications: any[]}>('assets/mock-data/applications.json')
+        .subscribe({
+          next: (data) => {
+            this.stages = data.applicationStages;
+            resolve();
+          },
+          error: (error) => {
+            console.error('Error loading application data:', error);
+            // Fallback to empty arrays if loading fails
+            this.stages = [];
+            reject(error);
+          }
+        });
     });
   }
 
   loadApplication() {
-    // In real implementation, this would fetch from API
-    this.application = {
-      id: this.applicationId,
-      companyName: 'Al Dhafra Manufacturing',
-      stage: 'RFQ' as any,
-      status: 'Pending' as any,
-      progress: 25,
-      date: '1 Jan 2025',
-      deadline: '1/20/2025',
-      category: 'Electricity,Gas',
-      assignee: 'Certifying Body',
-      contactName: 'Sarah Al Mansoori',
-      contactPosition: 'Operations Manager',
-      contactEmail: 'sarah@adnoc.com',
-      contactPhone: '+971 50 987 6543'
-    };
-    
-    // Application loaded - no need to update stage name anymore
+    this.http.get<{applicationStages: ApplicationStage[], applications: any[]}>('assets/mock-data/applications.json')
+      .subscribe({
+        next: (data) => {
+          const applicationData = data.applications.find(app => app.id === this.applicationId);
+          if (applicationData) {
+            this.applicationDetailData = applicationData; // Store the full data
+            this.application = {
+              id: applicationData.id,
+              companyName: applicationData.companyName,
+              stage: applicationData.stage as any,
+              status: applicationData.status as any,
+              progress: applicationData.progress,
+              date: applicationData.date,
+              deadline: applicationData.deadline,
+              category: applicationData.category,
+              assignee: applicationData.assignee,
+              contactName: applicationData.contactName,
+              contactPosition: applicationData.contactPosition,
+              contactEmail: applicationData.contactEmail,
+              contactPhone: applicationData.contactPhone
+            };
+          } else {
+            // Fallback for unknown application ID
+            console.warn(`Application ${this.applicationId} not found in mock data`);
+            this.applicationDetailData = null;
+            this.application = {
+              id: this.applicationId,
+              companyName: 'Unknown Company',
+              stage: 'RFQ' as any,
+              status: 'Pending' as any,
+              progress: 0,
+              date: new Date().toLocaleDateString(),
+              assignee: 'Certifying Body'
+            };
+          }
+        },
+        error: (error) => {
+          console.error('Error loading application data:', error);
+          this.applicationDetailData = null;
+          // Fallback application data
+          this.application = {
+            id: this.applicationId,
+            companyName: 'Unknown Company',
+            stage: 'RFQ' as any,
+            status: 'Pending' as any,
+            progress: 0,
+            date: new Date().toLocaleDateString(),
+            assignee: 'Certifying Body'
+          };
+        }
+      });
   }
 
   get currentStageData() {
@@ -446,13 +459,13 @@ export class ApplicationDetailComponent implements OnInit {
       rows: [
         { label: 'Status', value: this.applicationStatusService.getBadgeText(this.application?.stage || 'RFQ', this.application?.status || 'Pending'), type: 'status-badge', statusVariant: this.applicationStatusService.getStatusVariant(this.application?.status || 'Pending') as any },
         { label: 'Application ID', value: this.application?.id || 'ESP-001' },
-        { label: 'Application Date', value: '8/1/2025' },
-        { label: 'Company', value: this.application?.companyName || 'Al Dhafra Manufacturing' },
-        { label: 'Type', value: 'Renewal' },
-        { label: 'Entity Type', value: 'Existing Manufacturing Entity' },
-        { label: 'Services', value: ['Electricity', 'Gas'], type: 'status-badges', allowWrap: true },
-        { label: 'Progress', value: '', type: 'progress', progress: this.application?.progress || 45 },
-        { label: 'Compliance', value: 'Application Overdue', type: 'compliance' }
+        { label: 'Application Date', value: this.getApplicationDate() },
+        { label: 'Company', value: this.application?.companyName || 'Unknown Company' },
+        { label: 'Type', value: this.getApplicationType() },
+        { label: 'Entity Type', value: this.getEntityType() },
+        { label: 'Services', value: this.getServices(), type: 'status-badges', allowWrap: true },
+        { label: 'Progress', value: '', type: 'progress', progress: this.application?.progress || 0 },
+        { label: 'Compliance', value: this.getCompliance(), type: 'compliance' }
       ]
     };
   }
@@ -461,12 +474,42 @@ export class ApplicationDetailComponent implements OnInit {
     return {
       title: 'Applicant Contact',
       rows: [
-        { label: 'Name', value: this.application?.contactName || 'Ahmed Al Rashid' },
-        { label: 'Position', value: this.application?.contactPosition || 'Operations Manager' },
-        { label: 'Email', value: this.application?.contactEmail || 'ahmed.rashid@emiratessteel.ae' },
-        { label: 'Phone', value: this.application?.contactPhone || '+971 50 123 4567' }
+        { label: 'Name', value: this.application?.contactName || 'Unknown Contact' },
+        { label: 'Position', value: this.application?.contactPosition || 'Unknown Position' },
+        { label: 'Email', value: this.application?.contactEmail || 'unknown@company.com' },
+        { label: 'Phone', value: this.application?.contactPhone || '+971 50 000 0000' }
       ]
     };
+  }
+
+  private getApplicationDate(): string {
+    return this.getApplicationDetail('applicationDate') || this.application?.date || new Date().toLocaleDateString();
+  }
+
+  private getApplicationType(): string {
+    return this.getApplicationDetail('applicationType') || 'Unknown Type';
+  }
+
+  private getEntityType(): string {
+    return this.getApplicationDetail('entityType') || 'Unknown Entity Type';
+  }
+
+  private getServices(): string[] {
+    const services = this.getApplicationDetail('services');
+    if (Array.isArray(services)) {
+      return services;
+    }
+    // Fallback to category parsing
+    const category = this.application?.category;
+    return category ? category.split(',').map(cat => cat.trim()) : ['Unknown Service'];
+  }
+
+  private getCompliance(): string {
+    return this.getApplicationDetail('compliance') || 'Unknown Compliance Status';
+  }
+
+  private getApplicationDetail(key: string): any {
+    return this.applicationDetailData ? this.applicationDetailData[key] : null;
   }
 
 }
