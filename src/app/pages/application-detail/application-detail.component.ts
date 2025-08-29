@@ -205,6 +205,18 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   private updateStageTabs() {
+    // For Closed applications with Certified status, only show Completed tab
+    if (this.application?.stage === 'Closed' && this.application?.status === 'Certified') {
+      this.stageTabs = this.stages.filter(stage => 
+        stage.id === 'Completed'
+      ).map(stage => ({ 
+        id: stage.id, 
+        label: stage.name,
+        icon: stage.icon
+      }));
+      return;
+    }
+    
     // For Quotation stage applications, only show Application and Quotation tabs  
     if (this.application?.stage === 'Quotation') {
       this.stageTabs = this.stages.filter(stage => 

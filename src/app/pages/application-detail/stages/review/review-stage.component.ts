@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../../../../components/ui/icon/icon.component';
 import { StatusBadgeComponent, StatusBadgeVariant } from '../../../../components/ui/status-badge/status-badge.component';
@@ -16,7 +16,7 @@ export interface EntityReview {
   templateUrl: './review-stage.component.html',
   styleUrl: './review-stage.component.scss'
 })
-export class ReviewStageComponent implements OnInit {
+export class ReviewStageComponent implements OnInit, OnChanges {
   @Input() application?: Application;
   
   entityReviews: EntityReview[] = [
@@ -39,12 +39,25 @@ export class ReviewStageComponent implements OnInit {
   ];
 
   ngOnInit() {
+    console.log('ReviewStageComponent - ngOnInit - Application:', this.application);
     this.setReviewStatuses();
   }
 
-  private setReviewStatuses() {
-    if (!this.application) return;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['application'] && changes['application'].currentValue) {
+      console.log('ReviewStageComponent - ngOnChanges - Application:', this.application);
+      this.setReviewStatuses();
+    }
+  }
 
+  private setReviewStatuses() {
+    if (!this.application) {
+      console.log('ReviewStageComponent - No application data');
+      return;
+    }
+
+    console.log('ReviewStageComponent - Application status:', this.application.status);
+    
     // Set statuses based on application status
     switch (this.application.status) {
       case 'Initial Review':
@@ -88,5 +101,25 @@ export class ReviewStageComponent implements OnInit {
       case 'rejected': return 'Rejected';
       default: return 'Pending';
     }
+  }
+
+  getPendingMessage(): string {
+    const pendingReviews = this.entityReviews.filter(review => review.status === 'pending');
+    const completedReviews = this.entityReviews.filter(review => review.status === 'submitted');
+    
+    if (pendingReviews.length === 0) {
+      return 'All reviews completed. Certificate ready for issuance.';
+    }
+    
+    const pendingNames = pendingReviews.map(r => r.name).join(', ');
+    const completedNames = completedReviews.map(r => r.name).join(', ');
+    
+    let message = `Certificate can only be issued after ${pendingNames} ${pendingReviews.length === 1 ? 'completes' : 'complete'} their review.`;
+    
+    if (completedReviews.length > 0) {
+      message += ` ${completedNames} ${completedReviews.length === 1 ? 'has' : 'have'} already submitted their evaluation.`;
+    }
+    
+    return message;
   }
 }
