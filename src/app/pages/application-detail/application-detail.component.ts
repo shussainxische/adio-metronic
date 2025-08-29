@@ -9,14 +9,14 @@ import { ApplicationStatusService, Application } from '../../services/applicatio
 import { ApplicationDetailService, QuotationApplicationData } from '../../services/application-detail.service';
 import { RightPanelComponent } from './right-panel/right-panel.component';
 import { InfoTableData } from '../../components/ui/widgets/info-table-widget/info-table-widget.component';
- 
+
 // Stage Components
 import { TammApplicationStageComponent } from './stages/tamm-application/tamm-application-stage.component';
 import { RfqStageComponent } from './stages/rfq/rfq-stage.component';
 import { EvaluationStageComponent } from './stages/evaluation/evaluation-stage.component';
 import { ReviewStageComponent } from './stages/review/review-stage.component';
 import { CompletedStageComponent } from './stages/completed/completed-stage.component';
- 
+
 // Evaluation Sub-Stage Components
 import { GeneralSubStageComponent } from './stages/evaluation/sub-stages/general/general-sub-stage.component';
 import { EconomicImpactSubStageComponent } from './stages/evaluation/sub-stages/economic-impact/economic-impact-sub-stage.component';
@@ -24,7 +24,7 @@ import { ProductivitySubStageComponent } from './stages/evaluation/sub-stages/pr
 import { EmsDmsSubStageComponent } from './stages/evaluation/sub-stages/ems-dms/ems-dms-sub-stage.component';
 import { SummarySubStageComponent } from './stages/evaluation/sub-stages/summary/summary-sub-stage.component';
 import { ReviewSubmitSubStageComponent } from './stages/evaluation/sub-stages/review-submit/review-submit-sub-stage.component';
- 
+
 interface ApplicationStage {
   id: string;
   name: string;
@@ -32,7 +32,7 @@ interface ApplicationStage {
   status: 'completed' | 'active' | 'pending';
   steps: ApplicationStep[];
 }
- 
+
 interface ApplicationStep {
   id: string;
   name: string;
@@ -40,7 +40,7 @@ interface ApplicationStep {
   status: 'completed' | 'active' | 'pending';
   required: boolean;
 }
- 
+
 @Component({
   selector: 'app-application-detail',
   standalone: true,
@@ -72,11 +72,11 @@ export class ApplicationDetailComponent implements OnInit {
   application: Application | null = null;
   currentStage: string = 'Application';
   currentStep: number = 0;
- 
+
   stages: ApplicationStage[] = [];
   private applicationDetailData: any = null;
   private quotationData: QuotationApplicationData | null = null;
- 
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -84,14 +84,14 @@ export class ApplicationDetailComponent implements OnInit {
     public applicationStatusService: ApplicationStatusService,
     private applicationDetailService: ApplicationDetailService
   ) {}
- 
+
   ngOnInit() {
     this.loadStagesData().then(() => {
       this.route.params.subscribe(params => {
         this.applicationId = params['id'];
         this.loadApplication();
       });
- 
+
       this.route.queryParams.subscribe(params => {
         if (params['stage']) {
           this.currentStage = params['stage'];
@@ -109,7 +109,7 @@ export class ApplicationDetailComponent implements OnInit {
       });
     });
   }
- 
+
   private async loadStagesData(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.http.get<{applicationStages: ApplicationStage[], applications: any[]}>('assets/mock-data/applications.json')
@@ -127,7 +127,7 @@ export class ApplicationDetailComponent implements OnInit {
         });
     });
   }
- 
+
   loadApplication() {
     const appId = parseInt(this.applicationId, 10);
    
@@ -196,7 +196,18 @@ export class ApplicationDetailComponent implements OnInit {
               contactPhone: applicationData.contactPhone
             };
           } else {
-            this.loadFallbackApplication();
+            // Fallback for unknown application ID
+            console.warn(`Application ${this.applicationId} not found in mock data`);
+            this.applicationDetailData = null;
+            this.application = {
+              id: this.applicationId,
+              companyName: 'Unknown Company',
+              stage: 'RFQ' as any,
+              status: 'Pending' as any,
+              progress: 0,
+              date: new Date().toLocaleDateString(),
+              assignee: 'Certifying Body'
+            };
           }
         },
         error: (error) => {
@@ -208,17 +219,18 @@ export class ApplicationDetailComponent implements OnInit {
  
   private loadFallbackApplication() {
     console.warn(`Application ${this.applicationId} not found, using fallback data`);
-    this.applicationDetailData = null;
-    this.application = {
-      id: this.applicationId,
-      companyName: 'Unknown Company',
-      stage: 'RFQ' as any,
-      status: 'Pending' as any,
-      progress: 0,
-      date: new Date().toLocaleDateString(),
-      assignee: 'Certifying Body'
-    };
-  }
+          this.applicationDetailData = null;
+          // Fallback application data
+          this.application = {
+            id: this.applicationId,
+            companyName: 'Unknown Company',
+            stage: 'RFQ' as any,
+            status: 'Pending' as any,
+            progress: 0,
+            date: new Date().toLocaleDateString(),
+            assignee: 'Certifying Body'
+          };
+        }
  
   private calculateProgressFromActivityLog(activityLog: any[]): number {
     // Simple progress calculation based on activity log entries
@@ -250,44 +262,44 @@ export class ApplicationDetailComponent implements OnInit {
     const latestEntry = activityLog[activityLog.length - 1];
     return latestEntry.userName || 'ADIO';
   }
- 
+
   get currentStageData() {
     return this.stages.find(stage => stage.id === this.currentStage);
   }
- 
+
   get currentStepData() {
     const stage = this.currentStageData;
     return stage?.steps[this.currentStep] || null;
   }
- 
+
   get stageTabs() {
-    return this.stages.map(stage => ({
-      id: stage.id,
+    return this.stages.map(stage => ({ 
+      id: stage.id, 
       label: stage.name,
       icon: stage.icon
     }));
   }
- 
+
   get currentStageSteps() {
-    return this.currentStageData?.steps.map(step => ({
+    return this.currentStageData?.steps.map(step => ({ 
       id: step.id,
       label: step.name,
       description: step.description,
       clickable: true // Make all steps clickable for prototype
     })) || [];
   }
- 
+
   onStageChange(stageId: string) {
     this.currentStage = stageId;
     this.currentStep = 0;
     this.updateUrl();
   }
- 
+
   onStepChange(stepIndex: number) {
     this.currentStep = stepIndex;
     this.updateUrl();
   }
- 
+
   nextStep() {
     const stage = this.currentStageData;
     if (stage && this.currentStep < stage.steps.length - 1) {
@@ -295,14 +307,14 @@ export class ApplicationDetailComponent implements OnInit {
       this.updateUrl();
     }
   }
- 
+
   previousStep() {
     if (this.currentStep > 0) {
       this.currentStep--;
       this.updateUrl();
     }
   }
- 
+
   nextStage() {
     const currentStageIndex = this.stages.findIndex(stage => stage.id === this.currentStage);
     if (currentStageIndex < this.stages.length - 1) {
@@ -311,7 +323,7 @@ export class ApplicationDetailComponent implements OnInit {
       this.updateUrl();
     }
   }
- 
+
   previousStage() {
     const currentStageIndex = this.stages.findIndex(stage => stage.id === this.currentStage);
     if (currentStageIndex > 0) {
@@ -320,7 +332,7 @@ export class ApplicationDetailComponent implements OnInit {
       this.updateUrl();
     }
   }
- 
+
   private updateUrl() {
     this.router.navigate([], {
       relativeTo: this.route,
@@ -328,43 +340,43 @@ export class ApplicationDetailComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
- 
+
   getStageProgress(stage: ApplicationStage): number {
     const completedSteps = stage.steps.filter(step => step.status === 'completed').length;
     return Math.round((completedSteps / stage.steps.length) * 100);
   }
- 
+
   goBack() {
     this.router.navigate(['/applications']);
   }
- 
+
   exportActivityLog() {
     // TODO: Implement activity log export functionality
     console.log('Export activity log clicked');
   }
- 
+
   get showPreviousStageButton(): boolean {
     return this.currentStep === 0 && this.stages.findIndex(s => s.id === this.currentStage) > 0;
   }
- 
+
   get showNextStageButton(): boolean {
     const currentStageIndex = this.stages.findIndex(s => s.id === this.currentStage);
     return this.currentStep === (this.currentStageData?.steps.length || 0) - 1 && currentStageIndex < this.stages.length - 1;
   }
- 
+
   get showCompleteButton(): boolean {
     return this.currentStep === (this.currentStageData?.steps.length || 0) - 1 && this.currentStage === 'Closed';
   }
- 
+
   get showNextStepButton(): boolean {
     const stage = this.currentStageData;
     return stage ? this.currentStep < stage.steps.length - 1 : false;
   }
- 
+
   get showPreviousStepButton(): boolean {
     return this.currentStep > 0;
   }
- 
+
   getNextButtonAction() {
     if (this.showCompleteButton) {
       this.completeApplication();
@@ -374,7 +386,7 @@ export class ApplicationDetailComponent implements OnInit {
       this.nextStage();
     }
   }
- 
+
   getNextButtonText(): string {
     if (this.showCompleteButton) {
       return 'Complete';
@@ -385,14 +397,14 @@ export class ApplicationDetailComponent implements OnInit {
     }
     return 'Next';
   }
- 
+
   completeApplication() {
     // TODO: Implement complete application functionality
     console.log('Complete application clicked');
   }
- 
- 
- 
+
+
+
   getSimpleStepClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
       // Completed step
@@ -405,7 +417,7 @@ export class ApplicationDetailComponent implements OnInit {
       return 'bg-white border-gray-300 text-gray-400';
     }
   }
- 
+
   getSimpleStepLabelClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
       // Completed step
@@ -418,12 +430,12 @@ export class ApplicationDetailComponent implements OnInit {
       return 'text-gray-400';
     }
   }
- 
+
   getStepDescription(stepIndex: number): string {
     const step = this.currentStageData?.steps[stepIndex];
     return step?.description || '';
   }
- 
+
   getLeanStepClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
       // Completed step
@@ -436,7 +448,7 @@ export class ApplicationDetailComponent implements OnInit {
       return 'bg-gray-200 text-gray-600';
     }
   }
- 
+
   getLeanStepLabelClasses(stepIndex: number): string {
     if (stepIndex <= this.currentStep) {
       // Completed or active step
@@ -446,11 +458,11 @@ export class ApplicationDetailComponent implements OnInit {
       return 'text-gray-400';
     }
   }
- 
+
   get hasMultipleSteps(): boolean {
     return this.currentStageData?.steps.length > 0;
   }
- 
+
   getChevronStepClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
       // Completed step
@@ -466,7 +478,7 @@ export class ApplicationDetailComponent implements OnInit {
       return 'bg-gray-100 text-gray-400 cursor-not-allowed';
     }
   }
- 
+
   getChevronArrowClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
       // Completed connection
@@ -476,17 +488,17 @@ export class ApplicationDetailComponent implements OnInit {
       return 'text-gray-400';
     }
   }
- 
+
   canAccessStep(stepIndex: number): boolean {
     return true; // All steps are accessible
   }
- 
+
   onStepClick(stepIndex: number): void {
     if (this.canAccessStep(stepIndex)) {
       this.onStepChange(stepIndex);
     }
   }
- 
+
   getSimpleTextStepClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
       // Completed step
@@ -499,7 +511,7 @@ export class ApplicationDetailComponent implements OnInit {
       return 'text-gray-400';
     }
   }
- 
+
   getContainerStepClasses(stepIndex: number): string {
     if (stepIndex < this.currentStep) {
       // Completed step - black, not bold
@@ -512,19 +524,19 @@ export class ApplicationDetailComponent implements OnInit {
       return 'text-gray-600 cursor-pointer text-sm';
     }
   }
- 
+
   getSLADaysLeft(): number {
     // Calculate days left based on deadline
     if (!this.application?.deadline) return 0;
-   
+    
     const deadline = new Date(this.application.deadline);
     const today = new Date();
     const diffTime = deadline.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-   
+    
     return Math.max(0, diffDays);
   }
- 
+
   get summaryTableData(): InfoTableData {
     return {
       title: 'Summary',
@@ -541,7 +553,7 @@ export class ApplicationDetailComponent implements OnInit {
       ]
     };
   }
- 
+
   get contactTableData(): InfoTableData {
     return {
       title: 'Applicant Contact',
@@ -553,7 +565,7 @@ export class ApplicationDetailComponent implements OnInit {
       ]
     };
   }
- 
+
  
   private getApplicationDetail(key: string): any {
     return this.applicationDetailData ? this.applicationDetailData[key] : null;
@@ -583,19 +595,19 @@ export class ApplicationDetailComponent implements OnInit {
     }
     return this.getApplicationDetail('applicationDate') || this.application?.date || new Date().toLocaleDateString();
   }
- 
+
   private getApplicationType(): string {
     // For now, return default - you can implement logic to determine from API data
     return this.getApplicationDetail('applicationType') || 'Renewal';
   }
- 
+
   private getEntityType(): string {
     if (this.quotationData) {
       return this.quotationData.licenseDetails.invIndustrialType || 'Manufacturing';
     }
     return this.getApplicationDetail('entityType') || 'Unknown Entity Type';
   }
- 
+
   private getServices(): string[] {
     if (this.quotationData) {
       // Determine services from license details
@@ -610,7 +622,7 @@ export class ApplicationDetailComponent implements OnInit {
     const category = this.application?.category;
     return category ? category.split(',').map(cat => cat.trim()) : ['Unknown Service'];
   }
- 
+
   private getCompliance(): string {
     if (this.quotationData && this.quotationData.activityLog.length > 0) {
       const latestActivity = this.quotationData.activityLog[this.quotationData.activityLog.length - 1];
@@ -619,7 +631,7 @@ export class ApplicationDetailComponent implements OnInit {
     }
     return this.getApplicationDetail('compliance') || 'Unknown Compliance Status';
   }
- 
+
   // Utility methods for API data
   getFormattedDocumentSize(sizeMb: number): string {
     return this.applicationDetailService.formatFileSize(sizeMb);
@@ -629,8 +641,11 @@ export class ApplicationDetailComponent implements OnInit {
     return this.applicationDetailService.formatDate(dateString);
   }
  
-  getFormattedDateTime(dateString: string): string {
-    return this.applicationDetailService.formatDateTime(dateString);
+    getFormattedDateTime(dateString: string): string {
+        return this.applicationDetailService.formatDateTime(dateString);
+    }
+  private getApplicationDetail(key: string): any {
+    return this.applicationDetailData ? this.applicationDetailData[key] : null;
   }
- 
+
 }

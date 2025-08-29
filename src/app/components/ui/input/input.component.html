@@ -17,12 +17,14 @@
   (click)="onClick($event)"
   class="border rounded-md relative group flex items-center w-full max-h-full"
   [ngClass]="{
-    'border-gray-700': !hasError,
+    'border-gray-700': !hasError && !isLocked,
+    'border-gray-300': isLocked && !hasError,
     'border-red': hasError,
-    'hover:border-gray-900': !disabled && !hasError,
-    'focus-within:border-primary-light': !disabled && !hasError,
-    'active:border-gray-700': !disabled && !hasError,
-    'bg-transparent': true
+    'hover:border-gray-900': !disabled && !hasError && !isLocked,
+    'focus-within:border-primary-light': !disabled && !hasError && !isLocked,
+    'active:border-gray-700': !disabled && !hasError && !isLocked,
+    'bg-transparent': !isLocked,
+    'bg-gray-50': isLocked
   }"
   [pTooltip]="tooltip"
   [tooltipPosition]="tooltipPosition"
@@ -68,12 +70,14 @@
       'text-xs h-4': size === 'small',
       'text-sm h-5': size === 'medium',
       'text-base h-6': size === 'large',
-      'text-gray-800': true,
-      'hover:text-gray-900': !disabled,
-      'focus:text-gray-900': !hasError,
-      'active:text-primary-on-surface': !hasError,
+      'text-gray-800': !isLocked,
+      'text-gray-500': isLocked,
+      'hover:text-gray-900': !disabled && !isLocked,
+      'focus:text-gray-900': !hasError && !isLocked,
+      'active:text-primary-on-surface': !hasError && !isLocked,
       'bg-transparent': true,
-      'placeholder:text-gray-700': true
+      'placeholder:text-gray-700': !isLocked,
+      'placeholder:text-gray-400': isLocked
     }"
     (focus)="onFocus($event)"
     (blur)="onBlur($event)"
@@ -105,12 +109,14 @@
       'text-xs h-4': size === 'small',
       'text-sm h-5': size === 'medium',
       'text-base h-6': size === 'large',
-      'text-gray-800': true,
-      'hover:text-gray-900': !disabled,
-      'focus:text-gray-900': !hasError,
-      'active:text-primary-on-surface': !hasError,
+      'text-gray-800': !isLocked,
+      'text-gray-500': isLocked,
+      'hover:text-gray-900': !disabled && !isLocked,
+      'focus:text-gray-900': !hasError && !isLocked,
+      'active:text-primary-on-surface': !hasError && !isLocked,
       'bg-transparent': true,
-      'placeholder:text-gray-700': true
+      'placeholder:text-gray-700': !isLocked,
+      'placeholder:text-gray-400': isLocked
     }"
     (focus)="onFocus($event)"
     (blur)="onBlur($event)"

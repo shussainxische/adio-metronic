@@ -3,6 +3,7 @@ import KTComponents from '../../../metronic/core/index';
 import KTLayout from '../../../metronic/app/layouts/demo1';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { NavItem } from '../../models/auth.model';
 // import { NavigationService } from '../../navigation.service';
 import { IconWrapperComponent } from "../ui/icon-wrapper/icon-wrapper.component";
@@ -34,7 +35,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     // public nav: NavigationService,
-    private appLauncherService: AppLauncherService
+    private appLauncherService: AppLauncherService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -57,8 +59,27 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   private loadAndFilterNavigationMenu(): void {
-    const menu = JSON.parse(localStorage.getItem("navigationMenu"));
-    this.sideNavPages = this.filterLeafNodes(menu);
+    const menu = JSON.parse(localStorage.getItem("navigationMenu") || 'null');
+    if (menu) {
+      this.sideNavPages = this.filterLeafNodes(menu);
+    } else {
+      // Load menu from JSON file
+      this.loadMenuFromFile();
+    }
+  }
+
+  private loadMenuFromFile(): void {
+    this.http.get<{sideNavPages: NavItem[]}>('assets/mock-data/sidebar-menu.json')
+      .subscribe({
+        next: (data) => {
+          this.sideNavPages = this.filterLeafNodes(data.sideNavPages);
+        },
+        error: (error) => {
+          console.error('Error loading sidebar menu:', error);
+          // Fallback to empty array if loading fails
+          this.sideNavPages = [];
+        }
+      });
   }
 
   private filterLeafNodes(items: any[]): any[] {

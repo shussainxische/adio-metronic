@@ -1,0 +1,74 @@
+:host ::ng-deep app-input label {
+  @apply text-xs font-semibold text-gray-900 mb-2 !important;
+}
+
+.section-container {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8;
+}
+
+.section-header {
+  @apply mb-6;
+  
+  .section-title {
+    @apply text-lg font-semibold text-gray-900 mb-1;
+  }
+}
+
+.field-grid {
+  @apply grid grid-cols-2 gap-6;
+  
+  &.with-spacing {
+    @apply mt-6;
+  }
+}
+
+.dropdown-field {
+  @apply mb-6;
+  
+  .dropdown-label {
+    @apply text-xs font-semibold text-gray-900 mb-2 block;
+  }
+  
+  .dropdown-select {
+    @apply w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 bg-white;
+    @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply transition-colors duration-200;
+    
+    &:focus {
+      @apply outline-none;
+    }
+  }
+}
+
+:host ::ng-deep .validation-select {
+  @apply w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 bg-white;
+  @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  @apply transition-colors duration-200;
+  
+  &:focus {
+    @apply outline-none;
+  }
+}
+
+.consumption-section {
+  @apply mb-6;
+  
+  .section-label {
+    @apply text-xs font-semibold text-gray-900 mb-3 block;
+  }
+  
+  .horizontal-fields {
+    @apply grid grid-cols-2 gap-6 items-start;
+  }
+  
+  .consumption-dropdown {
+    @apply w-full px-3 border border-gray-300 rounded-lg text-sm text-gray-900 bg-white;
+    @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply transition-colors duration-200;
+    height: 48px !important;
+    
+    &:focus {
+      @apply outline-none;
+    }
+  }
+}

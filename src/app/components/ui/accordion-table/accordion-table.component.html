@@ -1,0 +1,83 @@
+<div class="accordion-table-container">
+  <div class="accordion-table-header">
+    <h3 class="table-title">{{ title }}</h3>
+    <div class="table-category-score">
+      <span class="table-category">{{ category }}</span>
+      <div class="table-total-score">{{ totalScore }}</div>
+    </div>
+  </div>
+
+  <div class="accordion-table">
+    <div class="table-header-row">
+      <div class="header-cell component">Component</div>
+      <div class="header-cell value">Value</div>
+      <div class="header-cell weight">Weight</div>
+      <div class="header-cell score">Score</div>
+    </div>
+
+    <div *ngFor="let row of rows" class="table-row-group">
+      <div 
+        class="table-row main-row"
+        [class.expandable]="row.isExpandable"
+        [class.expanded]="row.isExpanded"
+        (click)="row.isExpandable ? toggleRow(row.id) : null">
+        
+        <div class="row-cell component">
+          <div class="component-content">
+            <app-icon 
+              *ngIf="row.isExpandable"
+              [name]="row.isExpanded ? 'chevron-down' : 'chevron-right'"
+              [size]="14"
+              class="expand-icon">
+            </app-icon>
+            <span class="component-text">{{ row.component }}</span>
+          </div>
+        </div>
+        
+        <div class="row-cell value">
+          <span *ngIf="!hasStatusBadge(row)" class="value-text">{{ getValueDisplay(row) }}</span>
+          <span 
+            *ngIf="hasStatusBadge(row)"
+            class="status-badge"
+            [ngClass]="getStatusBadgeClass(row)">
+            {{ getStatusBadgeText(row) }}
+          </span>
+        </div>
+        
+        <div class="row-cell weight">{{ row.weight }}</div>
+        <div class="row-cell score">{{ row.score }}</div>
+      </div>
+
+      <div *ngIf="row.isExpanded && row.subRows" class="sub-rows-full-width">
+        <div class="sub-table">
+          <div *ngIf="!row.hideSubHeaders" class="sub-header-row">
+            <div class="sub-header-cell breakdown">BREAKDOWN</div>
+            <div class="sub-header-cell score">SCORE</div>
+            <div class="sub-header-cell weight">WEIGHT</div>
+            <div class="sub-header-cell weighted">WEIGHTED</div>
+          </div>
+          
+          <div *ngFor="let subRow of row.subRows" class="sub-row" [class.two-column]="row.hideSubHeaders">
+            <div class="sub-cell breakdown">
+              <span class="sub-bullet">•</span>
+              {{ subRow.component }}
+            </div>
+            <div *ngIf="!row.hideSubHeaders" class="sub-cell score">{{ subRow.score }}</div>
+            <div *ngIf="!row.hideSubHeaders" class="sub-cell weight">{{ subRow.weight }}</div>
+            <div *ngIf="!row.hideSubHeaders" class="sub-cell weighted">{{ subRow.weighted }}</div>
+            <div *ngIf="row.hideSubHeaders" class="sub-cell value-only">{{ subRow.value }}</div>
+          </div>
+          
+          <div *ngIf="row.finalScore" class="final-score-row" [class.two-column]="row.hideSubHeaders">
+            <div class="final-score-label">{{ row.finalScore.label }}</div>
+            <div *ngIf="!row.hideSubHeaders"></div>
+            <div *ngIf="!row.hideSubHeaders"></div>
+            <div class="final-score-value" [class.highlighted]="row.finalScore.isHighlighted">
+              {{ row.finalScore.value }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

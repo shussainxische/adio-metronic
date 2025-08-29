@@ -1,0 +1,40 @@
+// Component-specific styles
+.applications-container {
+  @apply container-fixed;
+}
+
+// Card content styles (requires ::ng-deep for content projection)
+
+:host ::ng-deep .card-content {
+  h3 {
+    @apply text-sm font-bold text-primary-on-surface mb-4;
+  }
+  
+  h4 {
+    @apply text-sm font-bold text-primary-on-surface mb-1;
+  }
+  
+  .card-type {
+    @apply text-xs text-gray-700 mb-6;
+  }
+  
+  .card-categories {
+    @apply mb-6 flex gap-2;
+  }
+  
+  .card-progress {
+    @apply mb-6;
+  }
+}
+
+app-data-table {
+  th {
+    padding: 0.5rem 1rem !important;
+    color: black !important;
+  }
+  
+  td {
+    padding: 0.5rem 1rem !important;
+    color: black !important;
+  }
+}

@@ -1,0 +1,15 @@
+.activity-log {
+  @apply space-y-6;
+}
+
+.activity-group {
+  @apply space-y-4;
+}
+
+.group-date {
+  @apply text-sm font-medium text-gray-500 mb-4;
+}
+
+.group-items {
+  @apply space-y-4;
+}

@@ -1,0 +1,42 @@
+<div class="container-fixed space-y-8">
+  <div class="flex items-center justify-between">
+    <app-page-header
+      title="Notifications"
+      subtitle="Stay updated with application updates and system messages">
+    </app-page-header>
+  </div>
+
+  <!-- Notification Tabs -->
+  <app-tab-navigation
+    [tabs]="tabs"
+    [activeTabId]="activeTabId"
+    variant="pills"
+    (tabSelected)="onTabSelected($event)">
+  </app-tab-navigation>
+
+  <!-- Notifications List -->
+  <div class="notifications-list" *ngIf="filteredNotifications.length > 0">
+    <app-notification-card
+      *ngFor="let notification of paginatedNotifications"
+      [notification]="notification"
+      (cardClick)="onNotificationClick($event)"
+      (markAsRead)="onMarkAsRead($event)">
+    </app-notification-card>
+  </div>
+
+  <!-- Empty State -->
+  <app-table-no-data
+    *ngIf="filteredNotifications.length === 0"
+    title="No notifications"
+    description="You don't have any notifications yet.">
+  </app-table-no-data>
+
+  <!-- Pagination -->
+  <app-table-pagination 
+    [currentPage]="currentPage"
+    [perPage]="perPage"
+    [totalItems]="totalItems"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-table-pagination>
+</div>

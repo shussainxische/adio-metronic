@@ -1,9 +1,15 @@
 <div [class]="class" class="py-4">
-  <div class="flex border-b border-b-stroke-container">
+  <!-- Default Tab Style -->
+  <div *ngIf="variant === 'default'" class="flex border-b border-b-stroke-container">
     <ng-container *ngFor="let tab of tabs">
       <span *appHasPermission="tab.permissions || ''" class="me-5 cursor-pointer relative" (click)="selectTab(tab.id)">
       <div class="flex items-center gap-2 pt-3 px-4">
-        <a class="inline-block py-2 text-xl text-gray-900" [ngClass]="{'hover:text-primary-active text-primary-active font-bold': activeTabId === tab.id, 'hover:text-primary-light': activeTabId !== tab.id}">
+        <a class="inline-block py-2 text-base flex items-center gap-2" [ngClass]="{'hover:text-primary-active text-primary-active font-semibold': activeTabId === tab.id, 'hover:text-primary-light text-black': activeTabId !== tab.id}">
+          <app-icon 
+            *ngIf="tab.icon" 
+            [name]="tab.icon" 
+            [size]="16">
+          </app-icon>
           {{ tab.label | translate }}
         </a>
         <div *ngIf="tab.count" class="bg-red min-w-7 h-7 px-2 py-2 rounded-full text-base text-white flex items-center justify-center font-bold">{{tab.count}}</div>
@@ -12,4 +18,26 @@
       </span>
     </ng-container>
   </div>
-<div>
+
+  <!-- Pills Tab Style -->
+  <div *ngIf="variant === 'pills'" class="flex gap-2">
+    <ng-container *ngFor="let tab of tabs">
+      <button 
+        *appHasPermission="tab.permissions || ''" 
+        (click)="selectTab(tab.id)"
+        class="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200"
+        [ngClass]="{
+          'bg-primary-active text-white': activeTabId === tab.id,
+          'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTabId !== tab.id
+        }">
+        <app-icon 
+          *ngIf="tab.icon" 
+          [name]="tab.icon" 
+          [size]="16">
+        </app-icon>
+        {{ tab.label | translate }}
+        <div *ngIf="tab.count" class="bg-red min-w-5 h-5 px-1 rounded-full text-xs text-white flex items-center justify-center font-bold ml-1">{{tab.count}}</div>
+      </button>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+.right-panel {
+  min-height: 100vh;
+}
+
+app-alert-widget:last-child .widget-container {
+  @apply mb-0;
+}

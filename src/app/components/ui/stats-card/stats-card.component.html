@@ -1,0 +1,11 @@
+<div class="stats-header">
+  <span class="stats-title">{{ title }}</span>
+  <app-icon [name]="icon" [size]="20" className="stats-icon"></app-icon>
+</div>
+<div class="stats-content">
+  <span class="stats-count">{{ count }}</span>
+  <div *ngIf="showAlert" class="stats-alert">
+    <app-icon name="alert-circle" [size]="16" className="alert-icon"></app-icon>
+    {{ alertText }}
+  </div>
+</div>

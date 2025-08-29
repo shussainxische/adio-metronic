@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxInputComponent } from "../../checkbox-input/checkbox-input.component";
-// import { HasPermissionDirective } from '../../../../directives/has-permission/has-permission.directive';
+import { HasPermissionDirective } from '../../../../directives/has-permission/has-permission.directive';
 
 interface TableRow {
   field?: string;
@@ -16,7 +16,7 @@ interface TableRow {
 
 @Component({
   selector: 'app-table-header',
-  imports: [CommonModule, TooltipModule, CheckboxInputComponent],// TranslateModule, HasPermissionDirective],
+  imports: [CommonModule, TooltipModule, CheckboxInputComponent, TranslateModule, HasPermissionDirective],
   templateUrl: './table-header.component.html',
   styleUrl: './table-header.component.scss',
   host: {
@@ -39,7 +39,7 @@ export class TableHeaderComponent {
   @ContentChild('headerCheckboxTemplate') headerCheckboxTemplate!: TemplateRef<any>;
 
 
-  // constructor(private translate: TranslateService) { }
+  constructor(private translate: TranslateService) { }
 
   onSort(field: string) {
     this.sort.emit(field);

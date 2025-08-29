@@ -1,0 +1,213 @@
+<div class="applications-container">
+  <div class="mt-6 mb-12">
+    <app-page-header
+      title="Energy Support Program"
+      subtitle="Manage and track all application types">
+    </app-page-header>
+  </div>
+
+  <div class="mb-8">
+    <app-filter-button
+      label="All Applications"
+      [active]="isFilterActive('All')"
+      [count]="getApplicationCount('All')"
+      (clicked)="filterApplications('All')">
+    </app-filter-button>
+  </div>
+
+  <div class="responsive-grid mb-8">
+    <app-top-card
+      *ngFor="let appType of applicationTypes"
+      [active]="isFilterActive(appType.name)"
+      (click)="filterApplications(appType.name)">
+      <app-stats-card
+        [title]="appType.name"
+        [count]="getApplicationCount(appType.name)"
+        [icon]="applicationStatusService.getIconForAppType(appType.name)"
+        [showAlert]="shouldShowOverdueAlert(appType.name)"
+        [alertText]="getOverdueAlertText()">
+      </app-stats-card>
+    </app-top-card>
+  </div>
+
+  <div *ngIf="shouldShowSubStatus(selectedFilter)" class="space-y-3 mb-8">
+    <div class="flex items-center gap-2 mb-3">
+      <app-icon name="filter" [size]="16" className="text-gray-700"></app-icon>
+      <p class="text-sm font-bold text-gray-700">Filter by status</p>
+    </div>
+    <app-status-filter-button
+      *ngFor="let subStatus of getSubStatuses(selectedFilter)"
+      [text]="subStatus"
+      [active]="selectedSubStatus === subStatus"
+      [customClasses]="applicationStatusService.getSubStatusPillClasses(subStatus, selectedSubStatus === subStatus)"
+      (clicked)="filterBySubStatus(subStatus)">
+    </app-status-filter-button>
+  </div>
+
+  <div class="border-t border-gray-200 mb-8"></div>
+
+  <div class="page-header mb-8">
+    <div>
+      <h2>Applications</h2>
+      <p>Showing {{ filteredApplications.length }} results</p>
+    </div>
+    <div class="header-controls">
+      <app-select-dropdown
+        label="Application Type"
+        [options]="applicationTypeOptions"
+        [selectedValue]="selectedApplicationType"
+        (selectionChange)="onApplicationTypeSelectChange($event)">
+      </app-select-dropdown>
+      <app-view-toggle
+        [currentView]="viewMode"
+        (viewChange)="toggleView($event)">
+      </app-view-toggle>
+    </div>
+  </div>
+  <div *ngIf="viewMode === 'grid'" class="responsive-grid">
+    <app-preview-card 
+      *ngFor="let app of paginatedApplications"
+      [className]="applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : ''"
+      [showShadow]="!applicationAssignmentService.isLocked(app)"
+      class="application-card"
+      [class.locked]="applicationAssignmentService.isLocked(app)"
+      (click)="navigateToDetail(app.id)">
+      
+      <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
+        <app-status-badge
+          [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
+          [variant]="applicationStatusService.getStatusVariant(app.status)"
+          [className]="getStatusBadgeClassName(app)"
+          size="sm"
+          [autoWidth]="true">
+        </app-status-badge>
+        <app-action-buttons
+          layout="card-header"
+          [showSLA]="isSLAViolation(app)"
+          [showNotifications]="false"
+          [showView]="false"
+          (slaClick)="onSLAClick(app, $event)">
+        </app-action-buttons>
+      </div>
+
+      <div class="card-content">
+        <h3>{{ app.id }}</h3>
+        
+        <h4>{{ app.companyName }}</h4>
+        <p class="card-type">{{ getApplicationTypeLabel(app.companyType) }}</p>
+
+        <div class="card-categories">
+          <app-status-badge
+            *ngFor="let category of getApplicationCategories(app)"
+            [text]="applicationStatusService.getCategoryInitial(category)"
+            variant="category"
+            size="xs">
+          </app-status-badge>
+        </div>
+
+        <div class="card-progress">
+          <app-progress-bar
+            [progress]="app.progress"
+            [urgent]="isSLAViolation(app)">
+          </app-progress-bar>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1">
+          <app-icon 
+            [name]="getAssigneeIcon(app.assignee)" 
+            [size]="16" 
+            className="text-gray-500">
+          </app-icon>
+          <span class="text-xs text-gray-600">{{ app.assignee }}</span>
+        </div>
+        
+        <app-action-buttons
+          layout="card-footer"
+          [showSLA]="false"
+          [showNotifications]="true"
+          [hasNewNotifications]="hasNotifications(app)"
+          [showView]="false"
+          (notificationClick)="onNotificationClick(app, $event)">
+        </app-action-buttons>
+      </div>
+
+    </app-preview-card>
+  </div>
+
+  <app-table-pagination 
+    *ngIf="viewMode === 'grid'"
+    [currentPage]="currentPage"
+    [perPage]="perPage"
+    [totalItems]="totalItems"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-table-pagination>
+
+  <div *ngIf="viewMode === 'table'" class="mt-8">
+    <app-data-table
+      [columns]="tableColumns"
+      [data]="filteredApplications"
+      [showPagination]="true"
+      [totalItems]="filteredApplications.length"
+      [rowClasses]="getRowClasses"
+      (rowClick)="onTableRowClick($event)">
+      
+      <ng-template #rowTemplate let-app let-columns="columns">
+        <td><span class="text-sm font-medium">{{ app.id }}</span></td>
+        <td>
+          <div class="text-sm font-medium">{{ app.companyName }}</div>
+          <div class="text-xs text-gray-600">{{ getApplicationTypeLabel(app.companyType) }}</div>
+        </td>
+        <td>
+          <app-status-badge
+            [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
+            [variant]="applicationStatusService.getStatusVariant(app.status)"
+            [className]="getStatusBadgeClassName(app)"
+            [autoWidth]="true"
+            size="sm">
+          </app-status-badge>
+        </td>
+        <td>
+          <div class="flex gap-1">
+            <app-status-badge
+              *ngFor="let category of getApplicationCategories(app)"
+              [text]="applicationStatusService.getCategoryInitial(category)"
+              variant="category"
+              size="xs">
+            </app-status-badge>
+          </div>
+        </td>
+        <td>
+          <app-progress-bar
+            [progress]="app.progress"
+            [urgent]="isSLAViolation(app)">
+          </app-progress-bar>
+        </td>
+        <td>
+          <div class="flex items-center gap-1">
+            <app-icon 
+              [name]="getAssigneeIcon(app.assignee)" 
+              [size]="16" 
+              className="text-gray-500">
+            </app-icon>
+            <span class="text-xs text-gray-600">{{ app.assignee }}</span>
+          </div>
+        </td>
+        <td>
+          <app-action-buttons
+            layout="table"
+            [showSLA]="isSLAViolation(app)"
+            [showNotifications]="true"
+            [hasNewNotifications]="hasNotifications(app)"
+            [showView]="true"
+            (slaClick)="onSLAClick(app, $event)"
+            (notificationClick)="onNotificationClick(app, $event)"
+            (viewClick)="navigateToDetail(app.id)">
+          </app-action-buttons>
+        </td>
+      </ng-template>
+    </app-data-table>
+  </div>
+</div>
