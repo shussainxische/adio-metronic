@@ -85,7 +85,7 @@
             <app-review-stage *ngIf="currentStage === 'Review'" [application]="application"></app-review-stage>
             
             <!-- Certified stage without container wrapper -->
-            <app-completed-stage *ngIf="currentStage === 'Completed'"></app-completed-stage>
+            <app-completed-stage *ngIf="currentStage === 'Completed'" [application]="application"></app-completed-stage>
           </div>
 
         </div>

@@ -95,17 +95,8 @@ export class ApplicationDetailComponent implements OnInit {
         if (params['stage']) {
           this.currentStage = params['stage'];
         } else {
-          // Default stage logic
-          if (this.applicationId === 'ESP003') {
-            this.currentStage = 'Quotation';
-          } else if (this.applicationId === 'ESP005' || this.applicationId === 'ESP007') {
-            this.currentStage = 'Evaluation';
-          } else if (this.applicationId === 'ESP009' || this.applicationId === 'ESP010' || this.applicationId === 'ESP011' || this.applicationId === 'ESP012') {
-            this.currentStage = 'Review';
-          } else {
-            this.currentStage = 'Application';
-          }
-          this.updateUrl();
+          // Default stage logic - will be set after application loads
+          this.setDefaultStage();
         }
         if (params['step']) {
           this.currentStep = parseInt(params['step'], 10);
@@ -161,6 +152,7 @@ export class ApplicationDetailComponent implements OnInit {
               contactPhone: applicationData.contactPhone
             };
             this.updateStageTabs();
+            this.setDefaultStage();
           } else {
             // Fallback for unknown application ID
             console.warn(`Application ${this.applicationId} not found in mock data`);
@@ -655,6 +647,27 @@ export class ApplicationDetailComponent implements OnInit {
         }
         break;
     }
+  }
+
+  private setDefaultStage(): void {
+    // For Closed applications with Certified status, force Completed stage
+    if (this.application?.stage === 'Closed' && this.application?.status === 'Certified') {
+      this.currentStage = 'Completed';
+      this.updateUrl();
+      return;
+    }
+    
+    // Default stage logic for other applications
+    if (this.applicationId === 'ESP003') {
+      this.currentStage = 'Quotation';
+    } else if (this.applicationId === 'ESP005' || this.applicationId === 'ESP007') {
+      this.currentStage = 'Evaluation';
+    } else if (this.applicationId === 'ESP009' || this.applicationId === 'ESP010' || this.applicationId === 'ESP011' || this.applicationId === 'ESP012') {
+      this.currentStage = 'Review';
+    } else {
+      this.currentStage = 'Application';
+    }
+    this.updateUrl();
   }
 
 }

@@ -78,7 +78,7 @@
     },
     {
       "id": "Completed",
-      "name": "Completed",
+      "name": "CERTIFIED",
       "icon": "award",
       "status": "pending",
       "steps": []

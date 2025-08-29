@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Application } from '../../../../services/application-status.service';
 
 @Component({
   selector: 'app-completed-stage',
@@ -9,6 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './completed-stage.component.scss'
 })
 export class CompletedStageComponent {
+  @Input() application?: Application;
 
   downloadCertificate(): void {
     // TODO: Implement certificate download functionality

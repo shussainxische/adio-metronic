@@ -20,7 +20,7 @@
     <!-- Certificate Content -->
     <div class="certificate-content">
       <p class="certificate-text">
-        Gulf Energy Solutions LLC has been approved for the Energy Support Program and is entitled to receive incentive 
+        {{ application?.companyName || 'Company Name' }} has been approved for the Energy Support Program and is entitled to receive incentive 
         support in the amount of <span class="amount-highlight">AED 2</span> based on their qualifying investment of AED 195.
       </p>
     </div>
@@ -34,17 +34,17 @@
         </div>
         <div class="detail-item">
           <p class="detail-label">Application ID</p>
-          <p class="detail-value">IETR-4315434</p>
+          <p class="detail-value">{{ application?.id || 'N/A' }}</p>
         </div>
       </div>
       <div class="detail-row">
         <div class="detail-item">
           <p class="detail-label">Issue Date</p>
-          <p class="detail-value">August 10, 2025</p>
+          <p class="detail-value">{{ application?.issueDate || 'N/A' }}</p>
         </div>
         <div class="detail-item">
           <p class="detail-label">Valid Until</p>
-          <p class="detail-value">August 10, 2028</p>
+          <p class="detail-value">{{ application?.expiryDate || 'N/A' }}</p>
         </div>
       </div>
     </div>
