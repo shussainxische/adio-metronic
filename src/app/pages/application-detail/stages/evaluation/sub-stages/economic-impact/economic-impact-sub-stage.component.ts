@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
@@ -11,7 +11,23 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
   templateUrl: './economic-impact-sub-stage.component.html',
   styleUrl: './economic-impact-sub-stage.component.scss'
 })
-export class EconomicImpactSubStageComponent {
+export class EconomicImpactSubStageComponent implements OnInit {
+  @Input() readOnly: boolean = false;
+  
+  ngOnInit() {
+    if (this.readOnly) {
+      this.grossBookValueAbuDhabiControl.disable();
+      this.totalGrossBookValueControl.disable();
+      this.salaryBenefitsEmiratiControl.disable();
+      this.totalSpentManpowerControl.disable();
+      this.originalEmiratiNumberControl.disable();
+      this.growthEmiratiNumberControl.disable();
+      this.totalStaffControl.disable();
+      this.skilledStaffControl.disable();
+      this.adLogisticsFeesControl.disable();
+      this.uaeLogisticsFeesControl.disable();
+    }
+  }
   // Investment Form Controls
   grossBookValueAbuDhabiControl = new FormControl('0');
   totalGrossBookValueControl = new FormControl('0');

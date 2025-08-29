@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from '../../../../../../components/ui/file-upload/file-upload.component';
@@ -12,6 +12,7 @@ import { EvaluationStatusComponent, EvaluationStatusData } from './evaluation-st
   styleUrl: './review-submit-sub-stage.component.scss'
 })
 export class ReviewSubmitSubStageComponent {
+  @Input() readOnly: boolean = false;
   uploadedFiles: File[] = [];
   confirmSubmission = false;
   isSubmitting = false;

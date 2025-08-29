@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GeneralSubStageComponent } from './sub-stages/general/general-sub-stage.component';
+import { Application } from '../../../../services/application-status.service';
 
 @Component({
   selector: 'app-evaluation-stage',
@@ -10,5 +11,9 @@ import { GeneralSubStageComponent } from './sub-stages/general/general-sub-stage
   styleUrl: './evaluation-stage.component.scss'
 })
 export class EvaluationStageComponent {
+  @Input() application?: Application;
 
+  get isReadOnly(): boolean {
+    return this.application?.stage === 'Review';
+  }
 }

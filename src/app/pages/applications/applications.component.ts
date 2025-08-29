@@ -28,12 +28,13 @@ import { AssigneeInfoComponent } from '../../components/ui/assignee-info/assigne
 import { TablePaginationComponent } from '../../components/ui/table/table-pagination/table-pagination.component';
 import { ActionButtonsComponent } from '../../components/ui/action-buttons/action-buttons.component';
 import { DataTableComponent, DataTableColumn } from '../../components/ui/data-table/data-table.component';
+import { InputComponent } from '../../components/ui/input/input.component';
 
 
 @Component({
   selector: 'app-applications',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, FilterButtonComponent, ViewToggleComponent, SelectDropdownComponent, StatsCardComponent, StatusFilterButtonComponent, AssigneeInfoComponent, TablePaginationComponent, ActionButtonsComponent, DataTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, FilterButtonComponent, ViewToggleComponent, SelectDropdownComponent, StatsCardComponent, StatusFilterButtonComponent, AssigneeInfoComponent, TablePaginationComponent, ActionButtonsComponent, DataTableComponent, InputComponent],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.scss'
 })
@@ -42,6 +43,7 @@ export class ApplicationsComponent implements OnInit {
   selectedFilter: string = 'All';
   selectedSubStatus: string = '';
   selectedApplicationType: string = 'all';
+  searchQuery: string = '';
   filteredApplications: Application[] = [];
   paginatedApplications: Application[] = [];
   viewMode: 'grid' | 'table' = 'grid';
@@ -101,6 +103,19 @@ export class ApplicationsComponent implements OnInit {
       filtered = filtered.filter(app => app.companyType === this.selectedApplicationType);
     }
     
+    // Apply search filtering
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(app => 
+        app.id.toLowerCase().includes(query) ||
+        app.companyName.toLowerCase().includes(query) ||
+        app.status.toLowerCase().includes(query) ||
+        app.stage.toLowerCase().includes(query) ||
+        (app.contactName && app.contactName.toLowerCase().includes(query)) ||
+        (app.assignee && app.assignee.toLowerCase().includes(query))
+      );
+    }
+    
     this.filteredApplications = filtered;
     this.totalItems = filtered.length;
     
@@ -120,6 +135,11 @@ export class ApplicationsComponent implements OnInit {
     this.updateFilteredApplications();
   }
 
+  onSearch(query: string) {
+    this.searchQuery = query;
+    this.updateFilteredApplications();
+  }
+
   isSLAViolation(app: Application): boolean {
     if (!app.deadline) return false;
     const today = new Date();
@@ -128,10 +148,9 @@ export class ApplicationsComponent implements OnInit {
   }
 
   hasNotifications(app: Application): boolean {
-    // Show notifications for submitted applications, returned applications, or SLA violations
-    return app.status === 'Submitted' || 
-           app.status === 'Returned' || 
-           this.isSLAViolation(app);
+    // Show notifications only for returned applications and all closed states
+    return app.status === 'Returned' || 
+           app.stage === 'Closed';
   }
 
   navigateToDetail(applicationId: string) {
@@ -149,11 +168,11 @@ export class ApplicationsComponent implements OnInit {
 
   tableColumns: DataTableColumn[] = [
     { field: 'id', label: 'Application ID', sortable: true, width: '100px' },
-    { field: 'companyName', label: 'Company Name', sortable: true },
-    { field: 'status', label: 'Status', sortable: true },
+    { field: 'companyName', label: 'Company Name', sortable: true, width: '200px' },
+    { field: 'status', label: 'Status', sortable: true, width: '160px' },
     { field: 'categories', label: 'Request', sortable: false, width: '80px' },
-    { field: 'progress', label: 'Progress', sortable: true, width: '120px' },
-    { field: 'assignee', label: 'Assignee', sortable: true },
+    { field: 'progress', label: 'Status', sortable: true, width: '160px' },
+    { field: 'assignee', label: 'Assignee', sortable: true, width: '140px' },
     { field: 'actions', label: 'Actions', sortable: false, width: '120px' }
   ];
 
@@ -178,7 +197,7 @@ export class ApplicationsComponent implements OnInit {
 
 
   shouldShowOverdueAlert(stageName: string): boolean {
-    return stageName === 'RFQ';
+    return stageName === 'Quotation';
   }
 
   getOverdueAlertText(): string {
@@ -234,6 +253,47 @@ export class ApplicationsComponent implements OnInit {
   };
 
   onTableRowClick(app: Application) {
+    if (app.status === 'Cancelled') {
+      return; // Prevent navigation for cancelled applications
+    }
     this.navigateToDetail(app.id);
+  }
+
+  onCardClick(app: Application) {
+    if (app.status === 'Cancelled') {
+      return; // Prevent navigation for cancelled applications
+    }
+    this.navigateToDetail(app.id);
+  }
+
+  onCardHover(app: Application, isHovering: boolean) {
+    if (app.status === 'Cancelled' && isHovering) {
+      // Could add visual feedback here (cursor style is handled via CSS)
+    }
+  }
+
+  isClosedApplication(app: Application): boolean {
+    return app.stage === 'Closed';
+  }
+
+  getClosedStatusDisplayText(app: Application): string {
+    return this.applicationStatusService.getClosedStatusText(app);
+  }
+
+  isCertificateExpired(app: Application): boolean {
+    return this.applicationStatusService.isCertificateExpired(app);
+  }
+
+  getReasonForStatus(app: Application): string {
+    switch (app.status) {
+      case 'Not Awarded':
+        return app.rejectionReason || 'Quotation Not Approved';
+      case 'Rejected':
+        return app.rejectionReason || 'Evaluation Rejected';
+      case 'Cancelled':
+        return app.cancellationReason || 'No response from applicant';
+      default:
+        return '';
+    }
   }
 }

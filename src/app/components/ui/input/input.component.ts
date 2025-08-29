@@ -57,8 +57,8 @@ export class InputComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() language: Language = null;
   @Input() size: 'small' | 'medium' | 'large' = 'medium';
   @Input() readOnly: boolean = false;
-  @ContentChild('[iconBefore]') iconBeforeContent: any;
-  @ContentChild('[iconAfter]') iconAfterContent: any;
+  @ContentChild('[iconBefore]', { static: false }) iconBeforeContent: any;
+  @ContentChild('[iconAfter]', { static: false }) iconAfterContent: any;
   @Input() labelStyle: 'floating' | 'standard' = 'standard';
   @Input() required: boolean = false;
   @Input() errorMessage: string = '';
@@ -179,6 +179,7 @@ get inputPattern(): string {
       this.valueChange.emit(value);
     });
   }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     // Check if value input changed

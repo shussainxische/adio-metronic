@@ -50,7 +50,7 @@
 }
 
 .info-value {
-  @apply text-sm font-medium text-gray-900 text-right flex-1 min-w-0;
+  @apply text-xs font-normal text-gray-900 text-right flex-1 min-w-0;
   
   .value-badge {
     @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;

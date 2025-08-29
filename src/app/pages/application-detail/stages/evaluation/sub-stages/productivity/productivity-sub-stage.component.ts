@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
@@ -12,6 +12,7 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
   styleUrl: './productivity-sub-stage.component.scss'
 })
 export class ProductivitySubStageComponent {
+  @Input() readOnly: boolean = false;
   totalRevenueMainActivityControl = new FormControl('0');
   finishedGoodsBeginningControl = new FormControl('0');
   finishedGoodsEndControl = new FormControl('0');

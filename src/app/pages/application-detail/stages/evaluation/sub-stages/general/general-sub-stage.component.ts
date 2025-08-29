@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
@@ -28,6 +28,8 @@ interface SimpleDocument {
   styleUrl: './general-sub-stage.component.scss'
 })
 export class GeneralSubStageComponent implements OnInit {
+  @Input() readOnly: boolean = false;
+  
   applicationTypeControl = new FormControl({ value: '', disabled: true });
   financialYearEndControl = new FormControl('');
   

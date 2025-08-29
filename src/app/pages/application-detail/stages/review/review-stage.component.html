@@ -6,27 +6,14 @@
     </div>
     
     <div class="entity-cards">
-      <div class="entity-card">
+      <div class="entity-card" *ngFor="let entity of entityReviews">
         <div class="entity-info">
-          <h4 class="entity-name">TAQA Review</h4>
+          <h4 class="entity-name">{{ entity.name }}</h4>
         </div>
         <div class="entity-status">
           <app-status-badge 
-            text="Submitted" 
-            variant="success" 
-            size="sm">
-          </app-status-badge>
-        </div>
-      </div>
-      
-      <div class="entity-card">
-        <div class="entity-info">
-          <h4 class="entity-name">AD Ports Review</h4>
-        </div>
-        <div class="entity-status">
-          <app-status-badge 
-            text="Pending" 
-            variant="pending" 
+            [text]="getStatusText(entity.status)" 
+            [variant]="getStatusVariant(entity.status)" 
             size="sm">
           </app-status-badge>
         </div>
@@ -40,7 +27,6 @@
       <h3 class="section-title">Certificate Issuance</h3>
     </div>
     
-    <p class="section-description">Certificate will be issued once all entities have approved</p>
     
     <!-- Pending Approvals Alert -->
     <div class="alert-card">
@@ -48,7 +34,7 @@
         <span class="alert-title">Pending Approvals</span>
       </div>
       <p class="alert-message">
-        Certificate can only be issued after AD Ports completes their review. TAQA has already submitted their evaluation.
+        Certificate can only be issued after AD Ports and Final Review complete their review. Initial Review and TAQA Review have already submitted their evaluation.
       </p>
     </div>
   </div>
