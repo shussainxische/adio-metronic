@@ -567,9 +567,7 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
  
-  private getApplicationDetail(key: string): any {
-    return this.applicationDetailData ? this.applicationDetailData[key] : null;
-  }
+
  
   // New methods to access quotation data
   get licenseDetails() {

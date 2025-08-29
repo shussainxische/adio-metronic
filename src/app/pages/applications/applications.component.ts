@@ -138,7 +138,7 @@ export class ApplicationsComponent implements OnInit {
       'fa-archive': 'check_circle'
     };
     return iconMap[faIcon] || 'file_text';
-    return this.applicationStatusService.getApplicationStages();
+    // return this.applicationStatusService.getApplicationStages();
   }
 
   filterApplications(stage: string) {
