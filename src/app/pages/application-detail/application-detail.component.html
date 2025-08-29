@@ -1,0 +1,101 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="flex">
+    <div class="flex-1 bg-gray-50">
+      <div class="container-fixed pb-12">
+        <div class="flex justify-between items-center my-4">
+          <app-button 
+            (click)="goBack()"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 bg-transparent border-none p-0">
+            <app-icon name="arrow-left" [size]="16"></app-icon>
+            <span class="text-sm font-medium">Back to Applications</span>
+          </app-button>
+          
+          <app-button 
+            (click)="exportActivityLog()"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 bg-transparent border border-gray-300 px-3 py-2 rounded-md hover:bg-gray-50">
+            <app-icon name="download" [size]="16"></app-icon>
+            <span class="text-sm font-medium">Export</span>
+          </app-button>
+        </div>
+        
+        <!-- Separator -->
+        <div class="border-b border-gray-200 mb-3"></div>
+
+        <!-- Application Title -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-gray-900 mb-1">ESP0001</h1>
+          <p class="text-sm text-gray-600">{{ application?.companyName }}</p>
+        </div>
+
+        <!-- Stage Tabs -->
+        <div>
+          <app-tab-navigation
+            [tabs]="stageTabs"
+            [activeTabId]="currentStage"
+            [variant]="'pills'"
+            (tabSelected)="onStageChange($event)">
+          </app-tab-navigation>
+        </div>
+
+        <!-- Step Content -->
+        <div *ngIf="currentStageData">
+          
+          <!-- Step Progress - For stages with multiple steps -->
+          <div *ngIf="hasMultipleSteps" class="bg-gray-50 border border-gray-200 px-6 py-4 rounded-2xl mb-8">
+            <div class="flex items-center flex-wrap text-sm">
+              <span *ngFor="let step of currentStageSteps; let i = index; let last = last" 
+                    class="flex items-center">
+                
+                <span 
+                  [class]="getContainerStepClasses(i)"
+                  [style.cursor]="canAccessStep(i) ? 'pointer' : 'not-allowed'"
+                  (click)="onStepClick(i)">
+                  {{ step.label }}
+                </span>
+                
+                <app-icon 
+                  *ngIf="!last"
+                  name="chevron-right" 
+                  [size]="14"
+                  className="mx-2 text-gray-500">
+                </app-icon>
+              </span>
+            </div>
+          </div>
+
+          <!-- Stage Content Area - No container for Application, RFQ, and Evaluation stages -->
+          <div>
+            <app-tamm-application-stage *ngIf="currentStage === 'Application'"></app-tamm-application-stage>
+            <app-rfq-stage *ngIf="currentStage === 'RFQ'"></app-rfq-stage>
+            
+            <!-- Evaluation stage without container wrapper -->
+            <div *ngIf="currentStage === 'Evaluation'">
+              <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
+              <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
+              <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
+              <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
+              <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
+              <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
+            </div>
+            
+            <!-- Review stage without container wrapper -->
+            <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
+            
+            <!-- Certified stage without container wrapper -->
+            <app-completed-stage *ngIf="currentStage === 'Completed'"></app-completed-stage>
+          </div>
+
+        </div>
+        
+        <div class="h-12"></div>
+      </div>
+    </div>
+
+    <app-right-panel 
+      position="right" 
+      width="w-96"
+      [summaryTableData]="summaryTableData"
+      [contactTableData]="contactTableData">
+    </app-right-panel>
+  </div>
+</div>

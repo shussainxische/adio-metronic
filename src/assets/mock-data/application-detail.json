@@ -1,0 +1,348 @@
+{
+  "applicationDetail": {
+    "ESP001": {
+      "application": {
+        "id": "ESP001",
+        "companyName": "Al Dhafra Manufacturing",
+        "companyType": "renewal",
+        "stage": "RFQ", 
+        "status": "Pending",
+        "progress": 15,
+        "date": "1 Jan 2025",
+        "deadline": "1/20/2025",
+        "category": "Electricity,Gas",
+        "assignee": "Certifying Body",
+        "contactName": "Sarah Al Mansoori",
+        "contactPosition": "Operations Manager", 
+        "contactEmail": "sarah@adnoc.com",
+        "contactPhone": "+971 50 987 6543",
+        "applicationDate": "8/1/2025",
+        "applicationType": "Renewal",
+        "entityType": "Existing Manufacturing Entity",
+        "services": ["Electricity", "Gas"],
+        "compliance": "Application Overdue"
+      },
+      "currentStage": "RFQ",
+      "currentStep": 0,
+      "slaInfo": {
+        "deadline": "2025-01-20",
+        "daysRemaining": -8,
+        "isOverdue": true,
+        "daysOverdue": 8,
+        "urgencyLevel": "critical"
+      },
+      "stages": [
+        {
+          "id": "Application",
+          "name": "Application",
+          "icon": "inbox",
+          "status": "completed",
+          "progress": 100,
+          "order": 0,
+          "steps": [],
+          "canAccess": true,
+          "completedAt": "2025-01-08T09:00:00Z",
+          "completedBy": "Sarah Al Mansoori"
+        },
+        {
+          "id": "RFQ",
+          "name": "RFQ", 
+          "icon": "file-text",
+          "status": "active",
+          "progress": 15,
+          "order": 1,
+          "steps": [],
+          "canAccess": true
+        },
+        {
+          "id": "Evaluation",
+          "name": "Evaluation",
+          "icon": "search", 
+          "status": "pending",
+          "progress": 0,
+          "order": 2,
+          "steps": [
+            {
+              "id": "general",
+              "name": "General", 
+              "description": "General information and requirements",
+              "status": "pending",
+              "required": true,
+              "order": 0,
+              "canAccess": false
+            },
+            {
+              "id": "economic-impact",
+              "name": "Economic Impact",
+              "description": "Economic impact assessment", 
+              "status": "pending",
+              "required": true,
+              "order": 1,
+              "canAccess": false
+            },
+            {
+              "id": "productivity", 
+              "name": "Productivity",
+              "description": "Productivity analysis",
+              "status": "pending",
+              "required": true,
+              "order": 2,
+              "canAccess": false
+            },
+            {
+              "id": "ems-dms",
+              "name": "EMS/DMS",
+              "description": "Environmental and Data Management Systems",
+              "status": "pending", 
+              "required": true,
+              "order": 3,
+              "canAccess": false
+            },
+            {
+              "id": "summary",
+              "name": "Summary",
+              "description": "Application summary and overview",
+              "status": "pending",
+              "required": true,
+              "order": 4,
+              "canAccess": false
+            },
+            {
+              "id": "review-submit",
+              "name": "Review & Submit",
+              "description": "Final review and submission",
+              "status": "pending",
+              "required": true,
+              "order": 5,
+              "canAccess": false
+            }
+          ],
+          "canAccess": false
+        },
+        {
+          "id": "Review",
+          "name": "Review",
+          "icon": "users",
+          "status": "pending", 
+          "progress": 0,
+          "order": 3,
+          "steps": [],
+          "canAccess": false
+        },
+        {
+          "id": "Completed",
+          "name": "Certified",
+          "icon": "award",
+          "status": "pending",
+          "progress": 0,
+          "order": 4, 
+          "steps": [],
+          "canAccess": false
+        }
+      ],
+      "activityLog": [
+        {
+          "date": "Today",
+          "items": [
+            {
+              "id": "8",
+              "message": "Application assigned to Certifying Body for RFQ processing",
+              "user": "System",
+              "userId": "system",
+              "timestamp": "2025-01-28T15:45:00Z",
+              "displayTime": "03:45 PM",
+              "icon": "user-check",
+              "iconColor": "blue",
+              "actionType": "assignment",
+              "stage": "RFQ",
+              "metadata": {
+                "assignedTo": "Certifying Body",
+                "assignedBy": "System"
+              }
+            }
+          ]
+        },
+        {
+          "date": "Yesterday", 
+          "items": [
+            {
+              "id": "7",
+              "message": "Application form submitted and validated",
+              "user": "Sarah Al Mansoori",
+              "userId": "sarah.almansoori",
+              "timestamp": "2025-01-27T14:30:00Z",
+              "displayTime": "02:30 PM",
+              "icon": "clipboard-check",
+              "iconColor": "green",
+              "actionType": "status_change",
+              "stage": "Application",
+              "metadata": {
+                "previousStatus": "Draft",
+                "newStatus": "Submitted"
+              }
+            },
+            {
+              "id": "6",
+              "message": "Company registration document uploaded",
+              "user": "Sarah Al Mansoori", 
+              "userId": "sarah.almansoori",
+              "timestamp": "2025-01-27T11:15:00Z",
+              "displayTime": "11:15 AM",
+              "icon": "upload",
+              "iconColor": "blue",
+              "actionType": "document_upload",
+              "stage": "Application",
+              "metadata": {
+                "documentType": "company_registration",
+                "fileName": "AlDhafra_Registration_2025.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "date": "2 Days Ago",
+          "items": [
+            {
+              "id": "5",
+              "message": "Application created and saved as draft",
+              "user": "Sarah Al Mansoori",
+              "userId": "sarah.almansoori", 
+              "timestamp": "2025-01-26T09:00:00Z",
+              "displayTime": "09:00 AM",
+              "icon": "file-plus",
+              "iconColor": "yellow",
+              "actionType": "status_change",
+              "stage": "Application",
+              "metadata": {
+                "applicationType": "Renewal",
+                "previousCertificate": "CERT-2022-001"
+              }
+            }
+          ]
+        }
+      ],
+      "documents": [
+        {
+          "id": "doc-001",
+          "fileName": "Application_Form_ESP001.pdf",
+          "originalName": "Application Form.pdf",
+          "fileSize": 2048576,
+          "mimeType": "application/pdf",
+          "category": "application_form",
+          "stage": "Application",
+          "uploadedAt": "2025-01-27T14:30:00Z",
+          "uploadedBy": "Sarah Al Mansoori",
+          "canView": true,
+          "canDownload": true
+        },
+        {
+          "id": "doc-002", 
+          "fileName": "AlDhafra_Registration_2025.pdf",
+          "originalName": "Company Registration Certificate.pdf",
+          "fileSize": 1024000,
+          "mimeType": "application/pdf",
+          "category": "supporting_documents",
+          "stage": "Application", 
+          "uploadedAt": "2025-01-27T11:15:00Z",
+          "uploadedBy": "Sarah Al Mansoori",
+          "canView": true,
+          "canDownload": true
+        }
+      ],
+      "pastCertificates": [
+        {
+          "id": "cert-001",
+          "title": "Certificate 2022-2024",
+          "certificateId": "CERT-2022-001", 
+          "startDate": "2022-01-15",
+          "endDate": "2024-01-15",
+          "status": "Expired",
+          "services": ["Electricity", "Gas"],
+          "downloadUrl": "/api/certificates/CERT-2022-001/download"
+        },
+        {
+          "id": "cert-002",
+          "title": "Certificate 2020-2022",
+          "certificateId": "CERT-2020-001",
+          "startDate": "2020-01-15", 
+          "endDate": "2022-01-15",
+          "status": "Expired",
+          "services": ["Electricity", "Gas"],
+          "downloadUrl": "/api/certificates/CERT-2020-001/download"
+        },
+        {
+          "id": "cert-003",
+          "title": "Certificate 2018-2020",
+          "certificateId": "CERT-2018-001",
+          "startDate": "2018-01-15",
+          "endDate": "2020-01-15",
+          "status": "Expired",
+          "services": ["Electricity"],
+          "downloadUrl": "/api/certificates/CERT-2018-001/download"
+        }
+      ],
+      "formData": {
+        "Application": {
+          "applicationType": "Renewal",
+          "companyProfile": {
+            "registrationNumber": "CN-1234567",
+            "establishedYear": 2010,
+            "industry": "Manufacturing",
+            "employeeCount": 250,
+            "website": "https://aldhafra.ae"
+          }
+        },
+        "Evaluation": {
+          "general": {
+            "applicationType": "Renewal",
+            "financialYearEnd": "2025-12-31",
+            "utilitiesRequired": ["Electricity", "Gas"]
+          },
+          "economicImpact": {
+            "grossBookValueAbuDhabi": "20000000",
+            "totalGrossBookValue": "50000000",
+            "salaryBenefitsEmirati": "2500000",
+            "totalSpentManpower": "10000000",
+            "originalEmiratiNumber": "8",
+            "growthEmiratiNumber": "12",
+            "totalStaff": "150",
+            "skilledStaff": "90",
+            "adLogisticsFees": "1200000",
+            "uaeLogisticsFees": "3000000"
+          },
+          "productivity": {
+            "totalRevenueMainActivity": "5000000",
+            "finishedGoodsBeginning": "300000",
+            "finishedGoodsEnd": "400000",
+            "workInProgressBeginning": "200000",
+            "workInProgressEnd": "250000",
+            "otherMiscellaneousIncome": "50000",
+            "rentalsOfBuilding": "150000",
+            "totalCostOfProduction": "2000000",
+            "wagesSalariesBonusesCogs": "500000",
+            "benefitsGrantedEmployeesCogs": "100000",
+            "depreciationCogs": "150000",
+            "totalGeneralAdminExpenses": "1200000",
+            "wagesSalariesBonusesAdmin": "300000",
+            "benefitsGrantedEmployeesAdmin": "80000",
+            "depreciationAdmin": "120000",
+            "bankingCharges": "50000",
+            "averageEmployees": "108"
+          },
+          "emsDms": {
+            "connectionLoadMeter": "15.5",
+            "emsAvailability": "Available",
+            "demandSideConsumption": "85-89"
+          }
+        }
+      },
+      "permissions": {
+        "canEdit": true,
+        "canSubmit": true,
+        "canAssign": false,
+        "canApprove": false,
+        "canReject": false
+      }
+    }
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "rfqData": {
+    "ESP001": {
+      "rfqStatus": "pending_quotation",
+      "issuedDate": "2025-01-28T09:00:00Z",
+      "dueDate": "2025-02-05T17:00:00Z",
+      "requirements": {
+        "services": [
+          {
+            "serviceType": "Electricity",
+            "currentConsumption": "2.5 MW peak demand",
+            "projectedConsumption": "3.2 MW peak demand",
+            "utilizationPattern": "24/7 continuous operation",
+            "criticalityLevel": "High",
+            "backup": {
+              "hasBackup": true,
+              "backupType": "Diesel generators",
+              "capacity": "1.5 MW"
+            }
+          },
+          {
+            "serviceType": "Natural Gas",
+            "currentConsumption": "150,000 cubic meters/month", 
+            "projectedConsumption": "190,000 cubic meters/month",
+            "utilizationPattern": "Industrial heating and steam generation",
+            "criticalityLevel": "Medium",
+            "backup": {
+              "hasBackup": false,
+              "alternativeSource": "None"
+            }
+          }
+        ],
+        "technicalSpecs": {
+          "electricitySpecs": {
+            "voltage": "11 kV",
+            "frequency": "50 Hz",
+            "powerFactor": "0.95 minimum",
+            "connectionType": "Dedicated feeder",
+            "meteringRequirements": "Smart meters with 15-minute interval data"
+          },
+          "gasSpecs": {
+            "pressure": "4-6 bar",
+            "quality": "Commercial grade",
+            "meteringType": "Turbine meters",
+            "safetyRequirements": "Emergency shut-off valves, leak detection system"
+          }
+        },
+        "deliverySchedule": {
+          "electricityConnectionDate": "2025-04-15",
+          "gasConnectionDate": "2025-04-01", 
+          "testingPeriod": "2 weeks",
+          "commercialOperationDate": "2025-05-01"
+        }
+      },
+      "quotations": [
+        {
+          "id": "quote-001",
+          "vendor": "ADDC (Abu Dhabi Distribution Company)",
+          "service": "Electricity",
+          "submittedAt": "2025-01-29T14:30:00Z",
+          "validUntil": "2025-02-28T23:59:59Z",
+          "status": "submitted",
+          "pricing": {
+            "connectionFee": 125000,
+            "monthlyDemandCharge": 35,
+            "energyRate": 0.078,
+            "currency": "AED",
+            "subsidyApplicable": true,
+            "subsidyRate": 15
+          },
+          "terms": {
+            "contractDuration": "3 years",
+            "paymentTerms": "Net 30 days",
+            "penaltyClause": "2% of monthly bill for late payment"
+          },
+          "documents": [
+            {
+              "id": "doc-quote-001-1",
+              "fileName": "ADDC_Electricity_Quotation_ESP001.pdf",
+              "type": "quotation",
+              "uploadedAt": "2025-01-29T14:30:00Z"
+            },
+            {
+              "id": "doc-quote-001-2", 
+              "fileName": "ADDC_Technical_Specifications.pdf",
+              "type": "technical_specs",
+              "uploadedAt": "2025-01-29T14:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "quote-002",
+          "vendor": "ADNOC Gas Processing",
+          "service": "Natural Gas",
+          "submittedAt": "2025-01-30T11:15:00Z",
+          "validUntil": "2025-03-01T23:59:59Z", 
+          "status": "under_review",
+          "pricing": {
+            "connectionFee": 75000,
+            "volumetricRate": 1.25,
+            "minimumMonthlyCharge": 8500,
+            "currency": "AED",
+            "subsidyApplicable": true,
+            "subsidyRate": 12
+          },
+          "terms": {
+            "contractDuration": "5 years",
+            "paymentTerms": "Net 15 days",
+            "takeOrPayClause": "80% of contracted volume"
+          },
+          "documents": [
+            {
+              "id": "doc-quote-002-1",
+              "fileName": "ADNOC_Gas_Quotation_ESP001.pdf", 
+              "type": "quotation",
+              "uploadedAt": "2025-01-30T11:15:00Z"
+            }
+          ]
+        }
+      ],
+      "evaluationCriteria": {
+        "technical": {
+          "weight": 40,
+          "criteria": [
+            "Service reliability and uptime guarantee",
+            "Technical specifications compliance", 
+            "Installation timeline feasibility",
+            "Maintenance and support capabilities"
+          ]
+        },
+        "financial": {
+          "weight": 35,
+          "criteria": [
+            "Total cost of ownership",
+            "Payment terms flexibility",
+            "Subsidy applicability and rate",
+            "Price escalation mechanism"
+          ]
+        },
+        "commercial": {
+          "weight": 25,
+          "criteria": [
+            "Contract terms and conditions",
+            "Vendor reputation and experience",
+            "Customer service quality",
+            "Flexibility for future expansion"
+          ]
+        }
+      },
+      "approvalStatus": {
+        "currentStatus": "pending_vendor_selection",
+        "approverRequired": "ADIO Energy Team",
+        "targetApprovalDate": "2025-02-10",
+        "notes": "Waiting for additional quotation from Emirates Gas"
+      },
+      "communicationLog": [
+        {
+          "date": "2025-01-30T16:00:00Z",
+          "from": "ADIO RFQ Team",
+          "to": "Sarah Al Mansoori", 
+          "subject": "RFQ Update - Additional quotation expected",
+          "summary": "Informed applicant about pending quotation from Emirates Gas. Expected by Feb 3rd."
+        },
+        {
+          "date": "2025-01-29T15:00:00Z",
+          "from": "ADDC",
+          "to": "ADIO RFQ Team",
+          "subject": "Electricity connection quotation submitted",
+          "summary": "Technical and commercial proposal submitted for electricity service."
+        }
+      ]
+    }
+  }
+}
