@@ -40,10 +40,10 @@ export class StatusBadgeComponent {
     
     const widthPrefix = this.autoWidth ? 'min-w-' : 'w-';
     const sizeMap: {[key: string]: string} = {
-      'xs': `h-6 px-3 text-xs leading-6 ${widthPrefix}20`,
-      'sm': `h-6 px-4 text-xs leading-6 ${widthPrefix}24`,
-      'md': `h-6 px-4 text-sm leading-6 ${widthPrefix}32`,
-      'lg': `h-8 px-5 text-base leading-8 ${widthPrefix}40`
+      'xs': `h-6 px-2 text-xs leading-6 ${widthPrefix}20`,
+      'sm': `h-6 px-3 text-xs leading-6 ${widthPrefix}24`,
+      'md': `h-6 px-3 text-sm leading-6 ${widthPrefix}32`,
+      'lg': `h-8 px-4 text-base leading-8 ${widthPrefix}40`
     };
     return sizeMap[this.size] || sizeMap['md'];
   }

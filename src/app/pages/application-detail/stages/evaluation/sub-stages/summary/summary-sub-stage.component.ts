@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccordionTableComponent, AccordionTableRow } from '../../../../../../components/ui/accordion-table/accordion-table.component';
 
@@ -10,6 +10,7 @@ import { AccordionTableComponent, AccordionTableRow } from '../../../../../../co
   styleUrl: './summary-sub-stage.component.scss'
 })
 export class SummarySubStageComponent {
+  @Input() readOnly: boolean = false;
   
   electricTariffData: AccordionTableRow[] = [
     {

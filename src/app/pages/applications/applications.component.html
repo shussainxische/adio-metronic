@@ -6,13 +6,22 @@
     </app-page-header>
   </div>
 
-  <div class="mb-8">
+  <div class="mb-8 flex items-center justify-between">
     <app-filter-button
       label="All Applications"
       [active]="isFilterActive('All')"
       [count]="getApplicationCount('All')"
       (clicked)="filterApplications('All')">
     </app-filter-button>
+    
+    <div class="w-72">
+      <app-input
+        placeholder="Search applications..."
+        (search)="onSearch($event)"
+        className="w-full">
+        <app-icon iconBefore name="search" [size]="16" className="text-gray-500"></app-icon>
+      </app-input>
+    </div>
   </div>
 
   <div class="responsive-grid mb-8">
@@ -71,7 +80,10 @@
       [showShadow]="!applicationAssignmentService.isLocked(app)"
       class="application-card"
       [class.locked]="applicationAssignmentService.isLocked(app)"
-      (click)="navigateToDetail(app.id)">
+      [class.cancelled]="app.status === 'Cancelled'"
+      (click)="onCardClick(app)"
+      (mouseenter)="onCardHover(app, true)"
+      (mouseleave)="onCardHover(app, false)">
       
       <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
         <app-status-badge
@@ -106,15 +118,31 @@
         </div>
 
         <div class="card-progress">
-          <app-progress-bar
-            [progress]="app.progress"
-            [urgent]="isSLAViolation(app)">
-          </app-progress-bar>
+          <div *ngIf="isClosedApplication(app); else normalProgress" class="closed-status-text">
+            <div *ngIf="app.status?.trim() === 'Certified'; else defaultStatusText" class="flex flex-col">
+              <div>Issued: {{ app.issueDate || app.date }}</div>
+              <div [class.text-red-600]="isCertificateExpired(app)" class="italic">
+                {{ isCertificateExpired(app) ? 'Expired:' : 'Expiring:' }} {{ app.expiryDate || 'N/A' }}
+              </div>
+            </div>
+            <ng-template #defaultStatusText>
+              <div class="flex flex-col">
+                <div>Date: {{ app.date }}</div>
+                <div class="italic">{{ getReasonForStatus(app) }}</div>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #normalProgress>
+            <app-progress-bar
+              [progress]="app.progress"
+              [urgent]="isSLAViolation(app)">
+            </app-progress-bar>
+          </ng-template>
         </div>
       </div>
 
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1" *ngIf="!isClosedApplication(app)">
           <app-icon 
             [name]="getAssigneeIcon(app.assignee)" 
             [size]="16" 
@@ -180,13 +208,29 @@
           </div>
         </td>
         <td>
-          <app-progress-bar
-            [progress]="app.progress"
-            [urgent]="isSLAViolation(app)">
-          </app-progress-bar>
+          <div *ngIf="isClosedApplication(app); else normalTableProgress" class="text-xs text-gray-900">
+            <div *ngIf="app.status?.trim() === 'Certified'; else defaultTableStatusText" class="flex flex-col">
+              <div>Issued: {{ app.issueDate || app.date }}</div>
+              <div [class.text-red-600]="isCertificateExpired(app)" class="italic">
+                {{ isCertificateExpired(app) ? 'Expired:' : 'Expiring:' }} {{ app.expiryDate || 'N/A' }}
+              </div>
+            </div>
+            <ng-template #defaultTableStatusText>
+              <div class="flex flex-col">
+                <div>Date: {{ app.date }}</div>
+                <div class="italic">{{ getReasonForStatus(app) }}</div>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #normalTableProgress>
+            <app-progress-bar
+              [progress]="app.progress"
+              [urgent]="isSLAViolation(app)">
+            </app-progress-bar>
+          </ng-template>
         </td>
         <td>
-          <div class="flex items-center gap-1">
+          <div class="flex items-center gap-1" *ngIf="!isClosedApplication(app)">
             <app-icon 
               [name]="getAssigneeIcon(app.assignee)" 
               [size]="16" 

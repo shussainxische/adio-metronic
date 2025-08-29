@@ -27,6 +27,32 @@
   }
 }
 
+// Hover behavior for cancelled cards
+:host ::ng-deep .cancelled {
+  cursor: not-allowed !important;
+  position: relative;
+  
+  * {
+    cursor: not-allowed !important;
+  }
+}
+
+// Ensure preview cards have relative positioning
+:host ::ng-deep app-preview-card {
+  position: relative;
+}
+
+// Closed status text styling
+:host ::ng-deep .closed-status-text {
+  font-size: 0.75rem; /* Same as text-xs (enrollment text size) */
+  color: #000000; /* Black color */
+  white-space: pre-line;
+  line-height: 1.4;
+  min-height: 2.5rem; /* Match approximate height of progress bar */
+  display: flex;
+  align-items: center;
+}
+
 app-data-table {
   th {
     padding: 0.5rem 1rem !important;

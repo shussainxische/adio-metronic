@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -74,6 +74,7 @@ export class ApplicationDetailComponent implements OnInit {
   currentStep: number = 0;
 
   stages: ApplicationStage[] = [];
+  stageTabs: any[] = [];
   private applicationDetailData: any = null;
   private quotationData: QuotationApplicationData | null = null;
 
@@ -81,6 +82,7 @@ export class ApplicationDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
+    private cdr: ChangeDetectorRef,
     public applicationStatusService: ApplicationStatusService,
     private applicationDetailService: ApplicationDetailService
   ) {}
@@ -96,8 +98,16 @@ export class ApplicationDetailComponent implements OnInit {
         if (params['stage']) {
           this.currentStage = params['stage'];
         } else {
-          // Default to Application stage if no query param
-          this.currentStage = 'Application';
+          // Default stage logic
+          if (this.applicationId === 'ESP003') {
+            this.currentStage = 'Quotation';
+          } else if (this.applicationId === 'ESP005' || this.applicationId === 'ESP007') {
+            this.currentStage = 'Evaluation';
+          } else if (this.applicationId === 'ESP009' || this.applicationId === 'ESP010' || this.applicationId === 'ESP011' || this.applicationId === 'ESP012') {
+            this.currentStage = 'Review';
+          } else {
+            this.currentStage = 'Application';
+          }
           this.updateUrl();
         }
         if (params['step']) {
@@ -116,12 +126,14 @@ export class ApplicationDetailComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.stages = data.applicationStages;
+            this.updateStageTabs();
             resolve();
           },
           error: (error) => {
             console.error('Error loading application data:', error);
             // Fallback to empty arrays if loading fails
             this.stages = [];
+            this.updateStageTabs();
             reject(error);
           }
         });
@@ -183,6 +195,7 @@ export class ApplicationDetailComponent implements OnInit {
             this.application = {
               id: applicationData.id,
               companyName: applicationData.companyName,
+              companyType: applicationData.companyType,
               stage: applicationData.stage as any,
               status: applicationData.status as any,
               progress: applicationData.progress,
@@ -195,6 +208,7 @@ export class ApplicationDetailComponent implements OnInit {
               contactEmail: applicationData.contactEmail,
               contactPhone: applicationData.contactPhone
             };
+            this.updateStageTabs();
           } else {
             // Fallback for unknown application ID
             console.warn(`Application ${this.applicationId} not found in mock data`);
@@ -202,12 +216,13 @@ export class ApplicationDetailComponent implements OnInit {
             this.application = {
               id: this.applicationId,
               companyName: 'Unknown Company',
-              stage: 'RFQ' as any,
+              stage: 'Quotation' as any,
               status: 'Pending' as any,
               progress: 0,
               date: new Date().toLocaleDateString(),
               assignee: 'Certifying Body'
             };
+            this.updateStageTabs();
           }
         },
         error: (error) => {
@@ -224,12 +239,13 @@ export class ApplicationDetailComponent implements OnInit {
           this.application = {
             id: this.applicationId,
             companyName: 'Unknown Company',
-            stage: 'RFQ' as any,
+            stage: 'Quotation' as any,
             status: 'Pending' as any,
             progress: 0,
             date: new Date().toLocaleDateString(),
             assignee: 'Certifying Body'
           };
+          this.updateStageTabs();
         }
  
   private calculateProgressFromActivityLog(activityLog: any[]): number {
@@ -272,8 +288,57 @@ export class ApplicationDetailComponent implements OnInit {
     return stage?.steps[this.currentStep] || null;
   }
 
-  get stageTabs() {
-    return this.stages.map(stage => ({ 
+  private updateStageTabs() {
+    // For Closed applications with Certified status, only show Completed tab
+    if (this.application?.stage === 'Closed' && this.application?.status === 'Certified') {
+      this.stageTabs = this.stages.filter(stage => 
+        stage.id === 'Completed'
+      ).map(stage => ({ 
+        id: stage.id, 
+        label: stage.name,
+        icon: stage.icon
+      }));
+      return;
+    }
+    
+    // For Quotation stage applications, only show Application and Quotation tabs  
+    if (this.application?.stage === 'Quotation') {
+      this.stageTabs = this.stages.filter(stage => 
+        stage.id === 'Application' || stage.id === 'Quotation'
+      ).map(stage => ({ 
+        id: stage.id, 
+        label: stage.name,
+        icon: stage.icon
+      }));
+      return;
+    }
+    
+    // For Evaluation stage applications, hide Review and Completed tabs
+    if (this.application?.stage === 'Evaluation') {
+      this.stageTabs = this.stages.filter(stage => 
+        stage.id === 'Application' || stage.id === 'Quotation' || stage.id === 'Evaluation'
+      ).map(stage => ({ 
+        id: stage.id, 
+        label: stage.name,
+        icon: stage.icon
+      }));
+      return;
+    }
+    
+    // For Review stage applications, hide Completed tab
+    if (this.application?.stage === 'Review') {
+      this.stageTabs = this.stages.filter(stage => 
+        stage.id !== 'Completed'
+      ).map(stage => ({ 
+        id: stage.id, 
+        label: stage.name,
+        icon: stage.icon
+      }));
+      return;
+    }
+    
+    // For other stages, show all tabs
+    this.stageTabs = this.stages.map(stage => ({ 
       id: stage.id, 
       label: stage.name,
       icon: stage.icon
@@ -348,6 +413,13 @@ export class ApplicationDetailComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/applications']);
+  }
+
+  isSLAViolation(): boolean {
+    if (!this.application?.deadline) return false;
+    const today = new Date();
+    const deadlineDate = new Date(this.application.deadline);
+    return today > deadlineDate && this.application.stage !== 'Closed';
   }
 
   exportActivityLog() {
@@ -538,19 +610,29 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   get summaryTableData(): InfoTableData {
+    const baseRows: any[] = [
+      { label: 'Status', value: this.applicationStatusService.getBadgeText(this.application?.stage || 'Quotation', this.application?.status || 'Pending'), type: 'status-badge', statusVariant: this.applicationStatusService.getStatusVariant(this.application?.status || 'Pending') },
+      { label: 'Application ID', value: this.application?.id || 'ESP-001' },
+      { label: 'Application Date', value: this.getApplicationDate() },
+      { label: 'Company', value: this.application?.companyName || 'Unknown Company' },
+      { label: 'Type', value: this.getApplicationType() },
+      { label: 'Entity Type', value: this.getEntityType() },
+      { label: 'Services', value: this.getServices(), type: 'status-badges', allowWrap: true },
+      { label: 'Progress', value: '', type: 'progress', progress: this.application?.progress || 0 }
+    ];
+
+    // Add stage-specific rows
+    if (this.application?.stage === 'Quotation') {
+      // Only add Compliance row for Quotation stage applications
+      baseRows.push({ label: 'Compliance', value: this.getCompliance(), type: 'compliance' });
+    } else if (this.application?.stage === 'Closed') {
+      // Add closed-specific information based on status
+      this.addClosedStatusRows(baseRows);
+    }
+
     return {
       title: 'Summary',
-      rows: [
-        { label: 'Status', value: this.applicationStatusService.getBadgeText(this.application?.stage || 'RFQ', this.application?.status || 'Pending'), type: 'status-badge', statusVariant: this.applicationStatusService.getStatusVariant(this.application?.status || 'Pending') as any },
-        { label: 'Application ID', value: this.application?.id || 'ESP-001' },
-        { label: 'Application Date', value: this.getApplicationDate() },
-        { label: 'Company', value: this.application?.companyName || 'Unknown Company' },
-        { label: 'Type', value: this.getApplicationType() },
-        { label: 'Entity Type', value: this.getEntityType() },
-        { label: 'Services', value: this.getServices(), type: 'status-badges', allowWrap: true },
-        { label: 'Progress', value: '', type: 'progress', progress: this.application?.progress || 0 },
-        { label: 'Compliance', value: this.getCompliance(), type: 'compliance' }
-      ]
+      rows: baseRows
     };
   }
 
@@ -595,8 +677,7 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   private getApplicationType(): string {
-    // For now, return default - you can implement logic to determine from API data
-    return this.getApplicationDetail('applicationType') || 'Renewal';
+    return this.getApplicationDetail('applicationType') || this.application?.companyType || 'Unknown Type';
   }
 
   private getEntityType(): string {
@@ -644,6 +725,69 @@ export class ApplicationDetailComponent implements OnInit {
     }
   private getApplicationDetail(key: string): any {
     return this.applicationDetailData ? this.applicationDetailData[key] : null;
+  }
+
+  private addClosedStatusRows(rows: any[]) {
+    const status = this.application?.status;
+    
+    switch (status) {
+      case 'Certified':
+        // Add issue date and expiry date for certified applications
+        const issueDate = this.getApplicationDetail('issueDate');
+        const expiryDate = this.getApplicationDetail('expiryDate');
+        
+        if (issueDate) {
+          rows.push({ label: 'Issued', value: issueDate });
+        }
+        if (expiryDate) {
+          const isExpired = this.applicationStatusService.isCertificateExpired(this.application!);
+          rows.push({ 
+            label: isExpired ? 'Expired' : 'Expiring', 
+            value: expiryDate,
+            type: isExpired ? 'expired-date' : 'text'
+          });
+        }
+        break;
+        
+      case 'Not Awarded':
+        // Add decision date and rejection reason
+        const decisionDate = this.application?.date;
+        const rejectionReason = this.getApplicationDetail('rejectionReason');
+        
+        if (decisionDate) {
+          rows.push({ label: 'Decision Date', value: decisionDate });
+        }
+        if (rejectionReason) {
+          rows.push({ label: 'Reason', value: rejectionReason, type: 'italic-text' });
+        }
+        break;
+        
+      case 'Rejected':
+        // Add decision date and rejection reason
+        const rejectedDate = this.application?.date;
+        const rejectedReason = this.getApplicationDetail('rejectionReason');
+        
+        if (rejectedDate) {
+          rows.push({ label: 'Decision Date', value: rejectedDate });
+        }
+        if (rejectedReason) {
+          rows.push({ label: 'Reason', value: rejectedReason, type: 'italic-text' });
+        }
+        break;
+        
+      case 'Cancelled':
+        // Add cancellation date and reason
+        const cancelledDate = this.application?.date;
+        const cancellationReason = this.getApplicationDetail('cancellationReason');
+        
+        if (cancelledDate) {
+          rows.push({ label: 'Cancelled Date', value: cancelledDate });
+        }
+        if (cancellationReason) {
+          rows.push({ label: 'Reason', value: cancellationReason, type: 'italic-text' });
+        }
+        break;
+    }
   }
 
 }

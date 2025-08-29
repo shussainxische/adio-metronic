@@ -15,7 +15,7 @@
 <!-- Fieldset with conditional legend -->
 <fieldset
   (click)="onClick($event)"
-  class="border rounded-md relative group flex items-center w-full max-h-full"
+  class="border rounded-md relative group flex items-center w-full max-h-full has-icon-before"
   [ngClass]="{
     'border-gray-700': !hasError && !isLocked,
     'border-gray-300': isLocked && !hasError,
@@ -42,10 +42,10 @@
     </span>
   </legend>
 
-  <!-- Icon Before -->
+  <!-- Icon Before - Always render, let CSS handle visibility -->
   <div
     (click)="onClick($event)"
-    class="cursor-pointer"
+    class="icon-before-container cursor-pointer"
     (mousedown)="onIconMouseDown($event)"
   >
     <ng-content select="[iconBefore]"></ng-content>

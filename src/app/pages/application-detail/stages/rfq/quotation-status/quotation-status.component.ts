@@ -36,7 +36,7 @@ export class QuotationStatusComponent {
         iconBg: 'bg-blue-100',
         title: 'Under Approval',
         description: 'Your quotation is pending approval from the applicant',
-        badge: { text: 'RFQ - Under Approval', variant: 'active' as StatusBadgeVariant },
+        badge: { text: 'Quotation - Under Approval', variant: 'active' as StatusBadgeVariant },
         alertType: 'info',
         alertMessage: 'You will be notified once the applicant reviews and responds to your quotation. No further action is required at this time.',
         showButton: false
@@ -45,12 +45,12 @@ export class QuotationStatusComponent {
         icon: 'check-circle',
         iconColor: 'text-green-600',
         iconBg: 'bg-green-100',
-        title: 'Awarded',
-        description: 'Congratulations! Your quotation has been accepted',
-        badge: { text: 'RFQ - Awarded', variant: 'awarded' as StatusBadgeVariant },
-        alertType: 'success',
-        alertMessage: 'You can now proceed to the evaluation phase. Please begin the assessment within 5 business days.',
-        showButton: true
+        title: 'Quotation',
+        description: 'Your quotation was approved by the applicant',
+        badge: { text: 'Quotation - Awarded', variant: 'success' as StatusBadgeVariant },
+        alertType: null,
+        alertMessage: null,
+        showButton: false
       },
       'not-awarded': {
         icon: 'x',
@@ -58,7 +58,7 @@ export class QuotationStatusComponent {
         iconBg: 'bg-red-100',
         title: 'Not Awarded',
         description: 'Your quotation was not selected for this project',
-        badge: { text: 'RFQ - Not Awarded', variant: 'archived' as StatusBadgeVariant },
+        badge: { text: 'Quotation - Not Awarded', variant: 'archived' as StatusBadgeVariant },
         alertType: null,
         alertMessage: null,
         showButton: false
@@ -68,8 +68,8 @@ export class QuotationStatusComponent {
         iconColor: 'text-gray-600',
         iconBg: 'bg-gray-100',
         title: 'Not Awarded - Missed Deadline',
-        description: 'You did not submit a quotation for this RFQ',
-        badge: { text: 'RFQ - Not Submitted', variant: 'archived' as StatusBadgeVariant },
+        description: 'You did not submit a quotation for this Quotation',
+        badge: { text: 'Quotation - Not Submitted', variant: 'archived' as StatusBadgeVariant },
         alertType: 'warning',
         alertMessage: 'This opportunity has closed. The deadline for quotation submission has passed.',
         showButton: false

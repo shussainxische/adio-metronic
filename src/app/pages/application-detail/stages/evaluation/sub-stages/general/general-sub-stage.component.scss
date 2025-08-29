@@ -12,6 +12,17 @@
   ::ng-deep app-date-input {
     width: 100%;
   }
+
+  // Bottom align fields when in rows
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    
+    > * {
+      flex: 1;
+    }
+  }
 }
 
 .certificate-files-container {

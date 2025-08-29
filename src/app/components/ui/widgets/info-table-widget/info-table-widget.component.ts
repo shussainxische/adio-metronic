@@ -7,7 +7,7 @@ import { StatusBadgeComponent, StatusBadgeVariant } from '../../status-badge/sta
 export interface InfoTableRow {
   label: string;
   value: string | string[];
-  type?: 'text' | 'status-badge' | 'status-badges' | 'progress' | 'compliance';
+  type?: 'text' | 'italic-text' | 'expired-date' | 'status-badge' | 'status-badges' | 'progress' | 'compliance';
   statusVariant?: StatusBadgeVariant;
   progress?: number;
   allowWrap?: boolean;

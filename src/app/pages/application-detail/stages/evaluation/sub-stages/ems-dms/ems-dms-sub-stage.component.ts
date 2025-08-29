@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputValidationComponent } from '../../../../../../components/ui/input-validation/input-validation.component';
@@ -12,6 +12,7 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
   styleUrl: './ems-dms-sub-stage.component.scss'
 })
 export class EmsDmsSubStageComponent {
+  @Input() readOnly: boolean = false;
   connectionLoadMeterControl = new FormControl('');
   emsAvailabilityControl = new FormControl('Available');
   demandSideConsumptionControl = new FormControl('');

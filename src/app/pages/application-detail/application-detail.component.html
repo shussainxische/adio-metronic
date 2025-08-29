@@ -26,7 +26,7 @@
 
         <!-- Application Title -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-gray-900 mb-1">ESP0001</h1>
+          <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ application?.id || applicationId }}</h1>
           <p class="text-sm text-gray-600">{{ application?.companyName }}</p>
         </div>
 
@@ -66,10 +66,10 @@
             </div>
           </div>
 
-          <!-- Stage Content Area - No container for Application, RFQ, and Evaluation stages -->
+          <!-- Stage Content Area - No container for Application, Quotation, and Evaluation stages -->
           <div>
             <app-tamm-application-stage *ngIf="currentStage === 'Application'"></app-tamm-application-stage>
-            <app-rfq-stage *ngIf="currentStage === 'RFQ'"></app-rfq-stage>
+            <app-rfq-stage *ngIf="currentStage === 'Quotation'" [application]="application"></app-rfq-stage>
             
             <!-- Evaluation stage without container wrapper -->
             <div *ngIf="currentStage === 'Evaluation'">
@@ -82,7 +82,7 @@
             </div>
             
             <!-- Review stage without container wrapper -->
-            <app-review-stage *ngIf="currentStage === 'Review'"></app-review-stage>
+            <app-review-stage *ngIf="currentStage === 'Review'" [application]="application"></app-review-stage>
             
             <!-- Certified stage without container wrapper -->
             <app-completed-stage *ngIf="currentStage === 'Completed'"></app-completed-stage>
