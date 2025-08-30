@@ -75,30 +75,30 @@
             </app-tamm-application-stage>
             <app-rfq-stage *ngIf="currentStage === 'Quotation'" [application]="application"></app-rfq-stage>
             
-            <!-- Evaluation stage without container wrapper -->
+            <!-- Evaluation stage without container wrapper - Components preserved to maintain form data -->
             <div *ngIf="currentStage === 'Evaluation'">
               <app-general-sub-stage 
-                *ngIf="currentStep === 0"
+                [style.display]="currentStep === 0 ? 'block' : 'none'"
                 [application]="application"
                 [licenseDetails]="licenseDetails"
                 [companyContact]="companyContact">
               </app-general-sub-stage>
               <app-economic-impact-sub-stage 
-                *ngIf="currentStep === 1"
+                [style.display]="currentStep === 1 ? 'block' : 'none'"
                 #economicImpactComponent>
               </app-economic-impact-sub-stage>
               <app-productivity-sub-stage 
-                *ngIf="currentStep === 2"
+                [style.display]="currentStep === 2 ? 'block' : 'none'"
                 #productivityComponent>
               </app-productivity-sub-stage>
               <app-ems-dms-sub-stage 
-                *ngIf="currentStep === 3">
+                [style.display]="currentStep === 3 ? 'block' : 'none'">
               </app-ems-dms-sub-stage>
               <app-summary-sub-stage 
-                *ngIf="currentStep === 4">
+                [style.display]="currentStep === 4 ? 'block' : 'none'">
               </app-summary-sub-stage>
               <app-review-submit-sub-stage 
-                *ngIf="currentStep === 5"
+                [style.display]="currentStep === 5 ? 'block' : 'none'"
                 [economicImpactData]="getEconomicImpactData()"
                 [productivityData]="getProductivityData()">
               </app-review-submit-sub-stage>
