@@ -64,3 +64,7 @@ app-data-table {
     color: black !important;
   }
 }
+
+.header-controls {
+  @apply flex items-center gap-3;
+}

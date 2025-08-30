@@ -52,13 +52,17 @@ export class ApplicationStatusService {
       applications.filter(app => app.stage === stage).map(app => app.status)
     )];
     
+    let sortedStatuses: string[];
     if (stage === 'Completed' || stage === 'Closed') {
-      return uniqueStatuses.sort((a, b) => this.closedStatusOrder.indexOf(a) - this.closedStatusOrder.indexOf(b));
+      sortedStatuses = uniqueStatuses.sort((a, b) => this.closedStatusOrder.indexOf(a) - this.closedStatusOrder.indexOf(b));
     } else if (stage === 'Review') {
-      return uniqueStatuses.sort((a, b) => this.reviewStatusOrder.indexOf(a) - this.reviewStatusOrder.indexOf(b));
+      sortedStatuses = uniqueStatuses.sort((a, b) => this.reviewStatusOrder.indexOf(a) - this.reviewStatusOrder.indexOf(b));
     } else {
-      return uniqueStatuses.sort();
+      sortedStatuses = uniqueStatuses.sort();
     }
+    
+    // Add "All" as the first option for each stage
+    return ['All', ...sortedStatuses];
   }
 
   getSubStatusPillClasses(subStatus: string, isSelected: boolean): string {
