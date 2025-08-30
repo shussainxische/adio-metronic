@@ -1130,17 +1130,21 @@ export class ApplicationDetailComponent implements OnInit {
 
     // Calculate scores using component methods
     const investmentScore = component.calculateAppInvestmentScore(inputValues.grossBookValueAbuDhabi, inputValues.totalGrossBookValue);
+    const emiratisationGrowthScore = component.calculateAppEmiratizationNoScore(inputValues.growthEmiratiNumber, inputValues.originalEmiratiNumber);
+    const skilledStaffScore = component.calculateAppSkilledStaffScore(inputValues.skilledStaff, inputValues.totalStaff);
+    const supplyChainScore = component.calculateAppLogisticsSupplyChainSupportScore(inputValues.adLogisticsFees, inputValues.uaeLogisticsFees);
+    
     const scores = {
       investmentScore: investmentScore,
       investmentWeightedScore: component.calculateAppInvestmentWeightedScore(investmentScore),
-      investmentTopUpScore: 0, // Will be calculated on server or use simpler calculation
-      emiratisationSalaryScore: 0, // Will be calculated on server
-      emiratisationGrowthScore: 0, // Will be calculated on server
-      emiratisationGrowthWeightedScore: 0, // Will be calculated on server
-      skilledStaffScore: 0, // Will be calculated on server
-      skilledStaffWeightedScore: 0, // Will be calculated on server
-      supplyChainScore: 0, // Will be calculated on server
-      supplyChainWeightedScore: 0 // Will be calculated on server
+      investmentTopUpScore: component.calculateAppInvestmentTopUpGbvAdScore(inputValues.grossBookValueAbuDhabi),
+      emiratisationSalaryScore: component.calculateAppEmiratizationSalaryBenefitsScore(inputValues.salaryBenefitsEmirati, inputValues.totalSpentManpower),
+      emiratisationGrowthScore: emiratisationGrowthScore,
+      emiratisationGrowthWeightedScore: component.calculateAppEmiratizationNoWeightedScore(emiratisationGrowthScore),
+      skilledStaffScore: skilledStaffScore,
+      skilledStaffWeightedScore: component.calculateAppSkilledStaffWeightedScore(skilledStaffScore),
+      supplyChainScore: supplyChainScore,
+      supplyChainWeightedScore: component.calculateAppLogisticsSupplyChainSupportWeightedScore(supplyChainScore)
     };
 
     return {
@@ -1165,17 +1169,16 @@ export class ApplicationDetailComponent implements OnInit {
       workInProgressEnd: parseFloat(component.workInProgressEndControl.value) || 0,
       rentalsOfBuilding: parseFloat(component.rentalsOfBuildingControl.value) || 0,
       otherMiscellaneousIncome: parseFloat(component.otherMiscellaneousIncomeControl.value) || 0,
-      totalMainRevenue: this.calculateTotalMainRevenue(component)
+      totalMainRevenue: component.mainRevenue,
+      totalSecondaryRevenue: component.secondaryRevenue,
+      totalRevenue: component.totalRevenue,
+      totalIntermediateConsumption: component.totalIntermediateConsumption,
+      valueAdded: component.valueAdded,
+      productivityScore: component.productivityScore
     };
 
     return inputValues;
   }
 
-  private calculateTotalMainRevenue(component: ProductivitySubStageComponent): number {
-    const totalRevenue = parseFloat(component.totalRevenueMainActivityControl.value) || 0;
-    const rentals = parseFloat(component.rentalsOfBuildingControl.value) || 0;
-    const miscellaneous = parseFloat(component.otherMiscellaneousIncomeControl.value) || 0;
-    return totalRevenue + rentals + miscellaneous;
-  }
 
 }

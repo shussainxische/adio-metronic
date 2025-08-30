@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
+import { EvaluationCalculationsService } from '../../../../../../services/evaluation-calculations.service';
 
 @Component({
   selector: 'app-economic-impact-sub-stage',
@@ -13,6 +14,8 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
 })
 export class EconomicImpactSubStageComponent implements OnInit {
   @Input() readOnly: boolean = false;
+  
+  constructor(private evaluationCalculations: EvaluationCalculationsService) {}
   
   ngOnInit() {
     if (this.readOnly) {
@@ -157,14 +160,43 @@ export class EconomicImpactSubStageComponent implements OnInit {
     appInvestmentGbvAdfaAd: number,
     appInvestmentGbvTotalProprities: number
   ): number {
-    if (appInvestmentGbvTotalProprities === 0) {
-      return 0;
-    }
-    return Math.min(1, appInvestmentGbvAdfaAd / appInvestmentGbvTotalProprities);
+    return this.evaluationCalculations.calculateAppInvestmentScore(appInvestmentGbvAdfaAd, appInvestmentGbvTotalProprities);
   }
 
   calculateAppInvestmentWeightedScore(appInvestmentScore: number): number {
-    return appInvestmentScore * 0.5;
+    return this.evaluationCalculations.calculateAppInvestmentWeightedScore(appInvestmentScore);
+  }
+
+  calculateAppInvestmentTopUpGbvAdScore(appInvestmentGbvAdfaAd: number): number {
+    return this.evaluationCalculations.calculateAppInvestmentTopUpGbvAdScore(appInvestmentGbvAdfaAd);
+  }
+
+  calculateAppEmiratizationSalaryBenefitsScore(appEmairatizationSalaryBenfCostPaid: number, appEmiratizationSpentOnManpower: number): number {
+    return this.evaluationCalculations.calculateAppEmiratizationSalaryBenefitsScore(appEmairatizationSalaryBenfCostPaid, appEmiratizationSpentOnManpower);
+  }
+
+  calculateAppEmiratizationNoScore(appEmiratizationGrowthInEmiratiNo: number, appEmiratizationNumberOfEmiratis: number): number {
+    return this.evaluationCalculations.calculateAppEmiratizationNoScore(appEmiratizationGrowthInEmiratiNo, appEmiratizationNumberOfEmiratis);
+  }
+
+  calculateAppEmiratizationNoWeightedScore(appEmiratizationNoScore: number): number {
+    return this.evaluationCalculations.calculateAppEmiratizationNoWeightedScore(appEmiratizationNoScore);
+  }
+
+  calculateAppSkilledStaffScore(appSkilledNumberOfStaff: number, appSkilledNumberOfStaffTotal: number): number {
+    return this.evaluationCalculations.calculateAppSkilledStaffScore(appSkilledNumberOfStaff, appSkilledNumberOfStaffTotal);
+  }
+
+  calculateAppSkilledStaffWeightedScore(appSkilledStaffScore: number): number {
+    return this.evaluationCalculations.calculateAppSkilledStaffWeightedScore(appSkilledStaffScore);
+  }
+
+  calculateAppLogisticsSupplyChainSupportScore(appLogisticsFeesChargesAd: number, appLogisticsFeesChargesUaeTotal: number): number {
+    return this.evaluationCalculations.calculateAppLogisticsSupplyChainSupportScore(appLogisticsFeesChargesAd, appLogisticsFeesChargesUaeTotal);
+  }
+
+  calculateAppLogisticsSupplyChainSupportWeightedScore(appLogisticsSupplyChainSupportScore: number): number {
+    return this.evaluationCalculations.calculateAppLogisticsSupplyChainSupportWeightedScore(appLogisticsSupplyChainSupportScore);
   }
 
   // Calculated Investment Scores
@@ -178,15 +210,7 @@ export class EconomicImpactSubStageComponent implements OnInit {
 
   get investmentTopUpScore(): string {
     const appInvestmentGbvAdfaAd = parseFloat(this.grossBookValueAbuDhabiControl.value || '0');
-
-    let score = appInvestmentGbvAdfaAd; // Cap at 1.0 for 100M+
-    if (appInvestmentGbvAdfaAd < 5_000_000) {
-      score = 0;
-    } else if (appInvestmentGbvAdfaAd > 150_000_000) {
-      score = 0;
-    } else {
-      score = appInvestmentGbvAdfaAd / 150_000_000;
-    }
+    const score = this.calculateAppInvestmentTopUpGbvAdScore(appInvestmentGbvAdfaAd);
     return score.toFixed(2);
   }
 
@@ -194,36 +218,21 @@ export class EconomicImpactSubStageComponent implements OnInit {
   get emiratisationSalaryScore(): string {
     const emiratiSalary = parseFloat(this.salaryBenefitsEmiratiControl.value || '0');
     const totalManpower = parseFloat(this.totalSpentManpowerControl.value || '0');
-    
-    if (emiratiSalary  === 0 || totalManpower === 0) return '0.00';
-    
-    const denominator = totalManpower * 0.20; // 20%
-    const ratio = emiratiSalary / denominator;
-    return Math.min(1, ratio).toFixed(2);
+    const score = this.calculateAppEmiratizationSalaryBenefitsScore(emiratiSalary, totalManpower);
+    return score.toFixed(2);
   }
 
   get emiratisationGrowthScore(): string {
-    const appEmiratizationGrowthInEmiratiNo = parseInt(this.originalEmiratiNumberControl.value || '0');
-    const appEmiratizationNumberOfEmiratis = parseInt(this.growthEmiratiNumberControl.value || '0');
-    let score = 0;
-    if (appEmiratizationGrowthInEmiratiNo === 0 || appEmiratizationNumberOfEmiratis === 0) {
-      score = 0;
-    }
-    const denominator = appEmiratizationNumberOfEmiratis * 0.20; // 20%
-    const ratio = appEmiratizationGrowthInEmiratiNo / denominator;
-    score = Math.min(1, ratio);
-    return Math.max(score, 0).toFixed(2);
+    const appEmiratizationGrowthInEmiratiNo = parseInt(this.growthEmiratiNumberControl.value || '0');
+    const appEmiratizationNumberOfEmiratis = parseInt(this.originalEmiratiNumberControl.value || '0');
+    const score = this.calculateAppEmiratizationNoScore(appEmiratizationGrowthInEmiratiNo, appEmiratizationNumberOfEmiratis);
+    return score.toFixed(2);
   }
 
   get skilledLabourScore(): string {
     const skilled = parseInt(this.skilledStaffControl.value || '0');
     const total = parseInt(this.totalStaffControl.value || '0');
-    
-    if (skilled === 0 || total === 0) return '0.00';
-
-    const denominator = total * 0.20;
-    const ratio = skilled / denominator;
-    const score = Math.min(ratio, 1); // Cap at 1.0
+    const score = this.calculateAppSkilledStaffScore(skilled, total);
     return score.toFixed(2);
   }
 
@@ -231,11 +240,7 @@ export class EconomicImpactSubStageComponent implements OnInit {
   get supplyChainScore(): string {
     const adLogistics = parseFloat(this.adLogisticsFeesControl.value || '0');
     const uaeLogistics = parseFloat(this.uaeLogisticsFeesControl.value || '0');
-    
-    if (adLogistics === 0 || uaeLogistics === 0) return '0.00';
-    
-    const ratio = adLogistics / uaeLogistics;
-    const score = Math.min(ratio, 1); // Cap at 1.0
+    const score = this.calculateAppLogisticsSupplyChainSupportScore(adLogistics, uaeLogistics);
     return score.toFixed(2);
   }
 

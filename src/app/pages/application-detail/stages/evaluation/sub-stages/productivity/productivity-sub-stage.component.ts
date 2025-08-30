@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
+import { EvaluationCalculationsService } from '../../../../../../services/evaluation-calculations.service';
 
 @Component({
   selector: 'app-productivity-sub-stage',
@@ -13,6 +14,8 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
 })
 export class ProductivitySubStageComponent {
   @Input() readOnly: boolean = false;
+
+  constructor(private evaluationCalculations: EvaluationCalculationsService) {}
   totalRevenueMainActivityControl = new FormControl('0');
   finishedGoodsBeginningControl = new FormControl('0');
   finishedGoodsEndControl = new FormControl('0');
@@ -198,6 +201,85 @@ export class ProductivitySubStageComponent {
     }
   };
 
+  // Calculation methods using evaluation service
+  calculateAppProductTotalMainRevenue(
+    appProductRevenueMain: number,
+    appProductFinishedgoodsBoy: number,
+    appProductFinishedgoodsEoy: number,
+    appProductWipBoy: number,
+    appProductWipEoy: number
+  ): number {
+    return this.evaluationCalculations.calculateAppProductTotalMainRevenue(
+      appProductRevenueMain,
+      appProductFinishedgoodsBoy,
+      appProductFinishedgoodsEoy,
+      appProductWipBoy,
+      appProductWipEoy
+    );
+  }
+
+  calculateAppProductTotalSecondaryRevenue(
+    appProductRevenueRentals: number,
+    appProductRevenueMisc: number
+  ): number {
+    return this.evaluationCalculations.calculateAppProductTotalSecondaryRevenue(
+      appProductRevenueRentals,
+      appProductRevenueMisc
+    );
+  }
+
+  calculateAppProductTotalRevenue(
+    appProductTotalMainRevenue: number,
+    appProductTotalSecondaryRevenue: number
+  ): number {
+    return this.evaluationCalculations.calculateAppProductTotalRevenue(
+      appProductTotalMainRevenue,
+      appProductTotalSecondaryRevenue
+    );
+  }
+
+  calculateAppProductIntermediateConsumptionTotal(
+    appTotalCostofProduction: number,
+    appProductWagesSalariesBonusesCashCogs: number,
+    appProductBenefitsGrantedEmpCogs: number,
+    appDepreciationCogs: number,
+    appProductTotalGeneralAdminExpenses: number,
+    appProductWagesSalariesBonusesCashGa: number,
+    appProductBenefitsGrantedEmpGa: number,
+    appProductBankingCharges: number
+  ): number {
+    return this.evaluationCalculations.calculateAppProductIntermediateConsumptionTotal(
+      appTotalCostofProduction,
+      appProductWagesSalariesBonusesCashCogs,
+      appProductBenefitsGrantedEmpCogs,
+      appDepreciationCogs,
+      appProductTotalGeneralAdminExpenses,
+      appProductWagesSalariesBonusesCashGa,
+      appProductBenefitsGrantedEmpGa,
+      appProductBankingCharges
+    );
+  }
+
+  calculateAppProductValueAdded(
+    appProductTotalRevenue: number,
+    appProductIntermediateConsumptionTotal: number
+  ): number {
+    return this.evaluationCalculations.calculateAppProductValueAdded(
+      appProductTotalRevenue,
+      appProductIntermediateConsumptionTotal
+    );
+  }
+
+  calculateAppProductProductivity(
+    appProductValueAdded: number,
+    appProductAvgNumberEmployees: number
+  ): number {
+    return this.evaluationCalculations.calculateAppProductProductivity(
+      appProductValueAdded,
+      appProductAvgNumberEmployees
+    );
+  }
+
   get mainRevenue(): number {
     const mainActivity = parseFloat(this.totalRevenueMainActivityControl.value || '0');
     const finishedBegin = parseFloat(this.finishedGoodsBeginningControl.value || '0');
@@ -205,18 +287,24 @@ export class ProductivitySubStageComponent {
     const wipBegin = parseFloat(this.workInProgressBeginningControl.value || '0');
     const wipEnd = parseFloat(this.workInProgressEndControl.value || '0');
     
-    return mainActivity + (finishedEnd - finishedBegin) + (wipEnd - wipBegin);
+    return this.calculateAppProductTotalMainRevenue(
+      mainActivity,
+      finishedBegin,
+      finishedEnd,
+      wipBegin,
+      wipEnd
+    );
   }
 
   get secondaryRevenue(): number {
     const otherIncome = parseFloat(this.otherMiscellaneousIncomeControl.value || '0');
     const rentals = parseFloat(this.rentalsOfBuildingControl.value || '0');
     
-    return otherIncome + rentals;
+    return this.calculateAppProductTotalSecondaryRevenue(rentals, otherIncome);
   }
 
   get totalRevenue(): number {
-    return this.mainRevenue + this.secondaryRevenue;
+    return this.calculateAppProductTotalRevenue(this.mainRevenue, this.secondaryRevenue);
   }
 
   get totalIntermediateConsumption(): number {
@@ -230,15 +318,24 @@ export class ProductivitySubStageComponent {
     const depreciationAdmin = parseFloat(this.depreciationAdminControl.value || '0');
     const bankingCharges = parseFloat(this.bankingChargesControl.value || '0');
     
-    return totalCostProduction + wagesCogs + benefitsCogs + depreciationCogs +
-           totalAdminExpenses + wagesAdmin + benefitsAdmin + depreciationAdmin + bankingCharges;
+    return this.calculateAppProductIntermediateConsumptionTotal(
+      totalCostProduction,
+      wagesCogs,
+      benefitsCogs,
+      depreciationCogs,
+      totalAdminExpenses,
+      wagesAdmin,
+      benefitsAdmin,
+      bankingCharges
+    );
   }
 
   get valueAdded(): number {
-    return this.totalRevenue - this.totalIntermediateConsumption;
+    return this.calculateAppProductValueAdded(this.totalRevenue, this.totalIntermediateConsumption);
   }
 
   get productivityScore(): number {
-    return 92.5;
+    const avgEmployees = parseFloat(this.averageEmployeesControl.value || '1');
+    return this.calculateAppProductProductivity(this.valueAdded, avgEmployees);
   }
 }
