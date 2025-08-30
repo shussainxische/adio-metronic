@@ -41,7 +41,7 @@ export interface ApplicationFiltersResponse {
   providedIn: 'root'
 })
 export class ApplicationFiltersService {
-  private apiUrl = 'http://localhost:5297/api/Application/cb-get-application-filters';
+  private apiUrl = 'https://localhost:44354/api/Application/cb-get-application-filters';
   private filtersSubject = new BehaviorSubject<{ appTypes: AppType[], stages: Stage[] }>({ appTypes: [], stages: [] });
   
   constructor(private http: HttpClient) {}

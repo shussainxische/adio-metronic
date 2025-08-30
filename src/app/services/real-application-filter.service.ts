@@ -11,7 +11,7 @@ import {
 
 @Injectable()
 export class RealApplicationFilterService extends BaseApplicationFilterService {
-  private apiUrl = 'http://localhost:5297/api/Application/cb-get-application-filters';
+  private apiUrl = 'https://localhost:44354/api/Application/cb-get-application-filters';
 
   constructor(private http: HttpClient) { 
     super(); 

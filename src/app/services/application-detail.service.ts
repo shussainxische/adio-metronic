@@ -56,7 +56,7 @@ export interface QuotationApplicationResponse {
   providedIn: 'root'
 })
 export class ApplicationDetailService {
-  private apiBaseUrl = 'http://localhost:5297/api/Application';
+  private apiBaseUrl = 'https://localhost:44354/api/Application';
   private applicationDetailSubject = new BehaviorSubject<QuotationApplicationData | null>(null);
  
   constructor(private http: HttpClient) {}

@@ -26,7 +26,7 @@ export interface ApplicationsResponse {
   providedIn: 'root'
 })
 export class ApplicationsService {
-  private apiUrl = 'http://localhost:5297/api/Application/cb-get-applications';
+  private apiUrl = 'https://localhost:44354/api/Application/cb-get-applications';
   private applicationsSubject = new BehaviorSubject<ApplicationData[]>([]);
  
   constructor(private http: HttpClient) {}

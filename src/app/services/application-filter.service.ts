@@ -40,7 +40,7 @@ export interface ApplicationFiltersResponse {
   providedIn: 'root'
 })
 export class ApplicationFilterService {
-  private readonly apiUrl = 'http://localhost:5297/api/Application/cb-get-application-filters';
+  private readonly apiUrl = 'https://localhost:44354/api/Application/cb-get-application-filters';
 
   constructor(private http: HttpClient) {}
 

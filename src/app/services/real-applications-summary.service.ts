@@ -9,7 +9,7 @@ import {
 
 @Injectable()
 export class RealApplicationsSummaryService extends BaseApplicationsSummaryService {
-  private apiUrl = 'http://localhost:5297/api/Application/get-applications-summary';
+  private apiUrl = 'https://localhost:44354/api/Application/get-applications-summary';
 
   constructor(private http: HttpClient) { 
     super(); 

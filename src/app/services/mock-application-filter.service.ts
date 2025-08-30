@@ -45,7 +45,7 @@ export class MockApplicationFilterService extends BaseApplicationFilterService i
           {
             wfStgId: 1,
             serviceId: 100,
-            wfStgName: "RFQ",
+            wfStgName: "Quotation",
             wfStgColor: "#4A90E2",
             wfStgIcon: "fa-file-text-o",
             wfStgSortId: 1,
@@ -123,7 +123,7 @@ export class MockApplicationFilterService extends BaseApplicationFilterService i
           {
             wfStgId: 4,
             serviceId: 100,
-            wfStgName: "Close",
+            wfStgName: "Closedd",
             wfStgColor: "#9B9B9B",
             wfStgIcon: "fa-archive",
             wfStgSortId: 4,
@@ -208,7 +208,7 @@ export class MockApplicationFilterService extends BaseApplicationFilterService i
           {
             wfStgId: 1,
             serviceId: 100,
-            wfStgName: "RFQ",
+            wfStgName: "Qoutation",
             wfStgColor: "#4A90E2",
             wfStgIcon: "fa-file-text-o",
             wfStgSortId: 1,
@@ -286,7 +286,7 @@ export class MockApplicationFilterService extends BaseApplicationFilterService i
           {
             wfStgId: 4,
             serviceId: 100,
-            wfStgName: "Close",
+            wfStgName: "Closed",
             wfStgColor: "#9B9B9B",
             wfStgIcon: "fa-archive",
             wfStgSortId: 4,

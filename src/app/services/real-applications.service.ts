@@ -9,7 +9,7 @@ import {
 
 @Injectable()
 export class RealApplicationsService extends BaseApplicationsService {
-  private apiUrl = 'http://localhost:5297/api/Application/cb-get-applications';
+  private apiUrl = 'https://localhost:44354/api/Application/cb-get-applications';
 
   constructor(private http: HttpClient) { 
     super(); 
