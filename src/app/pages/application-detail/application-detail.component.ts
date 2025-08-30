@@ -240,6 +240,10 @@ export class ApplicationDetailComponent implements OnInit {
               date: new Date().toLocaleDateString(),
               assignee: 'Certifying Body'
             };
+            
+            // Set default stage based on application status
+            this.setDefaultStageForApplication(summaryItem);
+            
             this.updateStageTabs();
             this.cdr.detectChanges();
           }
@@ -263,6 +267,10 @@ export class ApplicationDetailComponent implements OnInit {
           this.quotationData = response.data;
           this.applicationDetailData = null; // No longer needed
           this.application = this.createApplicationFromQuotationData(response.data, summaryItem);
+          
+          // Set default stage based on RFQ substage
+          this.setDefaultStageForApplication(summaryItem);
+          
           this.updateStageTabs();
           this.cdr.detectChanges();
         } else {
@@ -278,6 +286,10 @@ export class ApplicationDetailComponent implements OnInit {
             date: new Date().toLocaleDateString(),
             assignee: 'Certifying Body'
           };
+          
+          // Set default stage based on RFQ substage
+          this.setDefaultStageForApplication(summaryItem);
+          
           this.updateStageTabs();
           this.cdr.detectChanges();
         }
@@ -295,6 +307,10 @@ export class ApplicationDetailComponent implements OnInit {
           date: new Date().toLocaleDateString(),
           assignee: 'Certifying Body'
         };
+        
+        // Set default stage based on RFQ substage
+        this.setDefaultStageForApplication(summaryItem);
+        
         this.updateStageTabs();
         this.cdr.detectChanges();
       }
@@ -461,6 +477,37 @@ export class ApplicationDetailComponent implements OnInit {
   get currentStepData() {
     const stage = this.currentStageData;
     return stage?.steps[this.currentStep] || null;
+  }
+
+  private setDefaultStageForApplication(summaryItem: any) {
+    // Only set default stage if no stage parameter is provided in URL
+    this.route.queryParams.subscribe(params => {
+      if (!params['stage']) {
+        const stage = summaryItem.wfStgName?.toLowerCase();
+        const substage = summaryItem.wfSubstgName?.toLowerCase();
+        
+        if (stage === 'rfq') {
+          // If RFQ substage is 'Submitted', default to 'Quotation' tab
+          if (substage === 'submitted') {
+            this.currentStage = 'Quotation';
+          } else {
+            // For other RFQ substages (like 'Pending'), default to 'Application' tab
+            this.currentStage = 'Application';
+          }
+        } else if (stage === 'evaluation') {
+          this.currentStage = 'Evaluation';
+        } else if (stage === 'review') {
+          this.currentStage = 'Review';
+        } else if (stage === 'close' || stage === 'closed') {
+          this.currentStage = 'Completed';
+        } else {
+          // Default fallback
+          this.currentStage = 'Application';
+        }
+        
+        this.updateUrl();
+      }
+    }).unsubscribe(); // Unsubscribe immediately since this is a one-time check
   }
 
   private updateStageTabs() {

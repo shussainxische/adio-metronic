@@ -390,6 +390,31 @@ export class ApplicationsComponent implements OnInit {
     this.router.navigate(['/applications', appId.toString()]);
   }
 
+  navigateToDetailWithStage(app: Application) {
+    const queryParams: any = { step: 0 };
+    
+    // Determine the correct stage based on RFQ substage
+    if (app.stage === 'RFQ') {
+      if (app.status?.toLowerCase() === 'submitted') {
+        queryParams.stage = 'Quotation';
+      } else {
+        queryParams.stage = 'Application';
+      }
+    } else if (app.stage === 'Evaluation') {
+      queryParams.stage = 'Evaluation';
+    } else if (app.stage === 'Review') {
+      queryParams.stage = 'Review';
+    } else if (app.stage === 'Closed') {
+      queryParams.stage = 'Completed';
+    } else {
+      queryParams.stage = 'Application';
+    }
+
+    // Use numeric appId if available, otherwise fallback to string id
+    const applicationId = app.appId ? app.appId.toString() : app.id;
+    this.router.navigate(['/applications', applicationId], { queryParams });
+  }
+
   getApplicationCount = (stage: string) => {
     if (this.applicationsSummary.length > 0) {
       return this.getApplicationCountFromSummary(stage);
@@ -537,24 +562,14 @@ export class ApplicationsComponent implements OnInit {
     if (app.status === 'Cancelled') {
       return; // Prevent navigation for cancelled applications
     }
-    // Use numeric appId if available, otherwise fallback to string id
-    if (app.appId) {
-      this.navigateToDetailById(app.appId);
-    } else {
-      this.navigateToDetail(app.id);
-    }
+    this.navigateToDetailWithStage(app);
   }
 
   onCardClick(app: Application) {
     if (app.status === 'Cancelled') {
       return; // Prevent navigation for cancelled applications
     }
-    // Use numeric appId if available, otherwise fallback to string id
-    if (app.appId) {
-      this.navigateToDetailById(app.appId);
-    } else {
-      this.navigateToDetail(app.id);
-    }
+    this.navigateToDetailWithStage(app);
   }
 
   onCardHover(app: Application, isHovering: boolean) {
