@@ -1,0 +1,152 @@
+{
+  "data": {
+    "appTypes": [
+      {
+        "appTypeId": 1,
+        "appTypeName": "Enrollment"
+      },
+      {
+        "appTypeId": 2,
+        "appTypeName": "Renewal"
+      },
+      {
+        "appTypeId": 3,
+        "appTypeName": "New Manufacturing Entity"
+      },
+      {
+        "appTypeId": 4,
+        "appTypeName": "Existing Manufacturing Entity"
+      },
+      {
+        "appTypeId": 5,
+        "appTypeName": "Blocked"
+      }
+    ],
+    "stages": [
+      {
+        "wfStgId": 1,
+        "serviceId": 100,
+        "wfStgName": "RFQ",
+        "wfStgColor": "#4A90E2",
+        "wfStgIcon": "fa-file-text-o",
+        "wfStgSortId": 1,
+        "subStages": [
+          {
+            "wfSubstgId": 1,
+            "wfStgId": 1,
+            "wfSubstgName": "pending",
+            "wfSubstgColor": "#F5A623",
+            "wfSubstgIcon": "fa-clock-o",
+            "wfSubstgSortId": 1
+          },
+          {
+            "wfSubstgId": 2,
+            "wfStgId": 1,
+            "wfSubstgName": "submitted",
+            "wfSubstgColor": "#7ED321",
+            "wfSubstgIcon": "fa-paper-plane",
+            "wfSubstgSortId": 2
+          }
+        ]
+      },
+      {
+        "wfStgId": 2,
+        "serviceId": 100,
+        "wfStgName": "Evaluation",
+        "wfStgColor": "#F5A623",
+        "wfStgIcon": "fa-cogs",
+        "wfStgSortId": 2,
+        "subStages": [
+          {
+            "wfSubstgId": 3,
+            "wfStgId": 2,
+            "wfSubstgName": "In progress",
+            "wfSubstgColor": "#4A90E2",
+            "wfSubstgIcon": "fa-spinner",
+            "wfSubstgSortId": 1
+          },
+          {
+            "wfSubstgId": 4,
+            "wfStgId": 2,
+            "wfSubstgName": "Returned",
+            "wfSubstgColor": "#D0021B",
+            "wfSubstgIcon": "fa-undo",
+            "wfSubstgSortId": 2
+          }
+        ]
+      },
+      {
+        "wfStgId": 3,
+        "serviceId": 100,
+        "wfStgName": "Review",
+        "wfStgColor": "#BD10E0",
+        "wfStgIcon": "fa-search",
+        "wfStgSortId": 3,
+        "subStages": [
+          {
+            "wfSubstgId": 5,
+            "wfStgId": 3,
+            "wfSubstgName": "initial review",
+            "wfSubstgColor": "#F8E71C",
+            "wfSubstgIcon": "fa-eye",
+            "wfSubstgSortId": 1
+          },
+          {
+            "wfSubstgId": 6,
+            "wfStgId": 3,
+            "wfSubstgName": "final review",
+            "wfSubstgColor": "#50E3C2",
+            "wfSubstgIcon": "fa-gavel",
+            "wfSubstgSortId": 2
+          }
+        ]
+      },
+      {
+        "wfStgId": 4,
+        "serviceId": 100,
+        "wfStgName": "Close",
+        "wfStgColor": "#9B9B9B",
+        "wfStgIcon": "fa-archive",
+        "wfStgSortId": 4,
+        "subStages": [
+          {
+            "wfSubstgId": 7,
+            "wfStgId": 4,
+            "wfSubstgName": "certified",
+            "wfSubstgColor": "#7ED321",
+            "wfSubstgIcon": "fa-check-circle",
+            "wfSubstgSortId": 1
+          },
+          {
+            "wfSubstgId": 8,
+            "wfStgId": 4,
+            "wfSubstgName": "not certified",
+            "wfSubstgColor": "#D0021B",
+            "wfSubstgIcon": "fa-times-circle",
+            "wfSubstgSortId": 2
+          },
+          {
+            "wfSubstgId": 9,
+            "wfStgId": 4,
+            "wfSubstgName": "expired",
+            "wfSubstgColor": "#4A4A4A",
+            "wfSubstgIcon": "fa-calendar-times-o",
+            "wfSubstgSortId": 3
+          },
+          {
+            "wfSubstgId": 10,
+            "wfStgId": 4,
+            "wfSubstgName": "canceled",
+            "wfSubstgColor": "#B3B3B3",
+            "wfSubstgIcon": "fa-ban",
+            "wfSubstgSortId": 4
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+  ],
+  "responseTime": "2025-08-29T15:59:52.960667+04:00",
+  "isSuccess": true
+}

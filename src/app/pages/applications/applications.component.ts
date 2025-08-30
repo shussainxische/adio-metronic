@@ -15,7 +15,10 @@ import { AdioButtonComponent } from '../../components/ui/adio-button/adio-button
 import { ApplicationStatusService, Application } from '../../services/application-status.service';
 import { ApplicationAssignmentService } from '../../services/application-assignment.service';
 import { ApplicationFiltersService, AppType, Stage } from '../../services/application-filters.service';
+import { BaseApplicationFilterService } from '../../services/base-application-filter.service';
 import { ApplicationsService, ApplicationData } from '../../services/applications.service';
+import { BaseApplicationsService, ApplicationItem } from '../../services/base-applications.service';
+import { BaseApplicationsSummaryService, ApplicationSummaryItem } from '../../services/base-applications-summary.service';
 import { TableComponent } from '../../components/ui/table/table/table.component';
 import { TableHeaderComponent } from '../../components/ui/table/table-header/table-header.component';
 import { TableBodyComponent } from '../../components/ui/table/table-body/table-body.component';
@@ -59,6 +62,7 @@ export class ApplicationsComponent implements OnInit {
   appTypes: AppType[] = [];
   stages: Stage[] = [];
   applications: Application[] = [];
+  applicationsSummary: ApplicationSummaryItem[] = [];
 
   constructor(
     private router: Router,
@@ -66,60 +70,204 @@ export class ApplicationsComponent implements OnInit {
     public applicationStatusService: ApplicationStatusService,
     public applicationAssignmentService: ApplicationAssignmentService,
     public applicationFiltersService: ApplicationFiltersService,
-    private applicationsService: ApplicationsService
+    private baseApplicationFilterService: BaseApplicationFilterService,
+    private baseApplicationsService: BaseApplicationsService,
+    private baseApplicationsSummaryService: BaseApplicationsSummaryService
   ) {}
 
   ngOnInit() {
     this.loadFilters();
-    this.loadApplicationsData();
+    // this.loadApplicationsData(); // Using summary data instead
+    this.loadApplicationsSummary();
   }
 
   private loadFilters() {
-    this.applicationFiltersService.loadFilters().subscribe({
-      next: (filters) => {
-        debugger;
-        this.appTypes = filters.appTypes;
-        this.stages = filters.stages;
-        this.applicationTypeOptions = this.applicationFiltersService.getAppTypeOptions();
+    this.baseApplicationFilterService.getApplicationFilters().subscribe({
+      next: (response) => {
+        if (response.isSuccess && response.data) {
+          this.appTypes = response.data.appTypes;
+          this.stages = response.data.stages;
+          this.applicationTypeOptions = this.convertAppTypesToSelectOptions(response.data.appTypes);
+        } else {
+          console.error('Failed to load application filters:', response.errors);
+        }
       },
       error: (error) => {
         console.error('Error loading application filters:', error);
-        // Fallback to mock data if API fails
-        this.loadMockFilters();
       }
     });
   }
  
-  private loadMockFilters() {
-    this.http.get<{applicationTypeOptions: SelectOption[], applicationStages?: any[]}>('assets/mock-data/applications.json')
-      .subscribe(data => {
-        this.applicationTypeOptions = data.applicationTypeOptions;
-      });
+
+  private convertAppTypesToSelectOptions(appTypes: AppType[]): SelectOption[] {
+    return [
+      { label: 'All Types', value: 'all' },
+      ...appTypes.map(type => ({
+        label: type.appTypeName,
+        value: type.appTypeId.toString()
+      }))
+    ];
+  }
+
+  private convertApplicationItems(items: ApplicationItem[]): Application[] {
+    return items.map(item => ({
+      id: item.id,
+      companyName: item.companyName,
+      companyType: item.companyType,
+      stage: this.mapStage(item.stage),
+      status: this.mapStatus(item.status),
+      progress: item.progress,
+      date: item.date,
+      deadline: item.deadline,
+      category: item.category,
+      assignee: item.assignee,
+      contactName: item.contactName,
+      contactPosition: item.contactPosition,
+      contactEmail: item.contactEmail,
+      contactPhone: item.contactPhone,
+      issueDate: item.issueDate,
+      expiryDate: item.expiryDate,
+      rejectionReason: item.rejectionReason,
+      cancellationReason: item.cancellationReason
+    }));
+  }
+
+  private mapStage(stage: string): 'Quotation' | 'Evaluation' | 'Review' | 'Closed' {
+    const stageMap: { [key: string]: 'Quotation' | 'Evaluation' | 'Review' | 'Closed' } = {
+      'RFQ': 'Quotation',
+      'Quotation': 'Quotation',
+      'Evaluation': 'Evaluation',
+      'Review': 'Review',
+      'Close': 'Closed',
+      'Closed': 'Closed'
+    };
+    return stageMap[stage] || 'Quotation';
+  }
+
+  private mapStatus(status: string): 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected' {
+    const statusMap: { [key: string]: 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected' } = {
+      // Handle both lowercase and capitalized versions from API
+      'pending': 'Pending',
+      'Pending': 'Pending',
+      'submitted': 'Submitted',
+      'Submitted': 'Submitted', 
+      'In progress': 'In Progress',
+      'In Progress': 'In Progress',
+      'Returned': 'Returned',
+      'initial review': 'Initial Review',
+      'Initial Review': 'Initial Review',
+      'external review': 'External Review',
+      'External Review': 'External Review',
+      'final review': 'Final Review',
+      'Final Review': 'Final Review',
+      'certified': 'Certified',
+      'Certified': 'Certified',
+      'not certified': 'Not Awarded',
+      'Not Awarded': 'Not Awarded',
+      'cancelled': 'Cancelled',
+      'canceled': 'Cancelled',
+      'Cancelled': 'Cancelled',
+      'expired': 'Rejected',
+      'Rejected': 'Rejected'
+    };
+    return statusMap[status] || 'Pending';
+  }
+
+  private loadApplicationsSummary() {
+    this.baseApplicationsSummaryService.getApplicationsSummary().subscribe({
+      next: (response) => {
+        if (response.isSuccess && response.data) {
+          this.applicationsSummary = response.data;
+          // Convert summary data to applications for display
+          this.applications = this.convertSummaryToApplications(response.data);
+          this.updateFilteredApplications();
+        } else {
+          console.error('Failed to load applications summary:', response.errors);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading applications summary:', error);
+      }
+    });
+  }
+
+  private convertSummaryToApplications(summaryItems: ApplicationSummaryItem[]): Application[] {
+    return summaryItems.map(item => ({
+      id: item.appReferenceNumber,
+      appId: item.appId, // Add numeric appId for navigation
+      companyName: item.invCompanyName,
+      companyType: item.appTypeName,
+      stage: this.mapStage(item.wfStgName),
+      status: this.mapStatus(item.wfSubstgName),
+      progress: item.wfSubstgProgress,
+      date: new Date().toLocaleDateString(), // You might want to get this from the API
+      assignee: 'ADIO', // You might want to get this from the API
+      category: this.getCategoryFromServices(item.appIsElectricity, item.appIsGas),
+      services: this.getServicesArray(item.appIsElectricity, item.appIsGas),
+      compliance: 'On Track' // You might want to calculate this based on progress
+    }));
+  }
+
+  private getCategoryFromServices(isElectricity: boolean, isGas: boolean): string {
+    if (isElectricity && isGas) return 'Electricity,Gas';
+    if (isElectricity) return 'Electricity';
+    if (isGas) return 'Gas';
+    return 'Electricity';
+  }
+
+  private getServicesArray(isElectricity: boolean, isGas: boolean): string[] {
+    const services: string[] = [];
+    if (isElectricity) services.push('Electricity');
+    if (isGas) services.push('Gas');
+    return services.length > 0 ? services : ['Electricity'];
+  }
+
+  private filterApplicationsFromSummary(): Application[] {
+    let filteredSummary = this.applicationsSummary;
+
+    // Filter by stage if not "All"
+    if (this.selectedFilter !== 'All') {
+      const stageMap: { [key: string]: string } = {
+        'RFQ': 'RFQ',
+        'Quotation': 'RFQ',
+        'Evaluation': 'Evaluation', 
+        'Review': 'Review',
+        'Closed': 'Close',
+        'Close': 'Close'
+      };
+
+      const apiStageName = stageMap[this.selectedFilter] || this.selectedFilter;
+      filteredSummary = filteredSummary.filter(app => app.wfStgName === apiStageName);
+    }
+
+    // Filter by sub-status if selected
+    if (this.selectedSubStatus) {
+      filteredSummary = filteredSummary.filter(app => 
+        app.wfSubstgName.toLowerCase() === this.selectedSubStatus.toLowerCase()
+      );
+    }
+
+    // Convert filtered summary to applications
+    return this.convertSummaryToApplications(filteredSummary);
   }
  
   private loadApplicationsData() {
-    this.applicationsService.loadApplications().subscribe({
-      next: (applications) => {
-        // Convert API data to legacy format for compatibility with existing component
-        this.applications = this.applicationsService.convertAllToLegacyFormat();
-        this.updateFilteredApplications();
+    this.baseApplicationsService.getApplications().subscribe({
+      next: (response) => {
+        if (response.isSuccess && response.data?.applications) {
+          // Convert ApplicationItem to Application format for compatibility
+          this.applications = this.convertApplicationItems(response.data.applications);
+          this.updateFilteredApplications();
+        } else {
+          console.error('Failed to load applications:', response.errors);
+        }
       },
       error: (error) => {
         console.error('Error loading applications:', error);
-        // Fallback to mock data if API fails
-        this.loadMockApplicationsData();
       }
     });
   }
  
-  private loadMockApplicationsData() {
-    this.http.get<{applicationTypeOptions: SelectOption[], applications: Application[], applicationStages?: any[]}>('assets/mock-data/applications.json')
-      .subscribe(data => {
-        this.applicationTypeOptions = data.applicationTypeOptions;
-        this.applications = data.applications;
-        this.updateFilteredApplications();
-      });
-  }
 
   get applicationTypes() {
     // Convert API stages to the format expected by the template
@@ -156,9 +304,17 @@ export class ApplicationsComponent implements OnInit {
 
   private updateFilteredApplications() {
     // First apply stage and sub-status filtering
-    let filtered = this.applicationStatusService.filterApplications(
-      this.applications, this.selectedFilter, this.selectedSubStatus
-    );
+    let filtered: Application[];
+    
+    if (this.applicationsSummary.length > 0) {
+      // Use summary-based filtering
+      filtered = this.filterApplicationsFromSummary();
+    } else {
+      // Fallback to existing method
+      filtered = this.applicationStatusService.filterApplications(
+        this.applications, this.selectedFilter, this.selectedSubStatus
+      );
+    }
     
     // Then apply application type filtering
     if (this.selectedApplicationType !== 'all') {
@@ -230,9 +386,61 @@ export class ApplicationsComponent implements OnInit {
     this.router.navigate(['/applications', applicationId]);
   }
 
-  getApplicationCount = (stage: string) => this.applicationStatusService.getApplicationCount(this.applications, stage);
+  navigateToDetailById(appId: number) {
+    this.router.navigate(['/applications', appId.toString()]);
+  }
+
+  getApplicationCount = (stage: string) => {
+    if (this.applicationsSummary.length > 0) {
+      return this.getApplicationCountFromSummary(stage);
+    }
+    return this.applicationStatusService.getApplicationCount(this.applications, stage);
+  };
+
+  private getApplicationCountFromSummary(stage: string): number {
+    if (stage === 'All') {
+      return this.applicationsSummary.length;
+    }
+
+    // Map the display stage names to API stage names
+    const stageMap: { [key: string]: string } = {
+      'RFQ': 'RFQ',
+      'Quotation': 'RFQ',
+      'Evaluation': 'Evaluation',
+      'Review': 'Review',
+      'Closed': 'Close',
+      'Close': 'Close'
+    };
+
+    const apiStageName = stageMap[stage] || stage;
+    return this.applicationsSummary.filter(app => app.wfStgName === apiStageName).length;
+  }
   isFilterActive = (stage: string) => this.selectedFilter === stage;
-  getSubStatuses = (stage: string) => this.applicationStatusService.getSubStatuses(this.applications, stage);
+  getSubStatuses = (stage: string) => {
+    if (this.applicationsSummary.length > 0) {
+      return this.getSubStatusesFromSummary(stage);
+    }
+    return this.applicationStatusService.getSubStatuses(this.applications, stage);
+  };
+
+  private getSubStatusesFromSummary(stage: string): string[] {
+    if (stage === 'All') return [];
+
+    // Map the display stage names to API stage names
+    const stageMap: { [key: string]: string } = {
+      'RFQ': 'RFQ',
+      'Quotation': 'RFQ',
+      'Evaluation': 'Evaluation',
+      'Review': 'Review',
+      'Closed': 'Close',
+      'Close': 'Close'
+    };
+
+    const apiStageName = stageMap[stage] || stage;
+    const stageApplications = this.applicationsSummary.filter(app => app.wfStgName === apiStageName);
+    const subStatuses = [...new Set(stageApplications.map(app => app.wfSubstgName))];
+    return subStatuses;
+  }
   shouldShowSubStatus = (stage: string) => stage !== 'All' && this.getSubStatuses(stage).length > 0;
 
   toggleView(mode: 'grid' | 'table') {
@@ -329,14 +537,24 @@ export class ApplicationsComponent implements OnInit {
     if (app.status === 'Cancelled') {
       return; // Prevent navigation for cancelled applications
     }
-    this.navigateToDetail(app.id);
+    // Use numeric appId if available, otherwise fallback to string id
+    if (app.appId) {
+      this.navigateToDetailById(app.appId);
+    } else {
+      this.navigateToDetail(app.id);
+    }
   }
 
   onCardClick(app: Application) {
     if (app.status === 'Cancelled') {
       return; // Prevent navigation for cancelled applications
     }
-    this.navigateToDetail(app.id);
+    // Use numeric appId if available, otherwise fallback to string id
+    if (app.appId) {
+      this.navigateToDetailById(app.appId);
+    } else {
+      this.navigateToDetail(app.id);
+    }
   }
 
   onCardHover(app: Application, isHovering: boolean) {
@@ -371,19 +589,27 @@ export class ApplicationsComponent implements OnInit {
   }
  
   // API-based color and icon methods
-  getStageColor(stageName: string): string {
-    return this.applicationFiltersService.getStageColor(stageName);
+  getStageColor(stageName: string): void {
+    this.baseApplicationFilterService.getStageColor(stageName).subscribe(color => {
+      // Use the color in your template or store it
+    });
   }
  
-  getSubStageColor(subStageName: string): string {
-    return this.applicationFiltersService.getSubStageColor(subStageName);
+  getSubStageColor(subStageName: string): void {
+    this.baseApplicationFilterService.getSubStageColor(subStageName).subscribe(color => {
+      // Use the color in your template or store it
+    });
   }
  
-  getStageIcon(stageName: string): string {
-    return this.applicationFiltersService.getStageIcon(stageName);
+  getStageIcon(stageName: string): void {
+    this.baseApplicationFilterService.getStageIcon(stageName).subscribe(icon => {
+      // Use the icon in your template or store it
+    });
   }
  
-  getSubStageIcon(subStageName: string): string {
-    return this.applicationFiltersService.getSubStageIcon(subStageName);
+  getSubStageIcon(subStageName: string): void {
+    this.baseApplicationFilterService.getSubStageIcon(subStageName).subscribe(icon => {
+      // Use the icon in your template or store it
+    });
   }
 }

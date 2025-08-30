@@ -82,6 +82,11 @@ export class FileUploadComponent implements ControlValueAccessor {
   }
 
   private addFiles(fileList: FileList): void {
+    // If not multiple, clear existing files first
+    if (!this.multiple) {
+      this.uploadedFiles = [];
+    }
+    
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
       
@@ -100,14 +105,22 @@ export class FileUploadComponent implements ControlValueAccessor {
         continue;
       }
       
-      // Check if file already exists
-      if (this.uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
-        alert(`File already uploaded: ${file.name}`);
-        continue;
+      // For single file upload, skip duplicate check and just replace
+      if (this.multiple) {
+        // Check if file already exists (only for multiple files)
+        if (this.uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
+          alert(`File already uploaded: ${file.name}`);
+          continue;
+        }
       }
       
       this.uploadedFiles.push(file);
       this.fileAdded.emit(file);
+      
+      // For single file upload, break after first valid file
+      if (!this.multiple) {
+        break;
+      }
     }
     
     this.onChange(this.uploadedFiles);

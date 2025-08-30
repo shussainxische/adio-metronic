@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { DateInputComponent } from '../../../../../../components/ui/date-input/date-input.component';
 import { StatusBadgeComponent } from '../../../../../../components/ui/status-badge/status-badge.component';
 import { IconComponent } from '../../../../../../components/ui/icon/icon.component';
+import { Application } from '../../../../../../services/application-status.service';
 
 interface PastCertificate {
   title: string;
@@ -27,8 +28,11 @@ interface SimpleDocument {
   templateUrl: './general-sub-stage.component.html',
   styleUrl: './general-sub-stage.component.scss'
 })
-export class GeneralSubStageComponent implements OnInit {
+export class GeneralSubStageComponent implements OnInit, OnChanges {
   @Input() readOnly: boolean = false;
+  @Input() application?: Application;
+  @Input() licenseDetails: any = null;
+  @Input() companyContact: any = null;
   
   applicationTypeControl = new FormControl({ value: '', disabled: true });
   financialYearEndControl = new FormControl('');
@@ -62,6 +66,13 @@ export class GeneralSubStageComponent implements OnInit {
     utilitiesRequired: ['Electricity', 'Gas']
   };
 
+  get utilitiesRequired(): string[] {
+    if (this.application?.category) {
+      return this.application.category.split(',').map(cat => cat.trim());
+    }
+    return this.applicationData.utilitiesRequired;
+  }
+
   pastCertificates: PastCertificate[] = [
     {
       title: 'Certificate 2022-2024',
@@ -87,8 +98,32 @@ export class GeneralSubStageComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.applicationTypeControl.setValue(this.applicationData.applicationType);
-    this.financialYearEndControl.setValue(this.applicationData.financialYearEnd);
+    this.updateFormData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['application'] || changes['licenseDetails']) {
+      this.updateFormData();
+    }
+  }
+
+  private updateFormData() {
+    if (this.application) {
+      this.applicationTypeControl.setValue(this.application.companyType || 'Renewal');
+    } else {
+      this.applicationTypeControl.setValue(this.applicationData.applicationType);
+    }
+    
+    if (this.licenseDetails) {
+      // Use license expiry date as financial year end
+      const expiryDate = this.licenseDetails.invLicenseExpiryDate;
+      if (expiryDate) {
+        const formattedDate = new Date(expiryDate).toISOString().split('T')[0];
+        this.financialYearEndControl.setValue(formattedDate);
+      }
+    } else {
+      this.financialYearEndControl.setValue(this.applicationData.financialYearEnd);
+    }
   }
 
 

@@ -21,13 +21,18 @@
 
       <div>
         <app-file-upload
-          label="Upload Proposal Document"
+          label="Upload Proposal Document *"
           [accept]="'.pdf,.doc,.docx'"
           [allowedTypes]="['.pdf', '.doc', '.docx']"
           [maxSize]="10485760"
-          [(ngModel)]="proposalDocumentControl.value">
+          [multiple]="false"
+          [formControl]="proposalDocumentControl"
+          (filesChanged)="onFilesChanged($event)">
         </app-file-upload>
-        <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB</p>
+        <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB (Required)</p>
+        <p *ngIf="!hasUploadedFile() && quotationAmountControl.value && acceptTerms" class="text-xs text-red-600 mt-1">
+          Please upload a proposal document to continue
+        </p>
       </div>
 
       <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
@@ -40,12 +45,21 @@
         </label>
       </div>
 
+      <!-- Debug validation status (remove in production) -->
+      <div class="text-xs text-gray-500 mb-2">
+        Debug: Amount: {{!!quotationAmountControl.value}}, Terms: {{acceptTerms}}, File: {{hasUploadedFile()}}, Valid: {{isFormValid}}
+      </div>
+      
       <div class="pt-4">
         <app-button 
-          [disabled]="!quotationAmountControl.value || !acceptTerms"
+          [disabled]="!isFormValid || isSubmitting"
           (click)="onSubmitQuotation()"
           className="w-full bg-gray-900 text-white py-4 px-6 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
-          Submit Quotation
+          <span *ngIf="!isSubmitting">Submit Quotation</span>
+          <span *ngIf="isSubmitting" class="flex items-center justify-center gap-2">
+            <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+            Submitting...
+          </span>
         </app-button>
       </div>
     </div>

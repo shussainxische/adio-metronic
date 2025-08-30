@@ -117,8 +117,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
           !application ||
           !this.applications.find((app) => app.id === application.id)
         ) {
-          this.launcherActive = true;
-          this.appLauncherService.setLauncherActive(true);
+          this.launcherActive = false;
+          this.appLauncherService.setLauncherActive(false);
         }
       });
   }

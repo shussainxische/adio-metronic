@@ -3,9 +3,10 @@ import { StatusBadgeVariant } from '../components/ui/status-badge/status-badge.c
 
 export interface Application {
   id: string;
+  appId?: number; // Numeric ID for API calls
   companyName: string;
   companyType?: string;
-  stage: 'Quotation' | 'Evaluation' | 'Review' | 'Closed';
+  stage: 'RFQ' | 'Quotation' | 'Evaluation' | 'Review' | 'Closed';
   status: 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected';
   progress: number;
   date: string;

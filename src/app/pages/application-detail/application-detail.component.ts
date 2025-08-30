@@ -6,7 +6,8 @@ import { TabNavigationComponent } from '../../components/ui/tab-navigation/tab-n
 import { IconComponent } from '../../components/ui/icon/icon.component';
 import { ButtonComponent } from '../../components/ui/button/button.component';
 import { ApplicationStatusService, Application } from '../../services/application-status.service';
-import { ApplicationDetailService, QuotationApplicationData } from '../../services/application-detail.service';
+import { BaseRfqApplicationService, RfqApplicationData, RfqApplicationResponse } from '../../services/base-rfq-application.service';
+import { BaseApplicationsSummaryService, ApplicationSummaryItem } from '../../services/base-applications-summary.service';
 import { RightPanelComponent } from './right-panel/right-panel.component';
 import { InfoTableData } from '../../components/ui/widgets/info-table-widget/info-table-widget.component';
 
@@ -76,7 +77,7 @@ export class ApplicationDetailComponent implements OnInit {
   stages: ApplicationStage[] = [];
   stageTabs: any[] = [];
   private applicationDetailData: any = null;
-  private quotationData: QuotationApplicationData | null = null;
+  private quotationData: RfqApplicationData | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -84,7 +85,8 @@ export class ApplicationDetailComponent implements OnInit {
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     public applicationStatusService: ApplicationStatusService,
-    private applicationDetailService: ApplicationDetailService
+    private rfqApplicationService: BaseRfqApplicationService,
+    private applicationsSummaryService: BaseApplicationsSummaryService
   ) {}
 
   ngOnInit() {
@@ -98,12 +100,12 @@ export class ApplicationDetailComponent implements OnInit {
         if (params['stage']) {
           this.currentStage = params['stage'];
         } else {
-          // Default stage logic
+          // Default stage logic - will be overridden once application loads with proper stage
           if (this.applicationId === 'ESP003') {
             this.currentStage = 'Quotation';
-          } else if (this.applicationId === 'ESP005' || this.applicationId === 'ESP007') {
+          } else if (this.applicationId === 'ESP007' || this.applicationId === 'ESP008' || this.applicationId === 'ESP009' || this.applicationId === 'ESP010' || this.applicationId === 'ESP011' || this.applicationId === 'ESP012') {
             this.currentStage = 'Evaluation';
-          } else if (this.applicationId === 'ESP009' || this.applicationId === 'ESP010' || this.applicationId === 'ESP011' || this.applicationId === 'ESP012') {
+          } else if (this.applicationId === 'ESP013' || this.applicationId === 'ESP014') {
             this.currentStage = 'Review';
           } else {
             this.currentStage = 'Application';
@@ -122,21 +124,89 @@ export class ApplicationDetailComponent implements OnInit {
 
   private async loadStagesData(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get<{applicationStages: ApplicationStage[], applications: any[]}>('assets/mock-data/applications.json')
-        .subscribe({
-          next: (data) => {
-            this.stages = data.applicationStages;
-            this.updateStageTabs();
-            resolve();
-          },
-          error: (error) => {
-            console.error('Error loading application data:', error);
-            // Fallback to empty arrays if loading fails
-            this.stages = [];
-            this.updateStageTabs();
-            reject(error);
-          }
-        });
+      // Basic stages data - this should be replaced with proper service call if needed
+      this.stages = [
+        {
+          id: 'Application',
+          name: 'Application',
+          icon: 'document',
+          status: 'completed' as any,
+          steps: []
+        },
+        {
+          id: 'Quotation',
+          name: 'Quotation',
+          icon: 'calculator',
+          status: 'active' as any,
+          steps: []
+        },
+        {
+          id: 'Evaluation',
+          name: 'Evaluation',
+          icon: 'chart',
+          status: 'pending' as any,
+          steps: [
+            {
+              id: 'general',
+              name: 'General',
+              description: 'General evaluation criteria',
+              status: 'active' as any,
+              required: true
+            },
+            {
+              id: 'economic-impact',
+              name: 'Economic Impact',
+              description: 'Economic impact assessment',
+              status: 'pending' as any,
+              required: true
+            },
+            {
+              id: 'productivity',
+              name: 'Productivity',
+              description: 'Productivity evaluation',
+              status: 'pending' as any,
+              required: true
+            },
+            {
+              id: 'ems-dms',
+              name: 'EMS/DMS',
+              description: 'Environmental & Data Management Systems',
+              status: 'pending' as any,
+              required: true
+            },
+            {
+              id: 'summary',
+              name: 'Summary',
+              description: 'Evaluation summary',
+              status: 'pending' as any,
+              required: true
+            },
+            {
+              id: 'review-submit',
+              name: 'Review & Submit',
+              description: 'Review and submit evaluation',
+              status: 'pending' as any,
+              required: true
+            }
+          ]
+        },
+        {
+          id: 'Review',
+          name: 'Review',
+          icon: 'eye',
+          status: 'pending' as any,
+          steps: []
+        },
+        {
+          id: 'Completed',
+          name: 'Completed',
+          icon: 'check-circle',
+          status: 'pending' as any,
+          steps: []
+        }
+      ];
+      this.updateStageTabs();
+      resolve();
     });
   }
 
@@ -149,33 +219,101 @@ export class ApplicationDetailComponent implements OnInit {
       return;
     }
  
-    // Load from API first
-    this.applicationDetailService.loadApplicationDetail(appId).subscribe({
-      next: (quotationData) => {
-        this.quotationData = quotationData;
-        this.applicationDetailData = this.applicationDetailService.convertToLegacyApplicationFormat(this.applicationId);
-        this.application = this.createApplicationFromQuotationData(quotationData);
+    // First get summary data to determine which service to use based on stage
+    this.applicationsSummaryService.getApplicationSummaryById(appId).subscribe({
+      next: (summaryItem) => {
+        if (summaryItem) {
+          const stage = summaryItem.wfStgName.toLowerCase();
+          
+          if (stage === 'rfq') {
+            // For RFQ stage, use the RFQ service
+            this.loadRfqApplication(appId, summaryItem);
+          } else {
+            // For other stages (Evaluation, Review, Close), create application from summary data only
+            this.application = {
+              id: summaryItem.appReferenceNumber,
+              appId: summaryItem.appId,
+              companyName: summaryItem.invCompanyName,
+              stage: this.mapStageFromSummary(summaryItem.wfStgName),
+              status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
+              progress: summaryItem.wfSubstgProgress,
+              date: new Date().toLocaleDateString(),
+              assignee: 'Certifying Body'
+            };
+            this.updateStageTabs();
+            this.cdr.detectChanges();
+          }
+        } else {
+          console.error('Application not found in summary service');
+          this.loadFallbackApplication();
+        }
       },
       error: (error) => {
-        console.error('Error loading application detail from API:', error);
-        // Fallback to mock data
-        this.loadMockApplication();
+        console.error('Error loading application summary:', error);
+        this.loadFallbackApplication();
+      }
+    });
+  }
+  
+  private loadRfqApplication(appId: number, summaryItem: any) {
+    // Load RFQ application data for applications in RFQ stage
+    this.rfqApplicationService.getRfqApplication(appId).subscribe({
+      next: (response) => {
+        if (response.isSuccess && response.data) {
+          this.quotationData = response.data;
+          this.applicationDetailData = null; // No longer needed
+          this.application = this.createApplicationFromQuotationData(response.data, summaryItem);
+          this.updateStageTabs();
+          this.cdr.detectChanges();
+        } else {
+          console.error('RFQ API returned unsuccessful response:', response.errors);
+          // Even if RFQ service fails, we can still show basic info from summary
+          this.application = {
+            id: summaryItem.appReferenceNumber,
+            appId: summaryItem.appId,
+            companyName: summaryItem.invCompanyName,
+            stage: this.mapStageFromSummary(summaryItem.wfStgName),
+            status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
+            progress: summaryItem.wfSubstgProgress,
+            date: new Date().toLocaleDateString(),
+            assignee: 'Certifying Body'
+          };
+          this.updateStageTabs();
+          this.cdr.detectChanges();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading RFQ application:', error);
+        // Even if RFQ service fails, we can still show basic info from summary
+        this.application = {
+          id: summaryItem.appReferenceNumber,
+          appId: summaryItem.appId,
+          companyName: summaryItem.invCompanyName,
+          stage: this.mapStageFromSummary(summaryItem.wfStgName),
+          status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
+          progress: summaryItem.wfSubstgProgress,
+          date: new Date().toLocaleDateString(),
+          assignee: 'Certifying Body'
+        };
+        this.updateStageTabs();
+        this.cdr.detectChanges();
       }
     });
   }
  
-  private createApplicationFromQuotationData(data: QuotationApplicationData): Application {
+  private createApplicationFromQuotationData(data: RfqApplicationData, summaryItem?: ApplicationSummaryItem): Application {
     const licenseDetails = data.licenseDetails;
     const companyContact = data.companyContact;
    
     return {
-      id: this.applicationId,
+      id: summaryItem ? summaryItem.appReferenceNumber : this.applicationId,
+      appId: summaryItem ? summaryItem.appId : parseInt(this.applicationId, 10),
       companyName: licenseDetails.invCompanyName,
-      stage: 'RFQ' as any, // You might want to determine this from business logic
-      status: 'Pending' as any, // You might want to determine this from activity log
-      progress: this.calculateProgressFromActivityLog(data.activityLog),
-      date: this.applicationDetailService.formatDate(licenseDetails.invLicenseIssueDate),
-      deadline: this.applicationDetailService.formatDate(licenseDetails.invLicenseExpiryDate),
+      stage: summaryItem ? this.mapStageFromSummary(summaryItem.wfStgName) : 'RFQ',
+      status: summaryItem ? this.mapStatusFromSummary(summaryItem.wfSubstgName) : this.determineStatusFromActivityLog(data.activityLog),
+      progress: summaryItem ? summaryItem.wfSubstgProgress : this.calculateProgressFromActivityLog(data.activityLog),
+      date: this.formatDate(licenseDetails.invLicenseIssueDate),
+      deadline: this.formatDate(licenseDetails.invLicenseExpiryDate),
       category: this.determineCategoryFromLicense(licenseDetails),
       assignee: this.determineCurrentAssignee(data.activityLog),
       contactName: companyContact.invFullName,
@@ -233,9 +371,27 @@ export class ApplicationDetailComponent implements OnInit {
   }
  
   private loadFallbackApplication() {
-    console.warn(`Application ${this.applicationId} not found, using fallback data`);
-          this.applicationDetailData = null;
-          // Fallback application data
+    console.warn(`Application ${this.applicationId} not found in RFQ service, trying summary service for basic data`);
+    this.applicationDetailData = null;
+    
+    const appId = parseInt(this.applicationId, 10);
+    
+    // Try to get summary data to at least get the correct reference number and basic info
+    this.applicationsSummaryService.getApplicationSummaryById(appId).subscribe({
+      next: (summaryItem) => {
+        if (summaryItem) {
+          this.application = {
+            id: summaryItem.appReferenceNumber,
+            appId: summaryItem.appId,
+            companyName: summaryItem.invCompanyName,
+            stage: this.mapStageFromSummary(summaryItem.wfStgName),
+            status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
+            progress: summaryItem.wfSubstgProgress,
+            date: new Date().toLocaleDateString(),
+            assignee: 'Certifying Body'
+          };
+        } else {
+          // Final fallback if nothing is found
           this.application = {
             id: this.applicationId,
             companyName: 'Unknown Company',
@@ -245,8 +401,27 @@ export class ApplicationDetailComponent implements OnInit {
             date: new Date().toLocaleDateString(),
             assignee: 'Certifying Body'
           };
-          this.updateStageTabs();
         }
+        this.updateStageTabs();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading summary data for fallback:', error);
+        // Final fallback if summary service also fails
+        this.application = {
+          id: this.applicationId,
+          companyName: 'Unknown Company',
+          stage: 'Quotation' as any,
+          status: 'Pending' as any,
+          progress: 0,
+          date: new Date().toLocaleDateString(),
+          assignee: 'Certifying Body'
+        };
+        this.updateStageTabs();
+        this.cdr.detectChanges();
+      }
+    });
+  }
  
   private calculateProgressFromActivityLog(activityLog: any[]): number {
     // Simple progress calculation based on activity log entries
@@ -289,6 +464,9 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   private updateStageTabs() {
+    console.log('updateStageTabs called with application:', this.application);
+    console.log('Application stage:', this.application?.stage);
+    
     // For Closed applications with Certified status, only show Completed tab
     if (this.application?.stage === 'Closed' && this.application?.status === 'Certified') {
       this.stageTabs = this.stages.filter(stage => 
@@ -301,6 +479,20 @@ export class ApplicationDetailComponent implements OnInit {
       return;
     }
     
+    // For RFQ stage applications (with Pending/Submitted substages), only show Application and Quotation tabs  
+    if (this.application?.stage === 'RFQ') {
+      console.log('RFQ stage detected - showing only Application and Quotation tabs');
+      this.stageTabs = this.stages.filter(stage => 
+        stage.id === 'Application' || stage.id === 'Quotation'
+      ).map(stage => ({ 
+        id: stage.id, 
+        label: stage.name,
+        icon: stage.icon
+      }));
+      console.log('stageTabs after RFQ filter:', this.stageTabs);
+      return;
+    }
+
     // For Quotation stage applications, only show Application and Quotation tabs  
     if (this.application?.stage === 'Quotation') {
       this.stageTabs = this.stages.filter(stage => 
@@ -313,8 +505,9 @@ export class ApplicationDetailComponent implements OnInit {
       return;
     }
     
-    // For Evaluation stage applications, hide Review and Completed tabs
+    // For Evaluation stage applications, show Application, Quotation, and Evaluation tabs
     if (this.application?.stage === 'Evaluation') {
+      console.log('Evaluation stage detected - showing Application, Quotation, and Evaluation tabs');
       this.stageTabs = this.stages.filter(stage => 
         stage.id === 'Application' || stage.id === 'Quotation' || stage.id === 'Evaluation'
       ).map(stage => ({ 
@@ -322,6 +515,7 @@ export class ApplicationDetailComponent implements OnInit {
         label: stage.name,
         icon: stage.icon
       }));
+      console.log('stageTabs after Evaluation filter:', this.stageTabs);
       return;
     }
     
@@ -671,7 +865,7 @@ export class ApplicationDetailComponent implements OnInit {
   // Enhanced getters that use API data when available
   private getApplicationDate(): string {
     if (this.quotationData) {
-      return this.applicationDetailService.formatDate(this.quotationData.licenseDetails.invLicenseIssueDate);
+      return this.formatDate(this.quotationData.licenseDetails.invLicenseIssueDate);
     }
     return this.getApplicationDetail('applicationDate') || this.application?.date || new Date().toLocaleDateString();
   }
@@ -713,16 +907,44 @@ export class ApplicationDetailComponent implements OnInit {
 
   // Utility methods for API data
   getFormattedDocumentSize(sizeMb: number): string {
-    return this.applicationDetailService.formatFileSize(sizeMb);
+    return this.formatFileSize(sizeMb);
   }
  
   getFormattedDate(dateString: string): string {
-    return this.applicationDetailService.formatDate(dateString);
+    return this.formatDate(dateString);
   }
  
     getFormattedDateTime(dateString: string): string {
-        return this.applicationDetailService.formatDateTime(dateString);
+        return this.formatDateTime(dateString);
     }
+
+  // Utility methods moved from service
+  private formatDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
+  private formatDateTime(dateString: string): string {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  private formatFileSize(sizeMb: number): string {
+    if (sizeMb < 1) {
+      return `${Math.round(sizeMb * 1024)} KB`;
+    }
+    return `${sizeMb.toFixed(1)} MB`;
+  }
   private getApplicationDetail(key: string): any {
     return this.applicationDetailData ? this.applicationDetailData[key] : null;
   }
@@ -788,6 +1010,49 @@ export class ApplicationDetailComponent implements OnInit {
         }
         break;
     }
+  }
+
+  private mapStageFromSummary(stage: string): 'RFQ' | 'Quotation' | 'Evaluation' | 'Review' | 'Closed' {
+    const stageMap: { [key: string]: 'RFQ' | 'Quotation' | 'Evaluation' | 'Review' | 'Closed' } = {
+      'rfq': 'RFQ',
+      'quotation': 'Quotation', 
+      'evaluation': 'Evaluation',
+      'review': 'Review',
+      'close': 'Closed',
+      'closed': 'Closed'
+    };
+    return stageMap[stage.toLowerCase()] || 'RFQ';
+  }
+
+  private mapStatusFromSummary(substage: string): 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected' {
+    const statusMap: { [key: string]: 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected' } = {
+      'pending': 'Pending',
+      'submitted': 'Submitted',
+      'in progress': 'In Progress',
+      'returned': 'Returned',
+      'initial review': 'Initial Review',
+      'external review': 'External Review',
+      'final review': 'Final Review',
+      'certified': 'Certified',
+      'not awarded': 'Not Awarded',
+      'cancelled': 'Cancelled',
+      'rejected': 'Rejected'
+    };
+    return statusMap[substage.toLowerCase()] || 'Pending';
+  }
+
+  private determineStatusFromActivityLog(activityLog: any[]): 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected' {
+    if (!activityLog || activityLog.length === 0) return 'Pending';
+    
+    const latestEntry = activityLog[activityLog.length - 1];
+    const message = latestEntry.message?.toLowerCase() || '';
+    
+    if (message.includes('submitted')) return 'Submitted';
+    if (message.includes('pending')) return 'Pending';
+    if (message.includes('in progress')) return 'In Progress';
+    if (message.includes('returned')) return 'Returned';
+    
+    return 'Pending'; // Default fallback
   }
 
 }
