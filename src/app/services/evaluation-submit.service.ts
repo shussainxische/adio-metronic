@@ -47,7 +47,7 @@ export interface EvaluationSubmitResponse {
   providedIn: 'root'
 })
 export class EvaluationSubmitService {
-  private apiUrl = '/api/Application/cb-post-submit-evaluation';
+  private apiUrl = 'https://localhost:44354/api/Application/cb-post-submit-evaluation';
 
   constructor(private http: HttpClient) {}
 
