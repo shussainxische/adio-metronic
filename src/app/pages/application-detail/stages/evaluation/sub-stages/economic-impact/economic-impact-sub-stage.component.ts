@@ -142,25 +142,38 @@ export class EconomicImpactSubStageComponent implements OnInit {
     totalScore: 86.0
   };
 
+  // Investment Score Calculation Method
+  calculateAppInvestmentScore(
+    appInvestmentGbvAdfaAd: number,
+    appInvestmentGbvTotalProprities: number
+  ): number {
+    if (appInvestmentGbvTotalProprities === 0) {
+      return 0;
+    }
+    return Math.min(1, appInvestmentGbvAdfaAd / appInvestmentGbvTotalProprities);
+  }
+
+  calculateAppInvestmentWeightedScore(appInvestmentScore: number): number {
+    return appInvestmentScore * 0.5;
+  }
+
   // Calculated Investment Scores
   get investmentScore(): string {
     const abuDhabiValue = parseFloat(this.grossBookValueAbuDhabiControl.value || '0');
     const totalValue = parseFloat(this.totalGrossBookValueControl.value || '0');
     
-    if (totalValue === 0) return '0.00';
-    
-    const ratio = abuDhabiValue / totalValue;
-    const score = Math.min(ratio * 2, 1); // Cap at 1.0
+    const score = this.calculateAppInvestmentScore(abuDhabiValue, totalValue);
     return score.toFixed(2);
   }
 
   get investmentTopUpScore(): string {
     const totalValue = parseFloat(this.totalGrossBookValueControl.value || '0');
     
-    if (totalValue === 0) return '0.00';
+    //if (totalValue === 0) return '0.00';
     
     // Simple scoring based on total investment value
     const score = Math.min(totalValue / 100000000, 1); // Cap at 1.0 for 100M+
+
     return score.toFixed(2);
   }
 
