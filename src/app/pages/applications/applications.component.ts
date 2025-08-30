@@ -394,7 +394,7 @@ export class ApplicationsComponent implements OnInit {
     const queryParams: any = { step: 0 };
     
     // Determine the correct stage based on RFQ substage
-    if (app.stage === 'RFQ') {
+    if (app.stage === 'Quotation') {
       if (app.status?.toLowerCase() === 'submitted') {
         queryParams.stage = 'Quotation';
       } else {

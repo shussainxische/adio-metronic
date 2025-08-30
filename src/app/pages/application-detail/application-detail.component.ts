@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -78,6 +78,10 @@ export class ApplicationDetailComponent implements OnInit {
   stageTabs: any[] = [];
   private applicationDetailData: any = null;
   private quotationData: RfqApplicationData | null = null;
+
+  // ViewChild references for evaluation components
+  @ViewChild('economicImpactComponent') economicImpactComponent?: EconomicImpactSubStageComponent;
+  @ViewChild('productivityComponent') productivityComponent?: ProductivitySubStageComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -1100,6 +1104,78 @@ export class ApplicationDetailComponent implements OnInit {
     if (message.includes('returned')) return 'Returned';
     
     return 'Pending'; // Default fallback
+  }
+
+  // Data collection methods for evaluation submission
+  getEconomicImpactData(): any {
+    if (!this.economicImpactComponent) {
+      return null;
+    }
+    
+    const component = this.economicImpactComponent;
+    
+    // Extract input values from form controls
+    const inputValues = {
+      grossBookValueAbuDhabi: parseFloat(component.grossBookValueAbuDhabiControl.value) || 0,
+      totalGrossBookValue: parseFloat(component.totalGrossBookValueControl.value) || 0,
+      salaryBenefitsEmirati: parseFloat(component.salaryBenefitsEmiratiControl.value) || 0,
+      totalSpentManpower: parseFloat(component.totalSpentManpowerControl.value) || 0,
+      originalEmiratiNumber: parseFloat(component.originalEmiratiNumberControl.value) || 0,
+      growthEmiratiNumber: parseFloat(component.growthEmiratiNumberControl.value) || 0,
+      totalStaff: parseFloat(component.totalStaffControl.value) || 0,
+      skilledStaff: parseFloat(component.skilledStaffControl.value) || 0,
+      adLogisticsFees: parseFloat(component.adLogisticsFeesControl.value) || 0,
+      uaeLogisticsFees: parseFloat(component.uaeLogisticsFeesControl.value) || 0
+    };
+
+    // Calculate scores using component methods
+    const investmentScore = component.calculateAppInvestmentScore(inputValues.grossBookValueAbuDhabi, inputValues.totalGrossBookValue);
+    const scores = {
+      investmentScore: investmentScore,
+      investmentWeightedScore: component.calculateAppInvestmentWeightedScore(investmentScore),
+      investmentTopUpScore: 0, // Will be calculated on server or use simpler calculation
+      emiratisationSalaryScore: 0, // Will be calculated on server
+      emiratisationGrowthScore: 0, // Will be calculated on server
+      emiratisationGrowthWeightedScore: 0, // Will be calculated on server
+      skilledStaffScore: 0, // Will be calculated on server
+      skilledStaffWeightedScore: 0, // Will be calculated on server
+      supplyChainScore: 0, // Will be calculated on server
+      supplyChainWeightedScore: 0 // Will be calculated on server
+    };
+
+    return {
+      ...inputValues,
+      ...scores
+    };
+  }
+
+  getProductivityData(): any {
+    if (!this.productivityComponent) {
+      return null;
+    }
+
+    const component = this.productivityComponent;
+    
+    // Extract input values from form controls
+    const inputValues = {
+      totalRevenueMainActivity: parseFloat(component.totalRevenueMainActivityControl.value) || 0,
+      finishedGoodsBeginning: parseFloat(component.finishedGoodsBeginningControl.value) || 0,
+      finishedGoodsEnd: parseFloat(component.finishedGoodsEndControl.value) || 0,
+      workInProgressBeginning: parseFloat(component.workInProgressBeginningControl.value) || 0,
+      workInProgressEnd: parseFloat(component.workInProgressEndControl.value) || 0,
+      rentalsOfBuilding: parseFloat(component.rentalsOfBuildingControl.value) || 0,
+      otherMiscellaneousIncome: parseFloat(component.otherMiscellaneousIncomeControl.value) || 0,
+      totalMainRevenue: this.calculateTotalMainRevenue(component)
+    };
+
+    return inputValues;
+  }
+
+  private calculateTotalMainRevenue(component: ProductivitySubStageComponent): number {
+    const totalRevenue = parseFloat(component.totalRevenueMainActivityControl.value) || 0;
+    const rentals = parseFloat(component.rentalsOfBuildingControl.value) || 0;
+    const miscellaneous = parseFloat(component.otherMiscellaneousIncomeControl.value) || 0;
+    return totalRevenue + rentals + miscellaneous;
   }
 
 }

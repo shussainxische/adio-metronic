@@ -38,31 +38,38 @@ export class ProductivitySubStageComponent {
     fields: {
       totalRevenueMainActivity: {
         label: 'Total Revenue from Main Activity',
-        placeholder: '5,000,000'
+        placeholder: '5,000,000',
+        validationType: 'number' as const,
       },
       finishedGoodsBeginning: {
         label: 'Finished Goods (Beginning of Year)',
-        placeholder: '300,000'
+        placeholder: '300,000',
+        validationType: 'number' as const,
       },
       finishedGoodsEnd: {
         label: 'Finished Goods (End of Year)',
-        placeholder: '400,000'
+        placeholder: '400,000',
+        validationType: 'number' as const,
       },
       workInProgressBeginning: {
         label: 'Work in Process (Beginning of Year)',
-        placeholder: '200,000'
+        placeholder: '200,000',
+        validationType: 'number' as const,
       },
       workInProgressEnd: {
         label: 'Work in Process (End of Year)',
-        placeholder: '250,000'
+        placeholder: '250,000',
+        validationType: 'number' as const,
       },
       otherMiscellaneousIncome: {
         label: 'Other Miscellaneous Income',
-        placeholder: '50,000'
+        placeholder: '50,000',
+        validationType: 'number' as const,
       },
       rentalsOfBuilding: {
         label: 'Rentals of Building',
-        placeholder: '150,000'
+        placeholder: '150,000',
+        validationType: 'number' as const,
       }
     },
     calculatedFields: {
@@ -88,39 +95,48 @@ export class ProductivitySubStageComponent {
     fields: {
       totalCostOfProduction: {
         label: 'Total Cost of Production',
-        placeholder: '2,000,000'
+        placeholder: '2,000,000',
+        validationType: 'number' as const,
       },
       wagesSalariesBonusesCogs: {
         label: 'Wages, Salaries & Bonuses (in Cash)',
-        placeholder: '500,000'
+        placeholder: '500,000',
+        validationType: 'number' as const,
       },
       benefitsGrantedEmployeesCogs: {
         label: 'Benefits Granted to Employees',
-        placeholder: '100,000'
+        placeholder: '100,000',
+        validationType: 'number' as const,
       },
       depreciationCogs: {
         label: 'Depreciation',
-        placeholder: '150,000'
+        placeholder: '150,000',
+        validationType: 'number' as const,
       },
       totalGeneralAdminExpenses: {
         label: 'Total General & Administrative Expenses',
-        placeholder: '1,200,000'
+        placeholder: '1,200,000',
+        validationType: 'number' as const,
       },
       wagesSalariesBonusesAdmin: {
         label: 'Wages, Salaries & Bonuses (in Cash)',
-        placeholder: '300,000'
+        placeholder: '300,000',
+        validationType: 'number' as const,
       },
       benefitsGrantedEmployeesAdmin: {
         label: 'Benefits Granted to Employees',
-        placeholder: '80,000'
+        placeholder: '80,000',
+        validationType: 'number' as const,
       },
       depreciationAdmin: {
         label: 'Depreciation',
-        placeholder: '120,000'
+        placeholder: '120,000',
+        validationType: 'number' as const,
       },
       bankingCharges: {
         label: 'Banking Charges',
-        placeholder: '50,000'
+        placeholder: '50,000',
+        validationType: 'number' as const,
       }
     },
     calculatedFields: {
@@ -154,7 +170,8 @@ export class ProductivitySubStageComponent {
     fields: {
       averageEmployees: {
         label: 'Average Employees',
-        placeholder: '108'
+        placeholder: '108',
+        validationType: 'number' as const,
       }
     }
   };

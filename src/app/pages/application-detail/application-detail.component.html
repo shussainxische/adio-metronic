@@ -84,10 +84,12 @@
                 [companyContact]="companyContact">
               </app-general-sub-stage>
               <app-economic-impact-sub-stage 
-                *ngIf="currentStep === 1">
+                *ngIf="currentStep === 1"
+                #economicImpactComponent>
               </app-economic-impact-sub-stage>
               <app-productivity-sub-stage 
-                *ngIf="currentStep === 2">
+                *ngIf="currentStep === 2"
+                #productivityComponent>
               </app-productivity-sub-stage>
               <app-ems-dms-sub-stage 
                 *ngIf="currentStep === 3">
@@ -96,7 +98,9 @@
                 *ngIf="currentStep === 4">
               </app-summary-sub-stage>
               <app-review-submit-sub-stage 
-                *ngIf="currentStep === 5">
+                *ngIf="currentStep === 5"
+                [economicImpactData]="getEconomicImpactData()"
+                [productivityData]="getProductivityData()">
               </app-review-submit-sub-stage>
             </div>
             

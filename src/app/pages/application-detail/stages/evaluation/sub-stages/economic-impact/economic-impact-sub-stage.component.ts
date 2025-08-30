@@ -50,11 +50,13 @@ export class EconomicImpactSubStageComponent implements OnInit {
     fields: {
       grossBookValueAbuDhabi: {
         label: 'Gross Book Value of the Fixed Assets & Investment Properties in Abu Dhabi',
-        placeholder: '20,000,000'
+        placeholder: '20,000,000',
+        validationType: 'number' as const,
       },
       totalGrossBookValue: {
         label: 'Total Gross Book Value of the Fixed Assets & Investment Properties',
-        placeholder: '50,000,000'
+        placeholder: '50,000,000',
+        validationType: 'number' as const,
       }
     },
     calculatedFields: {
@@ -75,27 +77,33 @@ export class EconomicImpactSubStageComponent implements OnInit {
     fields: {
       salaryBenefitsEmirati: {
         label: 'Salary & Benefits Cost Paid to Emirati Employees in Abu Dhabi',
-        placeholder: '2,500,000'
+        placeholder: '2,500,000',
+        validationType: 'number' as const,
       },
       totalSpentManpower: {
         label: 'Total Spent on Manpower',
-        placeholder: '10,000,000'
+        placeholder: '10,000,000',
+        validationType: 'number' as const,
       },
       originalEmiratiNumber: {
         label: 'Original Number of Emiratis',
-        placeholder: '8'
+        placeholder: '8',
+        validationType: 'number' as const,
       },
       growthEmiratiNumber: {
         label: 'Growth In Emirati No\'s',
-        placeholder: '12'
+        placeholder: '12',
+        validationType: 'number' as const,
       },
       totalStaff: {
         label: 'Total Number of Staff',
-        placeholder: '150'
+        placeholder: '150',
+        validationType: 'number' as const,
       },
       skilledStaff: {
         label: 'Number of Skilled Staff',
-        placeholder: '90'
+        placeholder: '90',
+        validationType: 'number' as const,
       }
     },
     calculatedFields: {
@@ -120,11 +128,13 @@ export class EconomicImpactSubStageComponent implements OnInit {
     fields: {
       adLogisticsFees: {
         label: 'AD Logistics fees & charges',
-        placeholder: '1,200,000'
+        placeholder: '1,200,000',
+        validationType: 'number' as const,
       },
       uaeLogisticsFees: {
         label: 'UAE Total Logistics fees & Charges',
-        placeholder: '3,000,000'
+        placeholder: '3,000,000',
+        validationType: 'number' as const,
       }
     },
     calculatedFields: {
@@ -167,13 +177,16 @@ export class EconomicImpactSubStageComponent implements OnInit {
   }
 
   get investmentTopUpScore(): string {
-    const totalValue = parseFloat(this.totalGrossBookValueControl.value || '0');
-    
-    //if (totalValue === 0) return '0.00';
-    
-    // Simple scoring based on total investment value
-    const score = Math.min(totalValue / 100000000, 1); // Cap at 1.0 for 100M+
+    const appInvestmentGbvAdfaAd = parseFloat(this.grossBookValueAbuDhabiControl.value || '0');
 
+    let score = appInvestmentGbvAdfaAd; // Cap at 1.0 for 100M+
+    if (appInvestmentGbvAdfaAd < 5_000_000) {
+      score = 0;
+    } else if (appInvestmentGbvAdfaAd > 150_000_000) {
+      score = 0;
+    } else {
+      score = appInvestmentGbvAdfaAd / 150_000_000;
+    }
     return score.toFixed(2);
   }
 
@@ -182,21 +195,23 @@ export class EconomicImpactSubStageComponent implements OnInit {
     const emiratiSalary = parseFloat(this.salaryBenefitsEmiratiControl.value || '0');
     const totalManpower = parseFloat(this.totalSpentManpowerControl.value || '0');
     
-    if (totalManpower === 0) return '0.00';
+    if (emiratiSalary  === 0 || totalManpower === 0) return '0.00';
     
-    const ratio = emiratiSalary / totalManpower;
-    const score = Math.min(ratio * 4, 1); // Cap at 1.0
-    return score.toFixed(2);
+    const denominator = totalManpower * 0.20; // 20%
+    const ratio = emiratiSalary / denominator;
+    return Math.min(1, ratio).toFixed(2);
   }
 
   get emiratisationGrowthScore(): string {
-    const original = parseInt(this.originalEmiratiNumberControl.value || '0');
-    const growth = parseInt(this.growthEmiratiNumberControl.value || '0');
-    
-    if (original === 0) return '0.00';
-    
-    const growthRate = (growth - original) / original;
-    const score = Math.min(growthRate, 1); // Cap at 1.0
+    const appEmiratizationGrowthInEmiratiNo = parseInt(this.originalEmiratiNumberControl.value || '0');
+    const appEmiratizationNumberOfEmiratis = parseInt(this.growthEmiratiNumberControl.value || '0');
+    let score = 0;
+    if (appEmiratizationGrowthInEmiratiNo === 0 || appEmiratizationNumberOfEmiratis === 0) {
+      score = 0;
+    }
+    const denominator = appEmiratizationNumberOfEmiratis * 0.20; // 20%
+    const ratio = appEmiratizationGrowthInEmiratiNo / denominator;
+    score = Math.min(1, ratio);
     return Math.max(score, 0).toFixed(2);
   }
 
@@ -204,10 +219,11 @@ export class EconomicImpactSubStageComponent implements OnInit {
     const skilled = parseInt(this.skilledStaffControl.value || '0');
     const total = parseInt(this.totalStaffControl.value || '0');
     
-    if (total === 0) return '0.00';
-    
-    const ratio = skilled / total;
-    const score = Math.min(ratio * 1.5, 1); // Cap at 1.0
+    if (skilled === 0 || total === 0) return '0.00';
+
+    const denominator = total * 0.20;
+    const ratio = skilled / denominator;
+    const score = Math.min(ratio, 1); // Cap at 1.0
     return score.toFixed(2);
   }
 
@@ -216,10 +232,10 @@ export class EconomicImpactSubStageComponent implements OnInit {
     const adLogistics = parseFloat(this.adLogisticsFeesControl.value || '0');
     const uaeLogistics = parseFloat(this.uaeLogisticsFeesControl.value || '0');
     
-    if (uaeLogistics === 0) return '0.00';
+    if (adLogistics === 0 || uaeLogistics === 0) return '0.00';
     
     const ratio = adLogistics / uaeLogistics;
-    const score = Math.min(ratio * 2.5, 1); // Cap at 1.0
+    const score = Math.min(ratio, 1); // Cap at 1.0
     return score.toFixed(2);
   }
 

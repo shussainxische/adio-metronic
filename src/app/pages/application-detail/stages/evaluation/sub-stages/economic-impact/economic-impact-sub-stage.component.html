@@ -6,13 +6,15 @@
     <app-input 
       [control]="grossBookValueAbuDhabiControl" 
       [label]="investmentData.fields.grossBookValueAbuDhabi.label" 
-      [placeholder]="investmentData.fields.grossBookValueAbuDhabi.placeholder">
+      [placeholder]="investmentData.fields.grossBookValueAbuDhabi.placeholder"
+      [validationType]="investmentData.fields.grossBookValueAbuDhabi.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
     <app-input 
       [control]="totalGrossBookValueControl" 
       [label]="investmentData.fields.totalGrossBookValue.label" 
-      [placeholder]="investmentData.fields.totalGrossBookValue.placeholder">
+      [placeholder]="investmentData.fields.totalGrossBookValue.placeholder"
+      [validationType]="investmentData.fields.totalGrossBookValue.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
   </div>
@@ -38,37 +40,43 @@
     <app-input 
       [control]="salaryBenefitsEmiratiControl" 
       [label]="manpowerData.fields.salaryBenefitsEmirati.label" 
-      [placeholder]="manpowerData.fields.salaryBenefitsEmirati.placeholder">
+      [placeholder]="manpowerData.fields.salaryBenefitsEmirati.placeholder"
+               [validationType]="manpowerData.fields.salaryBenefitsEmirati.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
     <app-input 
       [control]="totalSpentManpowerControl" 
       [label]="manpowerData.fields.totalSpentManpower.label" 
-      [placeholder]="manpowerData.fields.totalSpentManpower.placeholder">
+      [placeholder]="manpowerData.fields.totalSpentManpower.placeholder"
+               [validationType]="manpowerData.fields.totalSpentManpower.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
   </div>
   <div class="field-grid with-spacing">
     <app-input [control]="originalEmiratiNumberControl"
                [label]="manpowerData.fields.originalEmiratiNumber.label"
-               [placeholder]="manpowerData.fields.originalEmiratiNumber.placeholder">
+               [placeholder]="manpowerData.fields.originalEmiratiNumber.placeholder"
+               [validationType]="manpowerData.fields.originalEmiratiNumber.validationType">
       <span iconBefore class="aed-currency">NO</span>
     </app-input>
     <app-input [control]="growthEmiratiNumberControl"
                [label]="manpowerData.fields.growthEmiratiNumber.label"
-               [placeholder]="manpowerData.fields.growthEmiratiNumber.placeholder">
+               [placeholder]="manpowerData.fields.growthEmiratiNumber.placeholder"
+               [validationType]="manpowerData.fields.growthEmiratiNumber.validationType">
       <span iconBefore class="aed-currency">NO</span>
     </app-input>
   </div>
   <div class="field-grid with-spacing">
     <app-input [control]="totalStaffControl"
                [label]="manpowerData.fields.totalStaff.label"
-               [placeholder]="manpowerData.fields.totalStaff.placeholder">
+               [placeholder]="manpowerData.fields.totalStaff.placeholder"
+               [validationType]="manpowerData.fields.totalStaff.validationType">
       <span iconBefore class="aed-currency">NO</span>
     </app-input>
     <app-input [control]="skilledStaffControl"
                [label]="manpowerData.fields.skilledStaff.label"
-               [placeholder]="manpowerData.fields.skilledStaff.placeholder">
+               [placeholder]="manpowerData.fields.skilledStaff.placeholder"
+               [validationType]="manpowerData.fields.skilledStaff.validationType">
       <span iconBefore class="aed-currency">NO</span>
     </app-input>
   </div>
@@ -102,13 +110,15 @@
     <app-input 
       [control]="adLogisticsFeesControl" 
       [label]="logisticsData.fields.adLogisticsFees.label" 
-      [placeholder]="logisticsData.fields.adLogisticsFees.placeholder">
+      [placeholder]="logisticsData.fields.adLogisticsFees.placeholder"
+               [validationType]="logisticsData.fields.adLogisticsFees.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
     <app-input 
       [control]="uaeLogisticsFeesControl" 
       [label]="logisticsData.fields.uaeLogisticsFees.label" 
-      [placeholder]="logisticsData.fields.uaeLogisticsFees.placeholder">
+      [placeholder]="logisticsData.fields.uaeLogisticsFees.placeholder"
+               [validationType]="logisticsData.fields.uaeLogisticsFees.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
   </div>
