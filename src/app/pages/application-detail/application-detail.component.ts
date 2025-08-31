@@ -243,7 +243,8 @@ export class ApplicationDetailComponent implements OnInit {
               status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
               progress: summaryItem.wfSubstgProgress,
               date: new Date().toLocaleDateString(),
-              assignee: 'Certifying Body'
+              assignee: 'Certifying Body',
+              category: this.getCategoryFromServices(summaryItem.appIsElectricity, summaryItem.appIsGas)
             };
             
             // Set default stage based on application status
@@ -290,7 +291,8 @@ export class ApplicationDetailComponent implements OnInit {
             status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
             progress: summaryItem.wfSubstgProgress,
             date: new Date().toLocaleDateString(),
-            assignee: 'Certifying Body'
+            assignee: 'Certifying Body',
+            category: this.getCategoryFromServices(summaryItem.appIsElectricity, summaryItem.appIsGas)
           };
           
           // Set default stage based on RFQ substage
@@ -413,7 +415,8 @@ export class ApplicationDetailComponent implements OnInit {
             status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
             progress: summaryItem.wfSubstgProgress,
             date: new Date().toLocaleDateString(),
-            assignee: 'Certifying Body'
+            assignee: 'Certifying Body',
+            category: this.getCategoryFromServices(summaryItem.appIsElectricity, summaryItem.appIsGas)
           };
         } else {
           // Final fallback if nothing is found
@@ -425,7 +428,8 @@ export class ApplicationDetailComponent implements OnInit {
             status: 'Pending' as any,
             progress: 0,
             date: new Date().toLocaleDateString(),
-            assignee: 'Certifying Body'
+            assignee: 'Certifying Body',
+            category: 'Electricity'
           };
         }
         this.updateStageTabs();
@@ -442,7 +446,8 @@ export class ApplicationDetailComponent implements OnInit {
           status: 'Pending' as any,
           progress: 0,
           date: new Date().toLocaleDateString(),
-          assignee: 'Certifying Body'
+          assignee: 'Certifying Body',
+          category: 'Electricity'
         };
         this.updateStageTabs();
         this.cdr.detectChanges();
@@ -936,7 +941,22 @@ export class ApplicationDetailComponent implements OnInit {
     if (this.quotationData) {
       return this.quotationData.licenseDetails.invIndustrialType || 'Manufacturing';
     }
-    return this.getApplicationDetail('entityType') || 'Unknown Entity Type';
+    
+    // For applications loaded from summary data, determine entity type from services
+    if (this.application) {
+      const services = this.getServices();
+      if (services.includes('Electricity') && services.includes('Gas')) {
+        return 'Manufacturing - Electricity & Gas';
+      } else if (services.includes('Electricity')) {
+        return 'Manufacturing - Electricity';
+      } else if (services.includes('Gas')) {
+        return 'Manufacturing - Gas';
+      } else {
+        return 'Manufacturing';
+      }
+    }
+    
+    return this.getApplicationDetail('entityType') || 'Manufacturing';
   }
 
   private getServices(): string[] {
@@ -1111,6 +1131,13 @@ export class ApplicationDetailComponent implements OnInit {
     if (message.includes('returned')) return 'Returned';
     
     return 'Pending'; // Default fallback
+  }
+
+  private getCategoryFromServices(isElectricity: boolean, isGas: boolean): string {
+    if (isElectricity && isGas) return 'Electricity,Gas';
+    if (isElectricity) return 'Electricity';
+    if (isGas) return 'Gas';
+    return 'Electricity';
   }
 
   // Data collection methods for evaluation submission
