@@ -89,4 +89,20 @@ export class QuotationStatusComponent {
   onDownloadFile() {
     console.log('Downloading file:', this.statusData.uploadedFileName || 'Energy_Audit_Proposal.pdf');
   }
+
+  formatAmount(amount: string | undefined): string {
+    if (!amount) return '0.00';
+    
+    // Remove any non-numeric characters except decimal point
+    const numStr = amount.toString().replace(/[^0-9.-]/g, '');
+    const num = parseFloat(numStr);
+    
+    if (isNaN(num)) return '0.00';
+    
+    // Format with 2 decimal places and add commas
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
 }
