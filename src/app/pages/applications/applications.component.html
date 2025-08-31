@@ -1,27 +1,15 @@
 <div class="applications-container">
-  <div class="mt-6 mb-12">
+  <div class="mt-6 mb-6 flex items-center justify-between">
     <app-page-header
       title="Energy Support Program"
       subtitle="Manage and track all application types">
     </app-page-header>
-  </div>
-
-  <div class="mb-8 flex items-center justify-between">
     <app-filter-button
       label="All Applications"
       [active]="isFilterActive('All')"
       [count]="getApplicationCount('All')"
       (clicked)="filterApplications('All')">
     </app-filter-button>
-    
-    <div class="w-72">
-      <app-input
-        placeholder="Search applications..."
-        (search)="onSearch($event)"
-        className="w-full">
-        <app-icon iconBefore name="search" [size]="16" className="text-gray-500"></app-icon>
-      </app-input>
-    </div>
   </div>
 
   <div class="responsive-grid mb-8">
@@ -39,34 +27,48 @@
     </app-top-card>
   </div>
 
-  <div *ngIf="shouldShowSubStatus(selectedFilter)" class="space-y-3 mb-8">
-    <div class="flex items-center gap-2 mb-3">
-      <app-icon name="filter" [size]="16" className="text-gray-700"></app-icon>
-      <p class="text-sm font-bold text-gray-700">Filter by status</p>
-    </div>
-    <app-status-filter-button
-      *ngFor="let subStatus of getSubStatuses(selectedFilter)"
-      [text]="subStatus"
-      [active]="selectedSubStatus === subStatus"
-      [customClasses]="applicationStatusService.getSubStatusPillClasses(subStatus, selectedSubStatus === subStatus)"
-      (clicked)="filterBySubStatus(subStatus)">
-    </app-status-filter-button>
-  </div>
-
-  <div class="border-t border-gray-200 mb-8"></div>
-
   <div class="page-header mb-8">
     <div>
-      <h2>Applications</h2>
-      <p>Showing {{ filteredApplications.length }} results</p>
+      <div *ngIf="!shouldShowSubStatus(selectedFilter) && selectedFilter !== 'All'">
+        <h2>Applications</h2>
+        <p>Showing {{ filteredApplications.length }} results</p>
+      </div>
+      <div *ngIf="shouldShowSubStatus(selectedFilter)">
+        <div class="flex flex-wrap gap-1 border-b border-gray-200">
+          <app-status-filter-button
+            *ngFor="let subStatus of getSubStatuses(selectedFilter)"
+            [text]="subStatus"
+            [active]="selectedSubStatus === subStatus"
+            [customClasses]="getTabClasses(subStatus)"
+            (clicked)="filterBySubStatus(subStatus)">
+          </app-status-filter-button>
+        </div>
+      </div>
     </div>
     <div class="header-controls">
-      <app-select-dropdown
-        label="Application Type"
-        [options]="applicationTypeOptions"
-        [selectedValue]="selectedApplicationType"
-        (selectionChange)="onApplicationTypeSelectChange($event)">
-      </app-select-dropdown>
+      <div class="relative w-48">
+        <select 
+          class="h-8 pl-2 pr-8 text-xs border border-gray-300 rounded bg-white text-gray-700 focus:border-primary focus:outline-none appearance-none opacity-0 absolute inset-0 w-full"
+          [value]="selectedApplicationType"
+          (change)="onApplicationTypeSelectChange($event)">
+          <option value="all">All Types</option>
+          <option *ngFor="let option of applicationTypeOptions.slice(1)" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+        <div class="h-8 pl-2 pr-8 text-xs border border-gray-300 rounded bg-white text-gray-700 flex items-center pointer-events-none w-full">
+          <span class="font-bold">Type</span>&nbsp;&nbsp;{{ getApplicationTypeDisplayText() }}
+        </div>
+        <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+          <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+      </div>
+      <app-compact-search
+        placeholder="Search applications..."
+        (search)="onSearch($event)">
+      </app-compact-search>
       <app-view-toggle
         [currentView]="viewMode"
         (viewChange)="toggleView($event)">

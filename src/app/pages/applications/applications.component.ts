@@ -26,20 +26,23 @@ import { TableRowComponent } from '../../components/ui/table/table-row/table-row
 import { TableCellComponent } from '../../components/ui/table/table-cell/table-cell.component';
 import { FilterButtonComponent } from '../../components/ui/filter-button/filter-button.component';
 import { ViewToggleComponent } from '../../components/ui/view-toggle/view-toggle.component';
-import { SelectDropdownComponent, SelectOption } from '../../components/ui/select-dropdown/select-dropdown.component';
 import { StatsCardComponent } from '../../components/ui/stats-card/stats-card.component';
 import { StatusFilterButtonComponent } from '../../components/ui/status-filter-button/status-filter-button.component';
 import { AssigneeInfoComponent } from '../../components/ui/assignee-info/assignee-info.component';
 import { TablePaginationComponent } from '../../components/ui/table/table-pagination/table-pagination.component';
 import { ActionButtonsComponent } from '../../components/ui/action-buttons/action-buttons.component';
 import { DataTableComponent, DataTableColumn } from '../../components/ui/data-table/data-table.component';
-import { InputComponent } from '../../components/ui/input/input.component';
+import { CompactSearchComponent } from './compact-search/compact-search.component';
 
+interface SelectOption {
+  label: string;
+  value: string;
+}
 
 @Component({
   selector: 'app-applications',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, FilterButtonComponent, ViewToggleComponent, SelectDropdownComponent, StatsCardComponent, StatusFilterButtonComponent, AssigneeInfoComponent, TablePaginationComponent, ActionButtonsComponent, DataTableComponent, InputComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, TopCardComponent, PreviewCardComponent, PageHeaderComponent, IconComponent, StatusBadgeComponent, ProgressBarComponent, FilterButtonComponent, ViewToggleComponent, StatsCardComponent, StatusFilterButtonComponent, AssigneeInfoComponent, TablePaginationComponent, ActionButtonsComponent, DataTableComponent, CompactSearchComponent],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.scss'
 })
@@ -305,7 +308,11 @@ export class ApplicationsComponent implements OnInit {
   }
 
   filterBySubStatus(subStatus: string) {
-    this.selectedSubStatus = this.selectedSubStatus === subStatus ? '' : subStatus;
+    if (subStatus === 'All') {
+      this.selectedSubStatus = '';
+    } else {
+      this.selectedSubStatus = this.selectedSubStatus === subStatus ? '' : subStatus;
+    }
     this.updateFilteredApplications();
   }
 
@@ -381,14 +388,30 @@ export class ApplicationsComponent implements OnInit {
     this.paginatedApplications = this.filteredApplications.slice(startIndex, endIndex);
   }
 
-  onApplicationTypeSelectChange(value: string) {
-    this.selectedApplicationType = value;
+  onApplicationTypeSelectChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    this.selectedApplicationType = target.value;
     this.updateFilteredApplications();
   }
 
   onSearch(query: string) {
     this.searchQuery = query;
     this.updateFilteredApplications();
+  }
+
+  getApplicationTypeDisplayText(): string {
+    if (this.selectedApplicationType === 'all') {
+      return 'All Types';
+    }
+    const selectedOption = this.applicationTypeOptions.find(option => option.value === this.selectedApplicationType);
+    return selectedOption ? selectedOption.label : 'All Types';
+  }
+
+  getTabClasses(subStatus: string): string {
+    const isActive = this.selectedSubStatus === subStatus || (subStatus === 'All' && !this.selectedSubStatus);
+    return isActive 
+      ? 'px-4 py-2 text-sm font-medium text-primary border-b-2 border-primary bg-transparent'
+      : 'px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 border-b-2 border-transparent bg-transparent';
   }
 
   isSLAViolation(app: Application): boolean {
