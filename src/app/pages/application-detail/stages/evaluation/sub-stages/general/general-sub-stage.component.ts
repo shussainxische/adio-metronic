@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { DateInputComponent } from '../../../../../../components/ui/date-input/date-input.component';
 import { StatusBadgeComponent } from '../../../../../../components/ui/status-badge/status-badge.component';
@@ -36,6 +37,8 @@ export class GeneralSubStageComponent implements OnInit, OnChanges {
   
   applicationTypeControl = new FormControl({ value: '', disabled: true });
   financialYearEndControl = new FormControl('');
+
+  constructor(private http: HttpClient) {}
   
 
   applicationDetails = {
@@ -137,6 +140,53 @@ export class GeneralSubStageComponent implements OnInit, OnChanges {
 
   downloadCertificate(document: SimpleDocument) {
     console.log('Downloading certificate:', document.fileName);
-    alert(`Would download: ${document.fileName}`);
+    
+    // Map document names to actual PDF files
+    let pdfUrl = '';
+    let downloadName = '';
+    
+    if (document.fileName.includes('2022')) {
+      pdfUrl = 'assets/sample-documents/historical-certificate-2022.pdf';
+      downloadName = 'CERT-2022-001.pdf';
+    } else if (document.fileName.includes('2020')) {
+      pdfUrl = 'assets/sample-documents/historical-certificate-2020.pdf';
+      downloadName = 'CERT-2020-001.pdf';
+    } else if (document.fileName.includes('2018')) {
+      pdfUrl = 'assets/sample-documents/historical-certificate-2018.pdf';
+      downloadName = 'CERT-2018-001.pdf';
+    } else {
+      pdfUrl = 'assets/sample-documents/sample-certificate.pdf';
+      downloadName = `${document.fileName.replace(/\s+/g, '-')}.pdf`;
+    }
+    
+    this.downloadPDF(pdfUrl, downloadName);
+  }
+
+  private downloadPDF(url: string, filename: string): void {
+    this.http.get(url, { responseType: 'blob' }).subscribe({
+      next: (blob: Blob) => {
+        // Create a blob URL for the PDF
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        // Create a temporary anchor element to trigger download
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename;
+        
+        // Append to body, click, and remove
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(blobUrl);
+        
+        console.log(`Certificate downloaded: ${filename}`);
+      },
+      error: (error) => {
+        console.error('Error downloading certificate:', error);
+        alert('Sorry, there was an error downloading the certificate. Please try again.');
+      }
+    });
   }
 }
