@@ -141,23 +141,9 @@ export class GeneralSubStageComponent implements OnInit, OnChanges {
   downloadCertificate(document: SimpleDocument) {
     console.log('Downloading certificate:', document.fileName);
     
-    // Map document names to actual PDF files
-    let pdfUrl = '';
-    let downloadName = '';
-    
-    if (document.fileName.includes('2022')) {
-      pdfUrl = 'assets/sample-documents/historical-certificate-2022.pdf';
-      downloadName = 'CERT-2022-001.pdf';
-    } else if (document.fileName.includes('2020')) {
-      pdfUrl = 'assets/sample-documents/historical-certificate-2020.pdf';
-      downloadName = 'CERT-2020-001.pdf';
-    } else if (document.fileName.includes('2018')) {
-      pdfUrl = 'assets/sample-documents/historical-certificate-2018.pdf';
-      downloadName = 'CERT-2018-001.pdf';
-    } else {
-      pdfUrl = 'assets/sample-documents/sample-certificate.pdf';
-      downloadName = `${document.fileName.replace(/\s+/g, '-')}.pdf`;
-    }
+    // Use sample certificate for all downloads
+    const pdfUrl = 'assets/sample-documents/sample-certificate.pdf';
+    const downloadName = `${document.fileName.replace(/\s+/g, '-')}.pdf`;
     
     this.downloadPDF(pdfUrl, downloadName);
   }
