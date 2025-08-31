@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { EvaluationDataService, EvaluationFormData } from './evaluation-data.service';
 
 export interface EconomicImpactFormData {
   grossBookValueAbuDhabi: string;
@@ -45,8 +46,6 @@ export interface EvaluationFormState {
   providedIn: 'root'
 })
 export class EvaluationFormStateService {
-  private readonly STORAGE_KEY = 'evaluation_form_state';
-  
   // Default empty form data
   private defaultEconomicImpactData: EconomicImpactFormData = {
     grossBookValueAbuDhabi: '0',
@@ -88,96 +87,144 @@ export class EvaluationFormStateService {
     currentStep: 0
   };
 
-  // BehaviorSubject to track form state changes
-  private formState$ = new BehaviorSubject<EvaluationFormState>(this.getStoredFormState());
-
-  constructor() {
-    // Initialize with stored data if available
-    this.loadFormState();
-  }
+  constructor(private evaluationDataService: EvaluationDataService) {}
 
   /**
    * Get current form state as observable
    */
-  getFormState() {
-    return this.formState$.asObservable();
+  getFormState(): Observable<EvaluationFormState> {
+    return this.evaluationDataService.evaluationState$.pipe(
+      map(state => this.mapToFormState(state.formData))
+    );
   }
 
   /**
    * Get current form state value
    */
   getCurrentFormState(): EvaluationFormState {
-    return this.formState$.value;
+    const currentData = this.evaluationDataService.getCurrentFormData();
+    return this.mapToFormState(currentData);
   }
 
   /**
    * Update economic impact form data
    */
   updateEconomicImpactData(data: Partial<EconomicImpactFormData>): void {
-    const currentState = this.getCurrentFormState();
-    const updatedState: EvaluationFormState = {
-      ...currentState,
-      economicImpact: {
-        ...currentState.economicImpact,
-        ...data
-      },
-      lastUpdated: new Date()
+    const updateData: Partial<EvaluationFormData> = {
+      grossBookValueAbuDhabi: data.grossBookValueAbuDhabi ? Number(data.grossBookValueAbuDhabi) : undefined,
+      grossBookValueTotal: data.totalGrossBookValue ? Number(data.totalGrossBookValue) : undefined,
+      salaryBenefitsEmirati: data.salaryBenefitsEmirati ? Number(data.salaryBenefitsEmirati) : undefined,
+      totalSpentManpower: data.totalSpentManpower ? Number(data.totalSpentManpower) : undefined,
+      originalEmiratiNumber: data.originalEmiratiNumber ? Number(data.originalEmiratiNumber) : undefined,
+      growthEmiratiNumber: data.growthEmiratiNumber ? Number(data.growthEmiratiNumber) : undefined,
+      totalStaff: data.totalStaff ? Number(data.totalStaff) : undefined,
+      skilledStaff: data.skilledStaff ? Number(data.skilledStaff) : undefined,
+      adLogisticsFees: data.adLogisticsFees ? Number(data.adLogisticsFees) : undefined,
+      uaeLogisticsFees: data.uaeLogisticsFees ? Number(data.uaeLogisticsFees) : undefined
     };
 
-    this.updateFormState(updatedState);
+    // Remove undefined values
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key as keyof EvaluationFormData] === undefined) {
+        delete updateData[key as keyof EvaluationFormData];
+      }
+    });
+
+    this.evaluationDataService.updateFormData(updateData);
   }
 
   /**
    * Update productivity form data
    */
   updateProductivityData(data: Partial<ProductivityFormData>): void {
-    const currentState = this.getCurrentFormState();
-    const updatedState: EvaluationFormState = {
-      ...currentState,
-      productivity: {
-        ...currentState.productivity,
-        ...data
-      },
-      lastUpdated: new Date()
+    const updateData: Partial<EvaluationFormData> = {
+      totalRevenueMainActivity: data.totalRevenueMainActivity ? Number(data.totalRevenueMainActivity) : undefined,
+      finishedGoodsBeginning: data.finishedGoodsBeginning ? Number(data.finishedGoodsBeginning) : undefined,
+      finishedGoodsEnd: data.finishedGoodsEnd ? Number(data.finishedGoodsEnd) : undefined,
+      workInProgressBeginning: data.workInProgressBeginning ? Number(data.workInProgressBeginning) : undefined,
+      workInProgressEnd: data.workInProgressEnd ? Number(data.workInProgressEnd) : undefined,
+      otherMiscellaneousIncome: data.otherMiscellaneousIncome ? Number(data.otherMiscellaneousIncome) : undefined,
+      rentalsOfBuilding: data.rentalsOfBuilding ? Number(data.rentalsOfBuilding) : undefined,
+      averageEmployees: data.averageEmployees ? Number(data.averageEmployees) : undefined,
+      totalCostOfProduction: data.totalCostOfProduction ? Number(data.totalCostOfProduction) : undefined,
+      wagesSalariesBonusesCogs: data.wagesSalariesBonusesCogs ? Number(data.wagesSalariesBonusesCogs) : undefined,
+      benefitsGrantedEmployeesCogs: data.benefitsGrantedEmployeesCogs ? Number(data.benefitsGrantedEmployeesCogs) : undefined,
+      depreciationCogs: data.depreciationCogs ? Number(data.depreciationCogs) : undefined,
+      totalGeneralAdminExpenses: data.totalGeneralAdminExpenses ? Number(data.totalGeneralAdminExpenses) : undefined,
+      wagesSalariesBonusesAdmin: data.wagesSalariesBonusesAdmin ? Number(data.wagesSalariesBonusesAdmin) : undefined,
+      benefitsGrantedEmployeesAdmin: data.benefitsGrantedEmployeesAdmin ? Number(data.benefitsGrantedEmployeesAdmin) : undefined,
+      depreciationAdmin: data.depreciationAdmin ? Number(data.depreciationAdmin) : undefined,
+      bankingCharges: data.bankingCharges ? Number(data.bankingCharges) : undefined
     };
 
-    this.updateFormState(updatedState);
+    // Remove undefined values
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key as keyof EvaluationFormData] === undefined) {
+        delete updateData[key as keyof EvaluationFormData];
+      }
+    });
+
+    this.evaluationDataService.updateFormData(updateData);
   }
 
   /**
    * Update current step
    */
   updateCurrentStep(step: number): void {
-    const currentState = this.getCurrentFormState();
-    const updatedState: EvaluationFormState = {
-      ...currentState,
-      currentStep: step,
-      lastUpdated: new Date()
-    };
-
-    this.updateFormState(updatedState);
+    // Current step tracking is now handled separately or can be added to EvaluationDataService if needed
+    console.log('📝 Current step updated:', step);
   }
 
   /**
    * Get economic impact data
    */
   getEconomicImpactData(): EconomicImpactFormData {
-    return this.getCurrentFormState().economicImpact;
+    const data = this.evaluationDataService.getEconomicImpactData();
+    return {
+      grossBookValueAbuDhabi: data.grossBookValueAbuDhabi?.toString() || '0',
+      totalGrossBookValue: data.grossBookValueTotal?.toString() || '0',
+      salaryBenefitsEmirati: data.salaryBenefitsEmirati?.toString() || '0',
+      totalSpentManpower: data.totalSpentManpower?.toString() || '0',
+      originalEmiratiNumber: data.originalEmiratiNumber?.toString() || '0',
+      growthEmiratiNumber: data.growthEmiratiNumber?.toString() || '0',
+      totalStaff: data.totalStaff?.toString() || '0',
+      skilledStaff: data.skilledStaff?.toString() || '0',
+      adLogisticsFees: data.adLogisticsFees?.toString() || '0',
+      uaeLogisticsFees: data.uaeLogisticsFees?.toString() || '0'
+    };
   }
 
   /**
    * Get productivity data
    */
   getProductivityData(): ProductivityFormData {
-    return this.getCurrentFormState().productivity;
+    const data = this.evaluationDataService.getProductivityData();
+    return {
+      totalRevenueMainActivity: data.totalRevenueMainActivity?.toString() || '0',
+      finishedGoodsBeginning: data.finishedGoodsBeginning?.toString() || '0',
+      finishedGoodsEnd: data.finishedGoodsEnd?.toString() || '0',
+      workInProgressBeginning: data.workInProgressBeginning?.toString() || '0',
+      workInProgressEnd: data.workInProgressEnd?.toString() || '0',
+      otherMiscellaneousIncome: data.otherMiscellaneousIncome?.toString() || '0',
+      rentalsOfBuilding: data.rentalsOfBuilding?.toString() || '0',
+      averageEmployees: data.averageEmployees?.toString() || '108',
+      totalCostOfProduction: data.totalCostOfProduction?.toString() || '0',
+      wagesSalariesBonusesCogs: data.wagesSalariesBonusesCogs?.toString() || '0',
+      benefitsGrantedEmployeesCogs: data.benefitsGrantedEmployeesCogs?.toString() || '0',
+      depreciationCogs: data.depreciationCogs?.toString() || '0',
+      totalGeneralAdminExpenses: data.totalGeneralAdminExpenses?.toString() || '0',
+      wagesSalariesBonusesAdmin: data.wagesSalariesBonusesAdmin?.toString() || '0',
+      benefitsGrantedEmployeesAdmin: data.benefitsGrantedEmployeesAdmin?.toString() || '0',
+      depreciationAdmin: data.depreciationAdmin?.toString() || '0',
+      bankingCharges: data.bankingCharges?.toString() || '0'
+    };
   }
 
   /**
    * Clear all form data
    */
   clearFormData(): void {
-    this.updateFormState(this.defaultFormState);
-    this.removeStoredFormState();
+    this.evaluationDataService.resetFormData();
   }
 
   /**
@@ -195,92 +242,14 @@ export class EvaluationFormStateService {
    * Check if form has unsaved changes
    */
   hasUnsavedChanges(): boolean {
-    const currentState = this.getCurrentFormState();
-    const storedState = this.getStoredFormState();
-    
-    return JSON.stringify(currentState) !== JSON.stringify(storedState);
-  }
-
-  /**
-   * Save current form state to localStorage
-   */
-  saveFormState(): void {
-    const currentState = this.getCurrentFormState();
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(currentState));
-      console.log('✅ Form state saved to localStorage');
-    } catch (error) {
-      console.warn('⚠️ Failed to save form state to localStorage:', error);
-    }
-  }
-
-  /**
-   * Load form state from localStorage
-   */
-  private loadFormState(): void {
-    const stored = this.getStoredFormState();
-    if (stored) {
-      this.formState$.next(stored);
-    }
-  }
-
-  /**
-   * Get stored form state from localStorage
-   */
-  private getStoredFormState(): EvaluationFormState {
-    try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        // Ensure all required properties exist (backward compatibility)
-        return {
-          ...this.defaultFormState,
-          ...parsed,
-          economicImpact: { ...this.defaultEconomicImpactData, ...parsed.economicImpact },
-          productivity: { ...this.defaultProductivityData, ...parsed.productivity }
-        };
-      }
-    } catch (error) {
-      console.warn('⚠️ Failed to load form state from localStorage:', error);
-    }
-    return this.defaultFormState;
-  }
-
-  /**
-   * Update form state and persist to storage
-   */
-  private updateFormState(state: EvaluationFormState): void {
-    this.formState$.next(state);
-    this.saveFormState();
-  }
-
-  /**
-   * Remove stored form state from localStorage
-   */
-  private removeStoredFormState(): void {
-    try {
-      localStorage.removeItem(this.STORAGE_KEY);
-    } catch (error) {
-      console.warn('⚠️ Failed to remove form state from localStorage:', error);
-    }
-  }
-
-  /**
-   * Auto-save functionality - call this method periodically
-   */
-  enableAutoSave(intervalMs: number = 30000): void {
-    setInterval(() => {
-      if (this.hasUnsavedChanges()) {
-        this.saveFormState();
-      }
-    }, intervalMs);
+    return this.evaluationDataService.hasUnsavedChanges();
   }
 
   /**
    * Export form data as JSON
    */
   exportFormData(): string {
-    const currentState = this.getCurrentFormState();
+    const currentState = this.evaluationDataService.exportCurrentState();
     return JSON.stringify(currentState, null, 2);
   }
 
@@ -289,15 +258,56 @@ export class EvaluationFormStateService {
    */
   importFormData(jsonData: string): boolean {
     try {
-      const imported = JSON.parse(jsonData) as EvaluationFormState;
-      // Validate the structure
-      if (imported.economicImpact && imported.productivity) {
-        this.updateFormState(imported);
+      const imported = JSON.parse(jsonData);
+      if (imported.formData) {
+        // Map and update the data through the centralized service
+        this.evaluationDataService.updateFormData(imported.formData);
         return true;
       }
     } catch (error) {
       console.error('❌ Failed to import form data:', error);
     }
     return false;
+  }
+
+  /**
+   * Map EvaluationFormData to EvaluationFormState
+   */
+  private mapToFormState(data: EvaluationFormData): EvaluationFormState {
+    return {
+      economicImpact: {
+        grossBookValueAbuDhabi: data.grossBookValueAbuDhabi?.toString() || '0',
+        totalGrossBookValue: data.grossBookValueTotal?.toString() || '0',
+        salaryBenefitsEmirati: data.salaryBenefitsEmirati?.toString() || '0',
+        totalSpentManpower: data.totalSpentManpower?.toString() || '0',
+        originalEmiratiNumber: data.originalEmiratiNumber?.toString() || '0',
+        growthEmiratiNumber: data.growthEmiratiNumber?.toString() || '0',
+        totalStaff: data.totalStaff?.toString() || '0',
+        skilledStaff: data.skilledStaff?.toString() || '0',
+        adLogisticsFees: data.adLogisticsFees?.toString() || '0',
+        uaeLogisticsFees: data.uaeLogisticsFees?.toString() || '0'
+      },
+      productivity: {
+        totalRevenueMainActivity: data.totalRevenueMainActivity?.toString() || '0',
+        finishedGoodsBeginning: data.finishedGoodsBeginning?.toString() || '0',
+        finishedGoodsEnd: data.finishedGoodsEnd?.toString() || '0',
+        workInProgressBeginning: data.workInProgressBeginning?.toString() || '0',
+        workInProgressEnd: data.workInProgressEnd?.toString() || '0',
+        otherMiscellaneousIncome: data.otherMiscellaneousIncome?.toString() || '0',
+        rentalsOfBuilding: data.rentalsOfBuilding?.toString() || '0',
+        averageEmployees: data.averageEmployees?.toString() || '108',
+        totalCostOfProduction: data.totalCostOfProduction?.toString() || '0',
+        wagesSalariesBonusesCogs: data.wagesSalariesBonusesCogs?.toString() || '0',
+        benefitsGrantedEmployeesCogs: data.benefitsGrantedEmployeesCogs?.toString() || '0',
+        depreciationCogs: data.depreciationCogs?.toString() || '0',
+        totalGeneralAdminExpenses: data.totalGeneralAdminExpenses?.toString() || '0',
+        wagesSalariesBonusesAdmin: data.wagesSalariesBonusesAdmin?.toString() || '0',
+        benefitsGrantedEmployeesAdmin: data.benefitsGrantedEmployeesAdmin?.toString() || '0',
+        depreciationAdmin: data.depreciationAdmin?.toString() || '0',
+        bankingCharges: data.bankingCharges?.toString() || '0'
+      },
+      lastUpdated: new Date(),
+      currentStep: 0
+    };
   }
 }

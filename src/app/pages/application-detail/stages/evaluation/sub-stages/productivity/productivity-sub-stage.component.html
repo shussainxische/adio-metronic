@@ -3,7 +3,7 @@
     <h3 class="section-title">{{revenueData.title}}</h3>
   </div>
   <div class="field-grid">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="totalRevenueMainActivityControl" 
       [label]="revenueData.fields.totalRevenueMainActivity.label" 
       [placeholder]="revenueData.fields.totalRevenueMainActivity.placeholder"
@@ -13,14 +13,14 @@
     <div></div>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="finishedGoodsBeginningControl" 
       [label]="revenueData.fields.finishedGoodsBeginning.label" 
       [placeholder]="revenueData.fields.finishedGoodsBeginning.placeholder"
                 [validationType]="revenueData.fields.finishedGoodsBeginning.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="finishedGoodsEndControl" 
       [label]="revenueData.fields.finishedGoodsEnd.label" 
       [placeholder]="revenueData.fields.finishedGoodsEnd.placeholder"
@@ -29,14 +29,14 @@
     </app-input>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="workInProgressBeginningControl" 
       [label]="revenueData.fields.workInProgressBeginning.label" 
       [placeholder]="revenueData.fields.workInProgressBeginning.placeholder"
                 [validationType]="revenueData.fields.workInProgressBeginning.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="workInProgressEndControl" 
       [label]="revenueData.fields.workInProgressEnd.label" 
       [placeholder]="revenueData.fields.workInProgressEnd.placeholder"
@@ -45,14 +45,14 @@
     </app-input>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="otherMiscellaneousIncomeControl" 
       [label]="revenueData.fields.otherMiscellaneousIncome.label" 
       [placeholder]="revenueData.fields.otherMiscellaneousIncome.placeholder"
                 [validationType]="revenueData.fields.otherMiscellaneousIncome.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="rentalsOfBuildingControl" 
       [label]="revenueData.fields.rentalsOfBuilding.label" 
       [placeholder]="revenueData.fields.rentalsOfBuilding.placeholder"
@@ -94,14 +94,14 @@
   </div>
   <div class="subsection-title">{{intermediateConsumptionData.cogsSubtitle}}</div>
   <div class="field-grid">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="totalCostOfProductionControl" 
       [label]="intermediateConsumptionData.fields.totalCostOfProduction.label" 
       [placeholder]="intermediateConsumptionData.fields.totalCostOfProduction.placeholder"
                 [validationType]="intermediateConsumptionData.fields.totalCostOfProduction.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="wagesSalariesBonusesCogsControl" 
       [label]="intermediateConsumptionData.fields.wagesSalariesBonusesCogs.label" 
       [placeholder]="intermediateConsumptionData.fields.wagesSalariesBonusesCogs.placeholder"
@@ -110,14 +110,14 @@
     </app-input>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="benefitsGrantedEmployeesCogsControl" 
       [label]="intermediateConsumptionData.fields.benefitsGrantedEmployeesCogs.label" 
       [placeholder]="intermediateConsumptionData.fields.benefitsGrantedEmployeesCogs.placeholder"
                [validationType]="intermediateConsumptionData.fields.benefitsGrantedEmployeesCogs.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="depreciationCogsControl" 
       [label]="intermediateConsumptionData.fields.depreciationCogs.label" 
       [placeholder]="intermediateConsumptionData.fields.depreciationCogs.placeholder"
@@ -128,14 +128,14 @@
   
   <div class="subsection-title with-spacing">{{intermediateConsumptionData.generalAdminSubtitle}}</div>
   <div class="field-grid">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="totalGeneralAdminExpensesControl" 
       [label]="intermediateConsumptionData.fields.totalGeneralAdminExpenses.label" 
       [placeholder]="intermediateConsumptionData.fields.totalGeneralAdminExpenses.placeholder"
                [validationType]="intermediateConsumptionData.fields.totalGeneralAdminExpenses.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="wagesSalariesBonusesAdminControl" 
       [label]="intermediateConsumptionData.fields.wagesSalariesBonusesAdmin.label" 
       [placeholder]="intermediateConsumptionData.fields.wagesSalariesBonusesAdmin.placeholder"
@@ -144,14 +144,14 @@
     </app-input>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="benefitsGrantedEmployeesAdminControl" 
       [label]="intermediateConsumptionData.fields.benefitsGrantedEmployeesAdmin.label" 
       [placeholder]="intermediateConsumptionData.fields.benefitsGrantedEmployeesAdmin.placeholder"
                [validationType]="intermediateConsumptionData.fields.benefitsGrantedEmployeesAdmin.validationType">
       <span iconBefore class="aed-currency">AED</span>
     </app-input>
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="depreciationAdminControl" 
       [label]="intermediateConsumptionData.fields.depreciationAdmin.label" 
       [placeholder]="intermediateConsumptionData.fields.depreciationAdmin.placeholder"
@@ -160,7 +160,7 @@
     </app-input>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input [disabled]="readOnly" 
       [control]="bankingChargesControl" 
       [label]="intermediateConsumptionData.fields.bankingCharges.label" 
       [placeholder]="intermediateConsumptionData.fields.bankingCharges.placeholder"
@@ -218,7 +218,7 @@
     <h3 class="section-title">{{averageEmployeesData.title}}</h3>
   </div>
   <div class="field-grid">
-    <app-input [control]="averageEmployeesControl"
+    <app-input [disabled]="readOnly" [control]="averageEmployeesControl"
                [label]="averageEmployeesData.fields.averageEmployees.label"
                [placeholder]="averageEmployeesData.fields.averageEmployees.placeholder"
                [validationType]="averageEmployeesData.fields.averageEmployees.validationType">

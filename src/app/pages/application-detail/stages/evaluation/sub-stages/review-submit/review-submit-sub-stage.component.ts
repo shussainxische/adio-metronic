@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ReviewSubmitSubStageComponent {
   @Input() readOnly: boolean = false;
-  @Input() economicImpactData: any = null;
+  @Input() evaluationData: any = null;
   @Input() productivityData: any = null;
   uploadedFiles: File[] = [];
   confirmSubmission = false;
@@ -27,6 +27,11 @@ export class ReviewSubmitSubStageComponent {
   submissionDate = new Date();
   statusData!: EvaluationStatusData;
   appId: number = 0;
+
+  // Getter for economic impact data from evaluationData
+  get economicImpactData() {
+    return this.evaluationData?.evaluation || null;
+  }
 
   // Document upload properties
   uploadProgress: { [fileName: string]: number } = {};

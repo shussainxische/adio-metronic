@@ -11,6 +11,8 @@ import { AccordionTableComponent, AccordionTableRow } from '../../../../../../co
 })
 export class SummarySubStageComponent {
   @Input() readOnly: boolean = false;
+  @Input() evaluation: any = null;
+  @Input() evaluationConfiguration: any = null;
   
   electricTariffData: AccordionTableRow[] = [
     {

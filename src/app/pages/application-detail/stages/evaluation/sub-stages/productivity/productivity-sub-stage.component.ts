@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
 import { EvaluationCalculationsService } from '../../../../../../services/evaluation-calculations.service';
+import { EvaluationDataService } from '../../../../../../services/evaluation-data.service';
 
 @Component({
   selector: 'app-productivity-sub-stage',
@@ -12,10 +13,232 @@ import { EvaluationCalculationsService } from '../../../../../../services/evalua
   templateUrl: './productivity-sub-stage.component.html',
   styleUrl: './productivity-sub-stage.component.scss'
 })
-export class ProductivitySubStageComponent {
+export class ProductivitySubStageComponent implements OnInit, OnChanges {
   @Input() readOnly: boolean = false;
+  @Input() evaluation: any = null;
+  @Input() evaluationConfiguration: any = null;
 
-  constructor(private evaluationCalculations: EvaluationCalculationsService) {}
+  constructor(
+    private evaluationCalculations: EvaluationCalculationsService,
+    private evaluationDataService: EvaluationDataService
+  ) {}
+
+  ngOnInit() {
+    this.initializeFormControls();
+    this.initializeFormData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['evaluation'] || changes['readOnly']) {
+      this.initializeFormData();
+    }
+  }
+
+  /**
+   * Initialize FormControls (placeholder for future enhancement)
+   */
+  private initializeFormControls(): void {
+    // FormControls are already initialized as class properties
+    // This method is a placeholder for future enhancement to initialize with proper disabled state
+    console.log('🔧 Productivity - FormControls initialization (placeholder)');
+  }
+
+  private initializeFormData() {
+    console.log('🔍 Productivity - initializeFormData called with readOnly:', this.readOnly);
+    
+    // Set readonly state in the centralized service
+    this.evaluationDataService.setReadOnlyState(this.readOnly);
+    
+    // Load data from evaluation API if available, otherwise load saved form data
+    if (this.evaluation) {
+      this.loadFromApiData();
+    } else {
+      this.loadFormData();
+    }
+
+    // Handle readonly state by disabling FormControls
+    if (this.readOnly) {
+      this.disableAllFormControls();
+      console.log('🔒 Productivity - All FormControls disabled for readonly mode');
+    } else {
+      this.enableAllFormControls();
+      this.setupFormValueListeners();
+      console.log('🔓 Productivity - All FormControls enabled and listeners set up');
+    }
+    
+    console.log('📥 Productivity component initialized with readonly:', this.readOnly);
+  }
+
+  private loadFromApiData(): void {
+    if (!this.evaluation) return;
+    
+    this.totalRevenueMainActivityControl.setValue((this.evaluation.appProductRevenueMain || 0).toString());
+    this.finishedGoodsBeginningControl.setValue((this.evaluation.appProductFinishedgoodsBoy || 0).toString());
+    this.finishedGoodsEndControl.setValue((this.evaluation.aappProductFinishedgoodsEoy || 0).toString());
+    this.workInProgressBeginningControl.setValue((this.evaluation.appProductWipBoy || 0).toString());
+    this.workInProgressEndControl.setValue((this.evaluation.appProductWipEoy || 0).toString());
+    this.otherMiscellaneousIncomeControl.setValue((this.evaluation.appProductRevenueMisc || 0).toString());
+    this.rentalsOfBuildingControl.setValue((this.evaluation.appProductRevenueRentals || 0).toString());
+    this.averageEmployeesControl.setValue((this.evaluation.appProductAvgNumberEmployees || 108).toString());
+    
+    this.totalCostOfProductionControl.setValue((this.evaluation.appTotalCostofProduction || 0).toString());
+    this.wagesSalariesBonusesCogsControl.setValue((this.evaluation.appProductWagesSalariesBonusesCashCogs || 0).toString());
+    this.benefitsGrantedEmployeesCogsControl.setValue((this.evaluation.appProductBenefitsGrantedEmpCogs || 0).toString());
+    this.depreciationCogsControl.setValue((this.evaluation.appDepreciationCogs || 0).toString());
+    this.totalGeneralAdminExpensesControl.setValue((this.evaluation.appProductTotalGeneralAdminExpenses || 0).toString());
+    this.wagesSalariesBonusesAdminControl.setValue((this.evaluation.appProductWagesSalariesBonusesCashGa || 0).toString());
+    this.benefitsGrantedEmployeesAdminControl.setValue((this.evaluation.appProductBenefitsGrantedEmpGa || 0).toString());
+    this.depreciationAdminControl.setValue((this.evaluation.appDepreciationGA || 0).toString());
+    this.bankingChargesControl.setValue((this.evaluation.appProductBankingCharges || 0).toString());
+
+    console.log('📥 Productivity form data loaded from API evaluation data');
+  }
+
+  /**
+   * Load form data from the centralized data service
+   */
+  private loadFormData(): void {
+    const savedData = this.evaluationDataService.getProductivityData();
+    
+    this.totalRevenueMainActivityControl.setValue(savedData.totalRevenueMainActivity?.toString() || '0');
+    this.finishedGoodsBeginningControl.setValue(savedData.finishedGoodsBeginning?.toString() || '0');
+    this.finishedGoodsEndControl.setValue(savedData.finishedGoodsEnd?.toString() || '0');
+    this.workInProgressBeginningControl.setValue(savedData.workInProgressBeginning?.toString() || '0');
+    this.workInProgressEndControl.setValue(savedData.workInProgressEnd?.toString() || '0');
+    this.otherMiscellaneousIncomeControl.setValue(savedData.otherMiscellaneousIncome?.toString() || '0');
+    this.rentalsOfBuildingControl.setValue(savedData.rentalsOfBuilding?.toString() || '0');
+    this.averageEmployeesControl.setValue(savedData.averageEmployees?.toString() || '108');
+    
+    this.totalCostOfProductionControl.setValue(savedData.totalCostOfProduction?.toString() || '0');
+    this.wagesSalariesBonusesCogsControl.setValue(savedData.wagesSalariesBonusesCogs?.toString() || '0');
+    this.benefitsGrantedEmployeesCogsControl.setValue(savedData.benefitsGrantedEmployeesCogs?.toString() || '0');
+    this.depreciationCogsControl.setValue(savedData.depreciationCogs?.toString() || '0');
+    this.totalGeneralAdminExpensesControl.setValue(savedData.totalGeneralAdminExpenses?.toString() || '0');
+    this.wagesSalariesBonusesAdminControl.setValue(savedData.wagesSalariesBonusesAdmin?.toString() || '0');
+    this.benefitsGrantedEmployeesAdminControl.setValue(savedData.benefitsGrantedEmployeesAdmin?.toString() || '0');
+    this.depreciationAdminControl.setValue(savedData.depreciationAdmin?.toString() || '0');
+    this.bankingChargesControl.setValue(savedData.bankingCharges?.toString() || '0');
+
+    console.log('📥 Productivity form data loaded from centralized data service');
+  }
+
+  /**
+   * Disable all form controls for readonly mode
+   */
+  private disableAllFormControls(): void {
+    this.totalRevenueMainActivityControl.disable({ emitEvent: false });
+    this.finishedGoodsBeginningControl.disable({ emitEvent: false });
+    this.finishedGoodsEndControl.disable({ emitEvent: false });
+    this.workInProgressBeginningControl.disable({ emitEvent: false });
+    this.workInProgressEndControl.disable({ emitEvent: false });
+    this.otherMiscellaneousIncomeControl.disable({ emitEvent: false });
+    this.rentalsOfBuildingControl.disable({ emitEvent: false });
+    this.averageEmployeesControl.disable({ emitEvent: false });
+    
+    this.totalCostOfProductionControl.disable({ emitEvent: false });
+    this.wagesSalariesBonusesCogsControl.disable({ emitEvent: false });
+    this.benefitsGrantedEmployeesCogsControl.disable({ emitEvent: false });
+    this.depreciationCogsControl.disable({ emitEvent: false });
+    this.totalGeneralAdminExpensesControl.disable({ emitEvent: false });
+    this.wagesSalariesBonusesAdminControl.disable({ emitEvent: false });
+    this.benefitsGrantedEmployeesAdminControl.disable({ emitEvent: false });
+    this.depreciationAdminControl.disable({ emitEvent: false });
+    this.bankingChargesControl.disable({ emitEvent: false });
+  }
+
+  /**
+   * Enable all form controls for edit mode
+   */
+  private enableAllFormControls(): void {
+    this.totalRevenueMainActivityControl.enable({ emitEvent: false });
+    this.finishedGoodsBeginningControl.enable({ emitEvent: false });
+    this.finishedGoodsEndControl.enable({ emitEvent: false });
+    this.workInProgressBeginningControl.enable({ emitEvent: false });
+    this.workInProgressEndControl.enable({ emitEvent: false });
+    this.otherMiscellaneousIncomeControl.enable({ emitEvent: false });
+    this.rentalsOfBuildingControl.enable({ emitEvent: false });
+    this.averageEmployeesControl.enable({ emitEvent: false });
+    
+    this.totalCostOfProductionControl.enable({ emitEvent: false });
+    this.wagesSalariesBonusesCogsControl.enable({ emitEvent: false });
+    this.benefitsGrantedEmployeesCogsControl.enable({ emitEvent: false });
+    this.depreciationCogsControl.enable({ emitEvent: false });
+    this.totalGeneralAdminExpensesControl.enable({ emitEvent: false });
+    this.wagesSalariesBonusesAdminControl.enable({ emitEvent: false });
+    this.benefitsGrantedEmployeesAdminControl.enable({ emitEvent: false });
+    this.depreciationAdminControl.enable({ emitEvent: false });
+    this.bankingChargesControl.enable({ emitEvent: false });
+  }
+
+  /**
+   * Set up form value change listeners to automatically save data
+   */
+  private setupFormValueListeners(): void {
+    // Create a debounced save function to avoid too many saves
+    let saveTimeout: any;
+    const debouncedSave = () => {
+      if (saveTimeout) clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => this.saveFormData(), 1000); // Save after 1 second of inactivity
+    };
+
+    this.totalRevenueMainActivityControl.valueChanges.subscribe(() => debouncedSave());
+    this.finishedGoodsBeginningControl.valueChanges.subscribe(() => debouncedSave());
+    this.finishedGoodsEndControl.valueChanges.subscribe(() => debouncedSave());
+    this.workInProgressBeginningControl.valueChanges.subscribe(() => debouncedSave());
+    this.workInProgressEndControl.valueChanges.subscribe(() => debouncedSave());
+    this.otherMiscellaneousIncomeControl.valueChanges.subscribe(() => debouncedSave());
+    this.rentalsOfBuildingControl.valueChanges.subscribe(() => debouncedSave());
+    this.averageEmployeesControl.valueChanges.subscribe(() => debouncedSave());
+    
+    this.totalCostOfProductionControl.valueChanges.subscribe(() => debouncedSave());
+    this.wagesSalariesBonusesCogsControl.valueChanges.subscribe(() => debouncedSave());
+    this.benefitsGrantedEmployeesCogsControl.valueChanges.subscribe(() => debouncedSave());
+    this.depreciationCogsControl.valueChanges.subscribe(() => debouncedSave());
+    this.totalGeneralAdminExpensesControl.valueChanges.subscribe(() => debouncedSave());
+    this.wagesSalariesBonusesAdminControl.valueChanges.subscribe(() => debouncedSave());
+    this.benefitsGrantedEmployeesAdminControl.valueChanges.subscribe(() => debouncedSave());
+    this.depreciationAdminControl.valueChanges.subscribe(() => debouncedSave());
+    this.bankingChargesControl.valueChanges.subscribe(() => debouncedSave());
+
+    console.log('🔄 Form value change listeners set up for Productivity component');
+  }
+
+  /**
+   * Save form data to the centralized data service
+   */
+  private saveFormData(): void {
+    const formData = {
+      totalRevenueMainActivity: Number(this.totalRevenueMainActivityControl.value) || 0,
+      finishedGoodsBeginning: Number(this.finishedGoodsBeginningControl.value) || 0,
+      finishedGoodsEnd: Number(this.finishedGoodsEndControl.value) || 0,
+      workInProgressBeginning: Number(this.workInProgressBeginningControl.value) || 0,
+      workInProgressEnd: Number(this.workInProgressEndControl.value) || 0,
+      otherMiscellaneousIncome: Number(this.otherMiscellaneousIncomeControl.value) || 0,
+      rentalsOfBuilding: Number(this.rentalsOfBuildingControl.value) || 0,
+      averageEmployees: Number(this.averageEmployeesControl.value) || 108,
+      totalCostOfProduction: Number(this.totalCostOfProductionControl.value) || 0,
+      wagesSalariesBonusesCogs: Number(this.wagesSalariesBonusesCogsControl.value) || 0,
+      benefitsGrantedEmployeesCogs: Number(this.benefitsGrantedEmployeesCogsControl.value) || 0,
+      depreciationCogs: Number(this.depreciationCogsControl.value) || 0,
+      totalGeneralAdminExpenses: Number(this.totalGeneralAdminExpensesControl.value) || 0,
+      wagesSalariesBonusesAdmin: Number(this.wagesSalariesBonusesAdminControl.value) || 0,
+      benefitsGrantedEmployeesAdmin: Number(this.benefitsGrantedEmployeesAdminControl.value) || 0,
+      depreciationAdmin: Number(this.depreciationAdminControl.value) || 0,
+      bankingCharges: Number(this.bankingChargesControl.value) || 0
+    };
+
+    this.evaluationDataService.updateFormData(formData);
+    console.log('💾 Productivity form data saved to centralized service');
+  }
+
+  /**
+   * Public method to manually save form data
+   */
+  public saveFormDataManually(): void {
+    this.saveFormData();
+  }
+
+
   totalRevenueMainActivityControl = new FormControl('0');
   finishedGoodsBeginningControl = new FormControl('0');
   finishedGoodsEndControl = new FormControl('0');

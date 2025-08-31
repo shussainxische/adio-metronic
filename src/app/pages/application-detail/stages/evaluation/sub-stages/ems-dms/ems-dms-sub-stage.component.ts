@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputValidationComponent } from '../../../../../../components/ui/input-validation/input-validation.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
+import { EvaluationDataService } from '../../../../../../services/evaluation-data.service';
 
 @Component({
   selector: 'app-ems-dms-sub-stage',
@@ -11,8 +12,117 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
   templateUrl: './ems-dms-sub-stage.component.html',
   styleUrl: './ems-dms-sub-stage.component.scss'
 })
-export class EmsDmsSubStageComponent {
+export class EmsDmsSubStageComponent implements OnInit, OnChanges {
   @Input() readOnly: boolean = false;
+  @Input() evaluation: any = null;
+  @Input() evaluationConfiguration: any = null;
+
+  constructor(private evaluationDataService: EvaluationDataService) {}
+
+  ngOnInit() {
+    this.initializeFormData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['evaluation'] || changes['readOnly']) {
+      this.initializeFormData();
+    }
+  }
+
+  private initializeFormData() {
+    console.log('🔍 EMS/DMS - initializeFormData called with readOnly:', this.readOnly);
+    
+    // Set readonly state in the centralized service
+    this.evaluationDataService.setReadOnlyState(this.readOnly);
+    
+    // Load data from evaluation API if available, otherwise load saved form data
+    if (this.evaluation) {
+      this.loadFromApiData();
+    } else {
+      this.loadFormData();
+    }
+    
+    this.updateFormControlStates();
+  }
+
+  private loadFromApiData(): void {
+    if (!this.evaluation) return;
+    
+    this.connectionLoadMeterControl.setValue((this.evaluation.appConnectionLoadMeter || 0).toString());
+    this.emsAvailabilityControl.setValue(this.evaluation.appEmsApplicability === 1 ? 'Available' : 'Not Available');
+    this.demandSideConsumptionControl.setValue((this.evaluation.demandSideConsumptionPercentage || 0).toString());
+
+    console.log('📥 EMS/DMS form data loaded from API evaluation data');
+  }
+
+  /**
+   * Load form data from the centralized data service
+   */
+  private loadFormData(): void {
+    const savedData = this.evaluationDataService.getEmsDmsData();
+    
+    this.connectionLoadMeterControl.setValue(savedData.connectionLoadMeter?.toString() || '0');
+    this.emsAvailabilityControl.setValue(savedData.emsAvailability || 'Available');
+    this.demandSideConsumptionControl.setValue(savedData.demandSideConsumption?.toString() || '0');
+
+    console.log('📥 EMS/DMS form data loaded from centralized data service');
+  }
+
+  private updateFormControlStates(): void {
+    if (this.readOnly) {
+      this.connectionLoadMeterControl.disable({ emitEvent: false });
+      this.emsAvailabilityControl.disable({ emitEvent: false });
+      this.demandSideConsumptionControl.disable({ emitEvent: false });
+      console.log('🔒 EMS/DMS - All FormControls disabled for readonly mode');
+    } else {
+      this.connectionLoadMeterControl.enable({ emitEvent: false });
+      this.emsAvailabilityControl.enable({ emitEvent: false });
+      this.demandSideConsumptionControl.enable({ emitEvent: false });
+      this.setupFormValueListeners();
+      console.log('🔓 EMS/DMS - All FormControls enabled and listeners set up');
+    }
+    
+    console.log('📥 EMS/DMS component form controls updated with readonly:', this.readOnly);
+  }
+
+  /**
+   * Set up form value change listeners to automatically save data
+   */
+  private setupFormValueListeners(): void {
+    // Create a debounced save function to avoid too many saves
+    let saveTimeout: any;
+    const debouncedSave = () => {
+      if (saveTimeout) clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => this.saveFormData(), 1000); // Save after 1 second of inactivity
+    };
+
+    this.connectionLoadMeterControl.valueChanges.subscribe(() => debouncedSave());
+    this.emsAvailabilityControl.valueChanges.subscribe(() => debouncedSave());
+    this.demandSideConsumptionControl.valueChanges.subscribe(() => debouncedSave());
+
+    console.log('🔄 Form value change listeners set up for EMS/DMS component');
+  }
+
+  /**
+   * Save form data to the centralized data service
+   */
+  private saveFormData(): void {
+    const formData = {
+      connectionLoadMeter: Number(this.connectionLoadMeterControl.value) || 0,
+      emsAvailability: this.emsAvailabilityControl.value || 'Available',
+      demandSideConsumption: Number(this.demandSideConsumptionControl.value) || 0
+    };
+
+    this.evaluationDataService.updateFormData(formData);
+    console.log('💾 EMS/DMS form data saved to centralized service');
+  }
+
+  /**
+   * Public method to manually save form data
+   */
+  public saveFormDataManually(): void {
+    this.saveFormData();
+  }
   connectionLoadMeterControl = new FormControl('');
   emsAvailabilityControl = new FormControl('Available');
   demandSideConsumptionControl = new FormControl('');

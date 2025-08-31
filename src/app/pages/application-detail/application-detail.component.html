@@ -79,28 +79,42 @@
             <div *ngIf="currentStage === 'Evaluation'">
               <app-general-sub-stage 
                 [style.display]="currentStep === 0 ? 'block' : 'none'"
+                [readOnly]="isEvaluationReadOnly"
                 [application]="application"
                 [licenseDetails]="licenseDetails"
-                [companyContact]="companyContact">
+                [companyContact]="companyContact"
+                [applicationSummary]="evaluationData?.applicationSummary">
               </app-general-sub-stage>
               <app-economic-impact-sub-stage 
                 [style.display]="currentStep === 1 ? 'block' : 'none'"
+                [readOnly]="isEvaluationReadOnly"
+                [evaluation]="evaluationData?.evaluation"
+                [evaluationConfiguration]="evaluationData?.evaluationConfiguration"
                 #economicImpactComponent>
               </app-economic-impact-sub-stage>
               <app-productivity-sub-stage 
                 [style.display]="currentStep === 2 ? 'block' : 'none'"
+                [readOnly]="isEvaluationReadOnly"
+                [evaluation]="evaluationData?.evaluation"
+                [evaluationConfiguration]="evaluationData?.evaluationConfiguration"
                 #productivityComponent>
               </app-productivity-sub-stage>
               <app-ems-dms-sub-stage 
-                [style.display]="currentStep === 3 ? 'block' : 'none'">
+                [style.display]="currentStep === 3 ? 'block' : 'none'"
+                [readOnly]="isEvaluationReadOnly"
+                [evaluation]="evaluationData?.evaluation"
+                [evaluationConfiguration]="evaluationData?.evaluationConfiguration">
               </app-ems-dms-sub-stage>
               <app-summary-sub-stage 
-                [style.display]="currentStep === 4 ? 'block' : 'none'">
+                [style.display]="currentStep === 4 ? 'block' : 'none'"
+                [readOnly]="isEvaluationReadOnly"
+                [evaluation]="evaluationData?.evaluation"
+                [evaluationConfiguration]="evaluationData?.evaluationConfiguration">
               </app-summary-sub-stage>
               <app-review-submit-sub-stage 
                 [style.display]="currentStep === 5 ? 'block' : 'none'"
-                [economicImpactData]="getEconomicImpactData()"
-                [productivityData]="getProductivityData()">
+                [readOnly]="isEvaluationReadOnly"
+                [evaluationData]="evaluationData">
               </app-review-submit-sub-stage>
             </div>
             

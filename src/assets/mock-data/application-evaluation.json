@@ -1,0 +1,151 @@
+{
+  "data": {
+    "licenseDetails": {
+      "invId": 2,
+      "invLicenseId": 2,
+      "invCompanyName": "Abu Dhabi Plastics Co.",
+      "invAddress": "Industrial Zone 2, Abu Dhabi",
+      "invIndustrialType": "",
+      "invLicenseIssueDate": "2019-03-15T00:00:00",
+      "invLicenseExpiryDate": "2024-03-14T00:00:00",
+      "invOperationDate": "2019-03-15T00:00:00",
+      "invAddressCity": "Abu Dhabi",
+      "invAddressEmirate": "Abu Dhabi"
+    },
+    "companyContact": {
+      "invFullName": "Sara Mohammed",
+      "invEmail": "sara@adplastics.ae",
+      "invPhone": "+971 55 234 5678",
+      "invPosition": "General Manager"
+    },
+    "applicationSummary": {
+      "appTypeName": "Renewal",
+      "appIsElectricity": true,
+      "appIsGas": true,
+      "appFinancialYearEndData": "2025-12-31T00:00:00"
+    },
+    "documents": [],
+    "activityLog": [
+      {
+        "logId": 2,
+        "createdOn": "2025-08-28T13:46:43Z",
+        "userName": "Sara Mohammed",
+        "message": "Application ESP-002 created and moved to RFQ - Pending stage. Initial application submission by Abu Dhabi Plastics Co."
+      }
+    ],
+    "evaluationConfiguration": {
+      "investmentScoreMaxValue": 1,
+      "investmentWeightedScoreMultiplier": 0.5,
+      "investmentTopUpMinThreshold": 5000000,
+      "investmentTopUpMaxThreshold": 150000000,
+      "investmentTopUpDivisor": 150000000,
+      "emiratizationPercentageMultiplier": 0.2,
+      "emiratizationNoWeightedMultiplier": 0.5,
+      "skilledStaffPercentageMultiplier": 0.2,
+      "skilledStaffWeightedMultiplier": 0.5,
+      "logisticsWeightedMultiplier": 0.5,
+      "dmsScoreTable": [
+        {
+          "minPercentage": 0,
+          "maxPercentage": 74.99,
+          "score": 0,
+          "description": "Below 75%"
+        },
+        {
+          "minPercentage": 75,
+          "maxPercentage": 79,
+          "score": 0.25,
+          "description": "75% to 79%"
+        },
+        {
+          "minPercentage": 80,
+          "maxPercentage": 84,
+          "score": 0.5,
+          "description": "80% to 84%"
+        },
+        {
+          "minPercentage": 85,
+          "maxPercentage": 89,
+          "score": 0.75,
+          "description": "85% to 89%"
+        },
+        {
+          "minPercentage": 90,
+          "maxPercentage": 94,
+          "score": 0.9,
+          "description": "90% to 94%"
+        },
+        {
+          "minPercentage": 95,
+          "maxPercentage": 105,
+          "score": 1,
+          "description": "95% to 105%"
+        },
+        {
+          "minPercentage": 105.01,
+          "maxPercentage": 7.922816251426434e+28,
+          "score": 0,
+          "description": "Above 105%"
+        }
+      ],
+      "calculationTolerance": 0.001,
+      "lastUpdated": "2025-08-30T12:06:48Z",
+      "updatedBy": "Brahimhz"
+    },
+    "evaluation": {
+      "appId": 2,
+      "appInvestmentGbvAdfaAd": 0,
+      "appInvestmentGbvTotalProprities": 0,
+      "appInvestmentScore": 0,
+      "appInvestmentWeightedScore": 0,
+      "appInvestmentTopUpGbvAdScore": 0,
+      "appEmairatizationSalaryBenfCostPaid": 0,
+      "appEmiratizationSpentOnManpower": 0,
+      "appEmiratizationNumberOfEmiratis": 0,
+      "appEmiratizationGrowthInEmiratiNo": 0,
+      "appSkilledNumberOfStaffTotal": 0,
+      "appSkilledNumberOfStaff": 0,
+      "appEmiratizationSalaryBenefitsScore": 0,
+      "appEmiratizationNoScore": 0,
+      "appEmiratizationNoWeightedScore": 0,
+      "appSkilledStaffScore": 0,
+      "appSkilledStaffWeightedScore": 0,
+      "appLogisticsFeesChargesAd": 0,
+      "appLogisticsFeesChargesUaeTotal": 0,
+      "appLogisticsSupplyChainSupportScore": 0,
+      "appLogisticsSupplyChainSupportWeightedScore": 0,
+      "appProductRevenueMain": 0,
+      "appProductFinishedgoodsBoy": 0,
+      "aappProductFinishedgoodsEoy": 0,
+      "appProductWipBoy": 0,
+      "appProductWipEoy": 0,
+      "appProductRevenueRentals": 0,
+      "appProductRevenueMisc": 0,
+      "appProductTotalMainRevenue": 0,
+      "appProductTotalSecondaryRevenue": 0,
+      "appProductTotalRevenue": 0,
+      "appTotalCostofProduction": 0,
+      "appProductBankingCharges": 0,
+      "appDepreciationCogs": 0,
+      "appDepreciationGA": 0,
+      "appProductBenefitsGrantedEmpGa": 0,
+      "appProductWagesSalariesBonusesCashGa": 0,
+      "appProductTotalGeneralAdminExpenses": 0,
+      "appProductBenefitsGrantedEmpCogs": 0,
+      "appProductWagesSalariesBonusesCashCogs": 0,
+      "appProductAvgNumberEmployees": 0,
+      "appProductIntermediateConsumptionTotal": 0,
+      "appProductValueAdded": 0,
+      "appProductProductivity": 0,
+      "appConnectionLoadMeter": 0,
+      "appEmsApplicability": 0,
+      "appConfigDmsOptionsId": 0,
+      "demandSideConsumptionPercentage": 0,
+      "appDmsScore": 0,
+      "appConfigDmsOptionsScore": 0
+    }
+  },
+  "errors": [],
+  "responseTime": "2025-08-31T08:43:16.6765648+04:00",
+  "isSuccess": true
+}

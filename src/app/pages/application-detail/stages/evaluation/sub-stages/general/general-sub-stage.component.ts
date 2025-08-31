@@ -7,6 +7,7 @@ import { DateInputComponent } from '../../../../../../components/ui/date-input/d
 import { StatusBadgeComponent } from '../../../../../../components/ui/status-badge/status-badge.component';
 import { IconComponent } from '../../../../../../components/ui/icon/icon.component';
 import { Application } from '../../../../../../services/application-status.service';
+import { EvaluationDataService } from '../../../../../../services/evaluation-data.service';
 
 interface PastCertificate {
   title: string;
@@ -34,11 +35,15 @@ export class GeneralSubStageComponent implements OnInit, OnChanges {
   @Input() application?: Application;
   @Input() licenseDetails: any = null;
   @Input() companyContact: any = null;
+  @Input() applicationSummary: any = null;
   
   applicationTypeControl = new FormControl({ value: '', disabled: true });
   financialYearEndControl = new FormControl('');
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private evaluationDataService: EvaluationDataService
+  ) {}
   
 
   applicationDetails = {
@@ -70,6 +75,12 @@ export class GeneralSubStageComponent implements OnInit, OnChanges {
   };
 
   get utilitiesRequired(): string[] {
+    if (this.applicationSummary) {
+      const utilities = [];
+      if (this.applicationSummary.appIsElectricity) utilities.push('Electricity');
+      if (this.applicationSummary.appIsGas) utilities.push('Gas');
+      return utilities;
+    }
     if (this.application?.category) {
       return this.application.category.split(',').map(cat => cat.trim());
     }
@@ -105,20 +116,43 @@ export class GeneralSubStageComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['application'] || changes['licenseDetails']) {
+    if (changes['application'] || changes['licenseDetails'] || changes['applicationSummary']) {
       this.updateFormData();
     }
   }
 
   private updateFormData() {
-    if (this.application) {
+    console.log('🔍 General - updateFormData called with readOnly:', this.readOnly);
+    
+    // Set readonly state in the centralized service
+    this.evaluationDataService.setReadOnlyState(this.readOnly);
+    
+    // Load data from applicationSummary if available, otherwise load saved form data
+    if (this.applicationSummary) {
+      this.loadFromApplicationSummary();
+    } else {
+      this.loadFormData();
+    }
+    
+    // Handle readonly state
+    this.updateFormControlStates();
+  }
+  
+  private loadFromApplicationSummary(): void {
+    // Set application type from applicationSummary or application data
+    if (this.applicationSummary?.appTypeName) {
+      this.applicationTypeControl.setValue(this.applicationSummary.appTypeName);
+    } else if (this.application) {
       this.applicationTypeControl.setValue(this.application.companyType || 'Renewal');
     } else {
       this.applicationTypeControl.setValue(this.applicationData.applicationType);
     }
     
-    if (this.licenseDetails) {
-      // Use license expiry date as financial year end
+    // Set financial year end from applicationSummary or license details
+    if (this.applicationSummary?.appFinancialYearEndData) {
+      const formattedDate = new Date(this.applicationSummary.appFinancialYearEndData).toISOString().split('T')[0];
+      this.financialYearEndControl.setValue(formattedDate);
+    } else if (this.licenseDetails) {
       const expiryDate = this.licenseDetails.invLicenseExpiryDate;
       if (expiryDate) {
         const formattedDate = new Date(expiryDate).toISOString().split('T')[0];
@@ -127,6 +161,75 @@ export class GeneralSubStageComponent implements OnInit, OnChanges {
     } else {
       this.financialYearEndControl.setValue(this.applicationData.financialYearEnd);
     }
+
+    console.log('📥 General component form data updated from application summary');
+  }
+
+  /**
+   * Load form data from the centralized data service
+   */
+  private loadFormData(): void {
+    const savedData = this.evaluationDataService.getGeneralData();
+    
+    this.applicationTypeControl.setValue(savedData.applicationType || 'Renewal');
+    this.financialYearEndControl.setValue(savedData.financialYearEnd || new Date().toISOString().split('T')[0]);
+
+    console.log('📥 General form data loaded from centralized data service');
+  }
+
+  /**
+   * Update form control states based on readonly mode
+   */
+  private updateFormControlStates(): void {
+    if (this.readOnly) {
+      this.applicationTypeControl.disable({ emitEvent: false });
+      this.financialYearEndControl.disable({ emitEvent: false });
+      console.log('🔒 General - All FormControls disabled for readonly mode');
+    } else {
+      // Application type is always disabled as it comes from API
+      // this.applicationTypeControl.enable({ emitEvent: false }); 
+      this.financialYearEndControl.enable({ emitEvent: false });
+      this.setupFormValueListeners();
+      console.log('🔓 General - FormControls enabled and listeners set up');
+    }
+  }
+
+  /**
+   * Set up form value change listeners to automatically save data
+   */
+  private setupFormValueListeners(): void {
+    // Create a debounced save function to avoid too many saves
+    let saveTimeout: any;
+    const debouncedSave = () => {
+      if (saveTimeout) clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => this.saveFormData(), 1000); // Save after 1 second of inactivity
+    };
+
+    // Only listen to financialYearEnd changes (applicationType is readonly from API)
+    this.financialYearEndControl.valueChanges.subscribe(() => debouncedSave());
+
+    console.log('🔄 Form value change listeners set up for General component');
+  }
+
+  /**
+   * Save form data to the centralized data service
+   */
+  private saveFormData(): void {
+    const formData = {
+      applicationType: this.applicationTypeControl.value || 'Renewal',
+      financialYearEnd: this.financialYearEndControl.value || new Date().toISOString().split('T')[0],
+      utilitiesRequired: this.utilitiesRequired || ['Electricity', 'Gas']
+    };
+
+    this.evaluationDataService.updateFormData(formData);
+    console.log('💾 General form data saved to centralized service');
+  }
+
+  /**
+   * Public method to manually save form data
+   */
+  public saveFormDataManually(): void {
+    this.saveFormData();
   }
 
 

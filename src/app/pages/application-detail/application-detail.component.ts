@@ -8,6 +8,7 @@ import { ButtonComponent } from '../../components/ui/button/button.component';
 import { ApplicationStatusService, Application } from '../../services/application-status.service';
 import { BaseRfqApplicationService, RfqApplicationData, RfqApplicationResponse } from '../../services/base-rfq-application.service';
 import { BaseApplicationsSummaryService, ApplicationSummaryItem } from '../../services/base-applications-summary.service';
+import { EvaluationApiService, EvaluationApplicationData } from '../../services/evaluation-api.service';
 import { RightPanelComponent } from './right-panel/right-panel.component';
 import { InfoTableData } from '../../components/ui/widgets/info-table-widget/info-table-widget.component';
 
@@ -78,6 +79,9 @@ export class ApplicationDetailComponent implements OnInit {
   stageTabs: any[] = [];
   private applicationDetailData: any = null;
   private quotationData: RfqApplicationData | null = null;
+  
+  // Evaluation data
+  evaluationData: EvaluationApplicationData | null = null;
 
   // ViewChild references for evaluation components
   @ViewChild('economicImpactComponent') economicImpactComponent?: EconomicImpactSubStageComponent;
@@ -90,7 +94,8 @@ export class ApplicationDetailComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     public applicationStatusService: ApplicationStatusService,
     private rfqApplicationService: BaseRfqApplicationService,
-    private applicationsSummaryService: BaseApplicationsSummaryService
+    private applicationsSummaryService: BaseApplicationsSummaryService,
+    private evaluationApiService: EvaluationApiService
   ) {}
 
   ngOnInit() {
@@ -249,6 +254,11 @@ export class ApplicationDetailComponent implements OnInit {
             
             // Set default stage based on application status
             this.setDefaultStageForApplication(summaryItem);
+            
+            // Load evaluation data if application is in Evaluation or Review stage
+            if (stage === 'evaluation' || stage === 'review') {
+              this.loadEvaluationData(appId);
+            }
             
             this.updateStageTabs();
             this.cdr.detectChanges();
@@ -908,14 +918,7 @@ export class ApplicationDetailComponent implements OnInit {
  
 
  
-  // New methods to access quotation data
-  get licenseDetails() {
-    return this.quotationData?.licenseDetails || null;
-  }
- 
-  get companyContact() {
-    return this.quotationData?.companyContact || null;
-  }
+  // Removed duplicate methods - using combined getters below
  
   get documents() {
     return this.quotationData?.documents || [];
@@ -1214,5 +1217,44 @@ export class ApplicationDetailComponent implements OnInit {
     return inputValues;
   }
 
+  // Evaluation readonly logic
+  get isEvaluationReadOnly(): boolean {
+    const isReviewStage = this.application?.stage === 'Review';
+    const isInitialReview = this.application?.status === 'Initial Review';
+    const readonly = isReviewStage && isInitialReview;
+    
+    console.log('🔍 Application Detail - isEvaluationReadOnly check:', {
+      application: this.application,
+      stage: this.application?.stage,
+      status: this.application?.status,
+      isReviewStage: isReviewStage,
+      isInitialReview: isInitialReview,
+      isReadOnly: readonly
+    });
+    return readonly;
+  }
 
+  // Load evaluation data
+  private loadEvaluationData(appId: number): void {
+    console.log('📥 Loading evaluation data for appId:', appId);
+    this.evaluationApiService.getEvaluationApplication(appId).subscribe({
+      next: (data) => {
+        this.evaluationData = data;
+        console.log('✅ Evaluation data loaded successfully:', data);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('❌ Error loading evaluation data:', error);
+      }
+    });
+  }
+
+  // Getters for evaluation data
+  get licenseDetails() {
+    return this.evaluationData?.licenseDetails || this.quotationData?.licenseDetails;
+  }
+
+  get companyContact() {
+    return this.evaluationData?.companyContact || this.quotationData?.companyContact;
+  }
 }

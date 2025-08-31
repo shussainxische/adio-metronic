@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
 import { EvaluationCalculationsService } from '../../../../../../services/evaluation-calculations.service';
-import { EvaluationFormStateService } from '../../../../../../services/evaluation-form-state.service';
+import { EvaluationDataService } from '../../../../../../services/evaluation-data.service';
 
 @Component({
   selector: 'app-economic-impact-sub-stage',
@@ -13,53 +13,180 @@ import { EvaluationFormStateService } from '../../../../../../services/evaluatio
   templateUrl: './economic-impact-sub-stage.component.html',
   styleUrl: './economic-impact-sub-stage.component.scss'
 })
-export class EconomicImpactSubStageComponent implements OnInit {
+export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
   @Input() readOnly: boolean = false;
+  @Input() evaluation: any = null;
+  @Input() evaluationConfiguration: any = null;
+  
   
   constructor(
     private evaluationCalculations: EvaluationCalculationsService,
-    private formStateService: EvaluationFormStateService
+    private evaluationDataService: EvaluationDataService
   ) {}
   
   ngOnInit() {
-    // Load saved form data
-    this.loadFormData();
+    console.log('🔍 Economic Impact - ngOnInit called with readOnly:', this.readOnly);
+    this.initializeFormControls();
+    this.initializeFormData();
+  }
 
-    if (this.readOnly) {
-      this.grossBookValueAbuDhabiControl.disable();
-      this.totalGrossBookValueControl.disable();
-      this.salaryBenefitsEmiratiControl.disable();
-      this.totalSpentManpowerControl.disable();
-      this.originalEmiratiNumberControl.disable();
-      this.growthEmiratiNumberControl.disable();
-      this.totalStaffControl.disable();
-      this.skilledStaffControl.disable();
-      this.adLogisticsFeesControl.disable();
-      this.uaeLogisticsFeesControl.disable();
-    } else {
-      // Set up form value change listeners to save data automatically
-      this.setupFormValueListeners();
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('🔍 Economic Impact - ngOnChanges called:', {
+      readOnly: this.readOnly,
+      changes: changes,
+      hasReadOnlyChange: !!changes['readOnly'],
+      hasEvaluationChange: !!changes['evaluation']
+    });
+    
+    if (changes['readOnly']) {
+      this.initializeFormControls();
+    }
+    
+    if (changes['evaluation'] || changes['readOnly']) {
+      this.initializeFormData();
     }
   }
 
   /**
-   * Load form data from the state service
+   * Initialize FormControls with proper disabled state
+   */
+  private initializeFormControls(): void {
+    console.log('🔧 Economic Impact - initializing FormControls with readOnly:', this.readOnly);
+    
+    // Initialize all FormControls with proper disabled state
+    this.grossBookValueAbuDhabiControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.totalGrossBookValueControl = new FormControl({
+      value: '0', 
+      disabled: this.readOnly
+    });
+    
+    this.salaryBenefitsEmiratiControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.totalSpentManpowerControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.originalEmiratiNumberControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.growthEmiratiNumberControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.totalStaffControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.skilledStaffControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.adLogisticsFeesControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    this.uaeLogisticsFeesControl = new FormControl({
+      value: '0',
+      disabled: this.readOnly
+    });
+    
+    console.log('✅ Economic Impact - FormControls initialized');
+  }
+
+  private initializeFormData() {
+    console.log('🔍 Economic Impact - initializeFormData called with readOnly:', this.readOnly);
+    
+    // Set readonly state in the centralized service
+    this.evaluationDataService.setReadOnlyState(this.readOnly);
+    
+    // Load data from evaluation API if available, otherwise load saved form data
+    if (this.evaluation) {
+      this.loadFromApiData();
+    } else {
+      this.loadFormData();
+    }
+
+    // Load configuration if provided
+    if (this.evaluationConfiguration) {
+      this.loadEvaluationConfiguration(this.evaluationConfiguration);
+    }
+
+    // Setup form value listeners for non-readonly mode
+    if (!this.readOnly) {
+      this.setupFormValueListeners();
+      console.log('🔓 Economic Impact - Form value listeners set up for editable mode');
+    } else {
+      console.log('🔒 Economic Impact - FormControls initialized as readonly');
+    }
+  }
+
+  /**
+   * Load form data from API evaluation data
+   */
+  private loadFromApiData(): void {
+    if (!this.evaluation) return;
+    
+    this.grossBookValueAbuDhabiControl.setValue((this.evaluation.appInvestmentGbvAdfaAd || 0).toString());
+    this.totalGrossBookValueControl.setValue((this.evaluation.appInvestmentGbvTotalProprities || 0).toString());
+    this.salaryBenefitsEmiratiControl.setValue((this.evaluation.appEmairatizationSalaryBenfCostPaid || 0).toString());
+    this.totalSpentManpowerControl.setValue((this.evaluation.appEmiratizationSpentOnManpower || 0).toString());
+    this.originalEmiratiNumberControl.setValue((this.evaluation.appEmiratizationNumberOfEmiratis || 0).toString());
+    this.growthEmiratiNumberControl.setValue((this.evaluation.appEmiratizationGrowthInEmiratiNo || 0).toString());
+    this.totalStaffControl.setValue((this.evaluation.appSkilledNumberOfStaffTotal || 0).toString());
+    this.skilledStaffControl.setValue((this.evaluation.appSkilledNumberOfStaff || 0).toString());
+    this.adLogisticsFeesControl.setValue((this.evaluation.appLogisticsFeesChargesAd || 0).toString());
+    this.uaeLogisticsFeesControl.setValue((this.evaluation.appLogisticsFeesChargesUaeTotal || 0).toString());
+
+    // Also update the centralized service with API data
+    const formData = {
+      grossBookValueAbuDhabi: this.evaluation.appInvestmentGbvAdfaAd || 0,
+      grossBookValueTotal: this.evaluation.appInvestmentGbvTotalProprities || 0,
+      salaryBenefitsEmirati: this.evaluation.appEmairatizationSalaryBenfCostPaid || 0,
+      totalSpentManpower: this.evaluation.appEmiratizationSpentOnManpower || 0,
+      originalEmiratiNumber: this.evaluation.appEmiratizationNumberOfEmiratis || 0,
+      growthEmiratiNumber: this.evaluation.appEmiratizationGrowthInEmiratiNo || 0,
+      totalStaff: this.evaluation.appSkilledNumberOfStaffTotal || 0,
+      skilledStaff: this.evaluation.appSkilledNumberOfStaff || 0,
+      adLogisticsFees: this.evaluation.appLogisticsFeesChargesAd || 0,
+      uaeLogisticsFees: this.evaluation.appLogisticsFeesChargesUaeTotal || 0
+    };
+    this.evaluationDataService.updateFormData(formData);
+
+    console.log('📥 Economic Impact form data loaded from API evaluation data');
+  }
+
+  /**
+   * Load form data from the centralized data service
    */
   private loadFormData(): void {
-    const savedData = this.formStateService.getEconomicImpactData();
+    const savedData = this.evaluationDataService.getEconomicImpactData();
     
-    this.grossBookValueAbuDhabiControl.setValue(savedData.grossBookValueAbuDhabi);
-    this.totalGrossBookValueControl.setValue(savedData.totalGrossBookValue);
-    this.salaryBenefitsEmiratiControl.setValue(savedData.salaryBenefitsEmirati);
-    this.totalSpentManpowerControl.setValue(savedData.totalSpentManpower);
-    this.originalEmiratiNumberControl.setValue(savedData.originalEmiratiNumber);
-    this.growthEmiratiNumberControl.setValue(savedData.growthEmiratiNumber);
-    this.totalStaffControl.setValue(savedData.totalStaff);
-    this.skilledStaffControl.setValue(savedData.skilledStaff);
-    this.adLogisticsFeesControl.setValue(savedData.adLogisticsFees);
-    this.uaeLogisticsFeesControl.setValue(savedData.uaeLogisticsFees);
+    this.grossBookValueAbuDhabiControl.setValue(savedData.grossBookValueAbuDhabi?.toString() || '0');
+    this.totalGrossBookValueControl.setValue(savedData.grossBookValueTotal?.toString() || '0');
+    this.salaryBenefitsEmiratiControl.setValue(savedData.salaryBenefitsEmirati?.toString() || '0');
+    this.totalSpentManpowerControl.setValue(savedData.totalSpentManpower?.toString() || '0');
+    this.originalEmiratiNumberControl.setValue(savedData.originalEmiratiNumber?.toString() || '0');
+    this.growthEmiratiNumberControl.setValue(savedData.growthEmiratiNumber?.toString() || '0');
+    this.totalStaffControl.setValue(savedData.totalStaff?.toString() || '0');
+    this.skilledStaffControl.setValue(savedData.skilledStaff?.toString() || '0');
+    this.adLogisticsFeesControl.setValue(savedData.adLogisticsFees?.toString() || '0');
+    this.uaeLogisticsFeesControl.setValue(savedData.uaeLogisticsFees?.toString() || '0');
 
-    console.log('📥 Economic Impact form data loaded from state service');
+    console.log('📥 Economic Impact form data loaded from centralized data service');
   }
 
   /**
@@ -88,24 +215,24 @@ export class EconomicImpactSubStageComponent implements OnInit {
   }
 
   /**
-   * Save form data to the state service
+   * Save form data to the centralized data service
    */
   private saveFormData(): void {
     const formData = {
-      grossBookValueAbuDhabi: this.grossBookValueAbuDhabiControl.value || '0',
-      totalGrossBookValue: this.totalGrossBookValueControl.value || '0',
-      salaryBenefitsEmirati: this.salaryBenefitsEmiratiControl.value || '0',
-      totalSpentManpower: this.totalSpentManpowerControl.value || '0',
-      originalEmiratiNumber: this.originalEmiratiNumberControl.value || '0',
-      growthEmiratiNumber: this.growthEmiratiNumberControl.value || '0',
-      totalStaff: this.totalStaffControl.value || '0',
-      skilledStaff: this.skilledStaffControl.value || '0',
-      adLogisticsFees: this.adLogisticsFeesControl.value || '0',
-      uaeLogisticsFees: this.uaeLogisticsFeesControl.value || '0'
+      grossBookValueAbuDhabi: Number(this.grossBookValueAbuDhabiControl.value) || 0,
+      grossBookValueTotal: Number(this.totalGrossBookValueControl.value) || 0,
+      salaryBenefitsEmirati: Number(this.salaryBenefitsEmiratiControl.value) || 0,
+      totalSpentManpower: Number(this.totalSpentManpowerControl.value) || 0,
+      originalEmiratiNumber: Number(this.originalEmiratiNumberControl.value) || 0,
+      growthEmiratiNumber: Number(this.growthEmiratiNumberControl.value) || 0,
+      totalStaff: Number(this.totalStaffControl.value) || 0,
+      skilledStaff: Number(this.skilledStaffControl.value) || 0,
+      adLogisticsFees: Number(this.adLogisticsFeesControl.value) || 0,
+      uaeLogisticsFees: Number(this.uaeLogisticsFeesControl.value) || 0
     };
 
-    this.formStateService.updateEconomicImpactData(formData);
-    console.log('💾 Economic Impact form data saved');
+    this.evaluationDataService.updateFormData(formData);
+    console.log('💾 Economic Impact form data saved to centralized service');
   }
 
   /**
@@ -119,7 +246,7 @@ export class EconomicImpactSubStageComponent implements OnInit {
    * Public method to reset form to default values
    */
   public resetFormData(): void {
-    this.formStateService.resetEconomicImpactData();
+    this.evaluationDataService.resetFormData();
     this.loadFormData();
     console.log('🔄 Economic Impact form data reset');
   }
@@ -128,23 +255,23 @@ export class EconomicImpactSubStageComponent implements OnInit {
    * Public method to check if form has unsaved changes
    */
   public hasUnsavedChanges(): boolean {
-    return this.formStateService.hasUnsavedChanges();
+    return this.evaluationDataService.hasUnsavedChanges();
   }
   // Investment Form Controls
-  grossBookValueAbuDhabiControl = new FormControl('0');
-  totalGrossBookValueControl = new FormControl('0');
+  grossBookValueAbuDhabiControl!: FormControl;
+  totalGrossBookValueControl!: FormControl;
   
   // Manpower & Emiratisation Form Controls
-  salaryBenefitsEmiratiControl = new FormControl('0');
-  totalSpentManpowerControl = new FormControl('0');
-  originalEmiratiNumberControl = new FormControl('0');
-  growthEmiratiNumberControl = new FormControl('0');
-  totalStaffControl = new FormControl('0');
-  skilledStaffControl = new FormControl('0');
+  salaryBenefitsEmiratiControl!: FormControl;
+  totalSpentManpowerControl!: FormControl;
+  originalEmiratiNumberControl!: FormControl;
+  growthEmiratiNumberControl!: FormControl;
+  totalStaffControl!: FormControl;
+  skilledStaffControl!: FormControl;
   
   // Logistics Form Controls
-  adLogisticsFeesControl = new FormControl('0');
-  uaeLogisticsFeesControl = new FormControl('0');
+  adLogisticsFeesControl!: FormControl;
+  uaeLogisticsFeesControl!: FormControl;
 
   // Investment Section Data
   investmentData = {

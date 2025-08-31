@@ -130,6 +130,10 @@ private inputRestrictionPatterns = {
     return this.variant === 'locked';
   }
 
+  get isDisabled(): boolean {
+    return this.getControl()?.disabled || false;
+  }
+
 get inputPattern(): string {
   if (this.pattern) {
     return this.pattern;
@@ -438,7 +442,7 @@ onPaste(event: ClipboardEvent) {
   }
 
   focusInput() {
-    if (this.disabled || this.readOnly) {
+    if (this.isDisabled || this.readOnly) {
       return;
     }
 
