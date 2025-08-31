@@ -228,6 +228,7 @@ export class ApplicationsComponent implements OnInit {
 
   private filterApplicationsFromSummary(): Application[] {
     let filteredSummary = this.applicationsSummary;
+    console.log(`🔄 filterApplicationsFromSummary: Starting with ${filteredSummary.length} applications`);
 
     // Filter by stage if not "All"
     if (this.selectedFilter !== 'All') {
@@ -324,18 +325,33 @@ export class ApplicationsComponent implements OnInit {
     
     // Then apply application type filtering
     if (this.selectedApplicationType !== 'all') {
+      console.log(`🔍 Filtering by application type: "${this.selectedApplicationType}"`);
+      console.log(`📊 Before filtering: ${filtered.length} applications`);
+      
       // Check if selectedApplicationType is a numeric ID (from API) or string value (from mock)
       const isNumericId = /^\d+$/.test(this.selectedApplicationType);
       if (isNumericId) {
         // Find the app type name by ID for API-based filtering
         const appType = this.appTypes.find(type => type.appTypeId.toString() === this.selectedApplicationType);
+        console.log(`🔧 Found appType:`, appType);
         if (appType) {
-          filtered = filtered.filter(app => app.companyType === appType.appTypeName.toLowerCase().replace(/\s+/g, '-'));
+          console.log(`🎯 Filtering for appTypeName: "${appType.appTypeName}"`);
+          filtered = filtered.filter(app => {
+            const match = app.companyType === appType.appTypeName;
+            if (match) console.log(`✅ Match: ${app.id} - ${app.companyType}`);
+            return match;
+          });
         }
       } else {
         // Legacy mock data filtering
-      filtered = filtered.filter(app => app.companyType === this.selectedApplicationType);
-    }
+        console.log(`🎯 Legacy filtering for: "${this.selectedApplicationType}"`);
+        filtered = filtered.filter(app => {
+          const match = app.companyType === this.selectedApplicationType;
+          if (match) console.log(`✅ Match: ${app.id} - ${app.companyType}`);
+          return match;
+        });
+      }
+      console.log(`📊 After filtering: ${filtered.length} applications`);
     }
     
     // Apply search filtering

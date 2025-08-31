@@ -27,18 +27,6 @@ export class MockApplicationFilterService extends BaseApplicationFilterService i
           {
             appTypeId: 2,
             appTypeName: "Renewal"
-          },
-          {
-            appTypeId: 3,
-            appTypeName: "New Manufacturing Entity"
-          },
-          {
-            appTypeId: 4,
-            appTypeName: "Existing Manufacturing Entity"
-          },
-          {
-            appTypeId: 5,
-            appTypeName: "Blocked"
           }
         ],
         stages: [
@@ -190,18 +178,6 @@ export class MockApplicationFilterService extends BaseApplicationFilterService i
           {
             appTypeId: 2,
             appTypeName: "Renewal"
-          },
-          {
-            appTypeId: 3,
-            appTypeName: "New Manufacturing Entity"
-          },
-          {
-            appTypeId: 4,
-            appTypeName: "Existing Manufacturing Entity"
-          },
-          {
-            appTypeId: 5,
-            appTypeName: "Blocked"
           }
         ],
         stages: [
