@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
  
 export interface ApplicationData {
   appId: number;
@@ -26,7 +27,7 @@ export interface ApplicationsResponse {
   providedIn: 'root'
 })
 export class ApplicationsService {
-  private apiUrl = 'https://localhost:44354/api/Application/cb-get-applications';
+  private apiUrl = `${environment.apiBaseUrl}/Application/cb-get-applications`;
   private applicationsSubject = new BehaviorSubject<ApplicationData[]>([]);
  
   constructor(private http: HttpClient) {}

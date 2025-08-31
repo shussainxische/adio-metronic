@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface AppType {
   appTypeId: number;
@@ -40,7 +41,7 @@ export interface ApplicationFiltersResponse {
   providedIn: 'root'
 })
 export class ApplicationFilterService {
-  private readonly apiUrl = 'https://localhost:44354/api/Application/cb-get-application-filters';
+  private readonly apiUrl = `${environment.apiBaseUrl}/Application/cb-get-application-filters`;
 
   constructor(private http: HttpClient) {}
 

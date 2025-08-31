@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface AppType {
   appTypeId: number;
@@ -41,7 +42,7 @@ export interface ApplicationFiltersResponse {
   providedIn: 'root'
 })
 export class ApplicationFiltersService {
-  private apiUrl = 'https://localhost:44354/api/Application/cb-get-application-filters';
+  private apiUrl = `${environment.apiBaseUrl}/Application/cb-get-application-filters`;
   private filtersSubject = new BehaviorSubject<{ appTypes: AppType[], stages: Stage[] }>({ appTypes: [], stages: [] });
   
   constructor(private http: HttpClient) {}

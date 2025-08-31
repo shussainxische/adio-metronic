@@ -6,10 +6,11 @@ import {
   ApplicationSummaryItem, 
   ApplicationsSummaryResponse 
 } from './base-applications-summary.service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class RealApplicationsSummaryService extends BaseApplicationsSummaryService {
-  private apiUrl = 'https://localhost:44354/api/Application/get-applications-summary';
+  private apiUrl = `${environment.apiBaseUrl}/Application/get-applications-summary`;
 
   constructor(private http: HttpClient) { 
     super(); 

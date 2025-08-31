@@ -6,10 +6,11 @@ import {
   ApplicationItem, 
   ApplicationsResponse 
 } from './base-applications.service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class RealApplicationsService extends BaseApplicationsService {
-  private apiUrl = 'https://localhost:44354/api/Application/cb-get-applications';
+  private apiUrl = `${environment.apiBaseUrl}/Application/cb-get-applications`;
 
   constructor(private http: HttpClient) { 
     super(); 

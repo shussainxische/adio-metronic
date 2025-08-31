@@ -8,10 +8,11 @@ import {
   SubStage, 
   ApplicationFiltersResponse 
 } from './base-application-filter.service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class RealApplicationFilterService extends BaseApplicationFilterService {
-  private apiUrl = 'https://localhost:44354/api/Application/cb-get-application-filters';
+  private apiUrl = `${environment.apiBaseUrl}/Application/cb-get-application-filters`;
 
   constructor(private http: HttpClient) { 
     super(); 

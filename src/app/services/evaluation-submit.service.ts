@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 // Interface for the evaluation submission request body
 export interface EvaluationSubmitRequest {
@@ -47,7 +48,7 @@ export interface EvaluationSubmitResponse {
   providedIn: 'root'
 })
 export class EvaluationSubmitService {
-  private apiUrl = 'https://localhost:44354/api/Application/cb-post-submit-evaluation';
+  private apiUrl = `${environment.apiBaseUrl}/Application/cb-post-submit-evaluation`;
 
   constructor(private http: HttpClient) {}
 
