@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface EvaluationData {
   appId: number;
@@ -128,7 +129,7 @@ export interface EvaluationApplicationResponse {
   providedIn: 'root'
 })
 export class EvaluationApiService {
-  private apiBaseUrl = 'https://localhost:44354/api/Application';
+  private apiBaseUrl = `${environment.apiBaseUrl}/Application`;
   private evaluationDataSubject = new BehaviorSubject<EvaluationApplicationData | null>(null);
   
   // Observable for components to subscribe to

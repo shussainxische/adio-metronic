@@ -1,6 +1,6 @@
 export const environment = {
-  production: true,
-  useMockData: false,
+  production: false,
+  useMockData: true,
   apiBaseUrl: 'https://localhost:44354/api',
   inMemoryDataServiceUrl: 'api/'
 };

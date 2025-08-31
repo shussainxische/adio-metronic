@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
  
 export interface LicenseDetails {
   invId: number;
@@ -56,7 +57,7 @@ export interface QuotationApplicationResponse {
   providedIn: 'root'
 })
 export class ApplicationDetailService {
-  private apiBaseUrl = 'https://localhost:44354/api/Application';
+  private apiBaseUrl = `${environment.apiBaseUrl}/Application`;
   private applicationDetailSubject = new BehaviorSubject<QuotationApplicationData | null>(null);
  
   constructor(private http: HttpClient) {}
