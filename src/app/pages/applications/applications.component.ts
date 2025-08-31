@@ -88,6 +88,7 @@ export class ApplicationsComponent implements OnInit {
           this.appTypes = response.data.appTypes;
           this.stages = response.data.stages;
           this.applicationTypeOptions = this.convertAppTypesToSelectOptions(response.data.appTypes);
+          console.log('🔧 Filters loaded - Stages:', this.stages.map(s => s.wfStgName));
         } else {
           console.error('Failed to load application filters:', response.errors);
         }
@@ -178,6 +179,9 @@ export class ApplicationsComponent implements OnInit {
       next: (response) => {
         if (response.isSuccess && response.data) {
           this.applicationsSummary = response.data;
+          console.log('🔄 Applications summary loaded:', this.applicationsSummary.length, 'applications');
+          console.log('📋 Summary data stages:', [...new Set(this.applicationsSummary.map(app => app.wfStgName))]);
+          
           // Convert summary data to applications for display
           this.applications = this.convertSummaryToApplications(response.data);
           this.updateFilteredApplications();
@@ -229,15 +233,17 @@ export class ApplicationsComponent implements OnInit {
     if (this.selectedFilter !== 'All') {
       const stageMap: { [key: string]: string } = {
         'RFQ': 'RFQ',
-        'Quotation': 'RFQ',
+        'Quotation': 'Quotation', // Quotation maps to API 'Quotation' stage
         'Evaluation': 'Evaluation', 
         'Review': 'Review',
-        'Closed': 'Close',
-        'Close': 'Close'
+        'Closed': 'Closed', // Closed maps to API 'Closed' stage
+        'Close': 'Closed'
       };
 
       const apiStageName = stageMap[this.selectedFilter] || this.selectedFilter;
+      console.log(`🔍 Filtering applications for stage: "${this.selectedFilter}" (API: "${apiStageName}")`);
       filteredSummary = filteredSummary.filter(app => app.wfStgName === apiStageName);
+      console.log(`📊 Filtered ${filteredSummary.length} applications`);
     }
 
     // Filter by sub-status if selected
@@ -416,10 +422,18 @@ export class ApplicationsComponent implements OnInit {
   }
 
   getApplicationCount = (stage: string) => {
+    console.log(`🔢 getApplicationCount called for stage: "${stage}"`);
+    console.log(`📊 applicationsSummary length: ${this.applicationsSummary.length}`);
+    console.log(`📦 applications length: ${this.applications.length}`);
+    
     if (this.applicationsSummary.length > 0) {
-      return this.getApplicationCountFromSummary(stage);
+      const count = this.getApplicationCountFromSummary(stage);
+      console.log(`📈 Returning summary count for "${stage}": ${count}`);
+      return count;
     }
-    return this.applicationStatusService.getApplicationCount(this.applications, stage);
+    const fallbackCount = this.applicationStatusService.getApplicationCount(this.applications, stage);
+    console.log(`📈 Returning fallback count for "${stage}": ${fallbackCount}`);
+    return fallbackCount;
   };
 
   private getApplicationCountFromSummary(stage: string): number {
@@ -430,15 +444,27 @@ export class ApplicationsComponent implements OnInit {
     // Map the display stage names to API stage names
     const stageMap: { [key: string]: string } = {
       'RFQ': 'RFQ',
-      'Quotation': 'RFQ',
+      'Quotation': 'Quotation', // Quotation maps to API 'Quotation' stage
       'Evaluation': 'Evaluation',
-      'Review': 'Review',
-      'Closed': 'Close',
-      'Close': 'Close'
+      'Review': 'Review', 
+      'Closed': 'Closed', // Closed maps to API 'Closed' stage
+      'Close': 'Closed'
     };
 
     const apiStageName = stageMap[stage] || stage;
-    return this.applicationsSummary.filter(app => app.wfStgName === apiStageName).length;
+    
+    // Debug logging to see what data we have
+    console.log(`🔍 Counting applications for stage: "${stage}" (API: "${apiStageName}")`);
+    console.log('📊 Available applications in summary:', this.applicationsSummary.map(app => ({
+      id: app.appReferenceNumber,
+      stage: app.wfStgName,
+      substage: app.wfSubstgName
+    })));
+    
+    const count = this.applicationsSummary.filter(app => app.wfStgName === apiStageName).length;
+    console.log(`✅ Count for stage "${stage}": ${count}`);
+    
+    return count;
   }
   isFilterActive = (stage: string) => this.selectedFilter === stage;
   getSubStatuses = (stage: string) => {
@@ -454,11 +480,11 @@ export class ApplicationsComponent implements OnInit {
     // Map the display stage names to API stage names
     const stageMap: { [key: string]: string } = {
       'RFQ': 'RFQ',
-      'Quotation': 'RFQ',
+      'Quotation': 'Quotation', // Quotation maps to API 'Quotation' stage
       'Evaluation': 'Evaluation',
       'Review': 'Review',
-      'Closed': 'Close',
-      'Close': 'Close'
+      'Closed': 'Closed', // Closed maps to API 'Closed' stage
+      'Close': 'Closed'
     };
 
     const apiStageName = stageMap[stage] || stage;

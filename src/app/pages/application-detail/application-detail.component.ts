@@ -238,6 +238,7 @@ export class ApplicationDetailComponent implements OnInit {
               id: summaryItem.appReferenceNumber,
               appId: summaryItem.appId,
               companyName: summaryItem.invCompanyName,
+              companyType: summaryItem.appTypeName,
               stage: this.mapStageFromSummary(summaryItem.wfStgName),
               status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
               progress: summaryItem.wfSubstgProgress,
@@ -284,6 +285,7 @@ export class ApplicationDetailComponent implements OnInit {
             id: summaryItem.appReferenceNumber,
             appId: summaryItem.appId,
             companyName: summaryItem.invCompanyName,
+            companyType: summaryItem.appTypeName,
             stage: this.mapStageFromSummary(summaryItem.wfStgName),
             status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
             progress: summaryItem.wfSubstgProgress,
@@ -305,6 +307,7 @@ export class ApplicationDetailComponent implements OnInit {
           id: summaryItem.appReferenceNumber,
           appId: summaryItem.appId,
           companyName: summaryItem.invCompanyName,
+          companyType: summaryItem.appTypeName,
           stage: this.mapStageFromSummary(summaryItem.wfStgName),
           status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
           progress: summaryItem.wfSubstgProgress,
@@ -329,6 +332,7 @@ export class ApplicationDetailComponent implements OnInit {
       id: summaryItem ? summaryItem.appReferenceNumber : this.applicationId,
       appId: summaryItem ? summaryItem.appId : parseInt(this.applicationId, 10),
       companyName: licenseDetails.invCompanyName,
+      companyType: summaryItem ? summaryItem.appTypeName : 'Renewal',
       stage: summaryItem ? this.mapStageFromSummary(summaryItem.wfStgName) : 'RFQ',
       status: summaryItem ? this.mapStatusFromSummary(summaryItem.wfSubstgName) : this.determineStatusFromActivityLog(data.activityLog),
       progress: summaryItem ? summaryItem.wfSubstgProgress : this.calculateProgressFromActivityLog(data.activityLog),
@@ -404,6 +408,7 @@ export class ApplicationDetailComponent implements OnInit {
             id: summaryItem.appReferenceNumber,
             appId: summaryItem.appId,
             companyName: summaryItem.invCompanyName,
+            companyType: summaryItem.appTypeName,
             stage: this.mapStageFromSummary(summaryItem.wfStgName),
             status: this.mapStatusFromSummary(summaryItem.wfSubstgName),
             progress: summaryItem.wfSubstgProgress,
@@ -415,6 +420,7 @@ export class ApplicationDetailComponent implements OnInit {
           this.application = {
             id: this.applicationId,
             companyName: 'Unknown Company',
+            companyType: 'Renewal',
             stage: 'Quotation' as any,
             status: 'Pending' as any,
             progress: 0,
@@ -431,6 +437,7 @@ export class ApplicationDetailComponent implements OnInit {
         this.application = {
           id: this.applicationId,
           companyName: 'Unknown Company',
+          companyType: 'Renewal',
           stage: 'Quotation' as any,
           status: 'Pending' as any,
           progress: 0,
@@ -922,7 +929,7 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   private getApplicationType(): string {
-    return this.getApplicationDetail('applicationType') || this.application?.companyType || 'Unknown Type';
+    return this.application?.companyType || this.getApplicationDetail('applicationType') || 'Renewal';
   }
 
   private getEntityType(): string {

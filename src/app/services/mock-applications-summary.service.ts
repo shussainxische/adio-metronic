@@ -76,8 +76,8 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
       data: [
         {
           appId: 1,
-          wfStgName: "RFQ",
-          wfSubstgName: "pending",
+          wfStgName: "Quotation",
+          wfSubstgName: "Pending",
           appReferenceNumber: "ESP-001",
           appTypeName: "Renewal",
           invCompanyName: "Al Dhafra Manufacturing LLC",
@@ -87,8 +87,8 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         },
         {
           appId: 2,
-          wfStgName: "RFQ",
-          wfSubstgName: "pending",
+          wfStgName: "Quotation",
+          wfSubstgName: "Pending",
           appReferenceNumber: "ESP-002",
           appTypeName: "Renewal",
           invCompanyName: "Abu Dhabi Plastics Co.",
@@ -98,8 +98,8 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         },
         {
           appId: 3,
-          wfStgName: "RFQ",
-          wfSubstgName: "pending",
+          wfStgName: "Quotation",
+          wfSubstgName: "Pending",
           appReferenceNumber: "ESP-003",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
@@ -109,10 +109,10 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         },
         {
           appId: 4,
-          wfStgName: "RFQ",
-          wfSubstgName: "submitted",
+          wfStgName: "Quotation",
+          wfSubstgName: "Submitted",
           appReferenceNumber: "ESP-004",
-          appTypeName: "Enrollment",
+          appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
           appIsElectricity: false,
           appIsGas: true,
@@ -120,30 +120,30 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         },
         {
           appId: 5,
-          wfStgName: "RFQ",
-          wfSubstgName: "submitted",
+          wfStgName: "Quotation",
+          wfSubstgName: "Submitted",
           appReferenceNumber: "ESP-005",
-          appTypeName: "Enrollment",
+          appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
           appIsElectricity: false,
           appIsGas: true,
-          wfSubstgProgress: 30
+          wfSubstgProgress: 12.5
         },
         {
           appId: 6,
-          wfStgName: "RFQ",
-          wfSubstgName: "submitted",
+          wfStgName: "Quotation",
+          wfSubstgName: "Submitted",
           appReferenceNumber: "ESP-006",
-          appTypeName: "Enrollment",
+          appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
           appIsElectricity: false,
           appIsGas: true,
-          wfSubstgProgress: 30
+          wfSubstgProgress: 12.5
         },
         {
           appId: 7,
           wfStgName: "Evaluation",
-          wfSubstgName: "In progress",
+          wfSubstgName: "In Progress",
           appReferenceNumber: "ESP-007",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
@@ -154,7 +154,7 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         {
           appId: 8,
           wfStgName: "Evaluation",
-          wfSubstgName: "In progress",
+          wfSubstgName: "In Progress",
           appReferenceNumber: "ESP-008",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
@@ -165,7 +165,7 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         {
           appId: 9,
           wfStgName: "Evaluation",
-          wfSubstgName: "In progress",
+          wfSubstgName: "In Progress",
           appReferenceNumber: "ESP-009",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
@@ -209,7 +209,7 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         {
           appId: 13,
           wfStgName: "Review",
-          wfSubstgName: "initial review",
+          wfSubstgName: "Initial Review",
           appReferenceNumber: "ESP-013",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
@@ -220,8 +220,19 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         {
           appId: 14,
           wfStgName: "Review",
-          wfSubstgName: "final review",
+          wfSubstgName: "External Review",
           appReferenceNumber: "ESP-014",
+          appTypeName: "Renewal",
+          invCompanyName: "Ruwais Industrial",
+          appIsElectricity: false,
+          appIsGas: true,
+          wfSubstgProgress: 60
+        },
+        {
+          appId: 15,
+          wfStgName: "Review",
+          wfSubstgName: "Final Review",
+          appReferenceNumber: "ESP-015",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
           appIsElectricity: false,
@@ -229,20 +240,9 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
           wfSubstgProgress: 75
         },
         {
-          appId: 15,
-          wfStgName: "Close",
-          wfSubstgName: "certified",
-          appReferenceNumber: "ESP-015",
-          appTypeName: "Renewal",
-          invCompanyName: "Ruwais Industrial",
-          appIsElectricity: false,
-          appIsGas: true,
-          wfSubstgProgress: 100
-        },
-        {
           appId: 16,
-          wfStgName: "Close",
-          wfSubstgName: "not certified",
+          wfStgName: "Closed",
+          wfSubstgName: "Certified",
           appReferenceNumber: "ESP-016",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
@@ -252,8 +252,8 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         },
         {
           appId: 17,
-          wfStgName: "Close",
-          wfSubstgName: "expired",
+          wfStgName: "Closed",
+          wfSubstgName: "Not Awarded",
           appReferenceNumber: "ESP-017",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
@@ -263,9 +263,20 @@ export class MockApplicationsSummaryService extends BaseApplicationsSummaryServi
         },
         {
           appId: 18,
-          wfStgName: "Close",
-          wfSubstgName: "canceled",
+          wfStgName: "Closed",
+          wfSubstgName: "Not Awarded",
           appReferenceNumber: "ESP-018",
+          appTypeName: "Renewal",
+          invCompanyName: "Ruwais Industrial",
+          appIsElectricity: false,
+          appIsGas: true,
+          wfSubstgProgress: 100
+        },
+        {
+          appId: 19,
+          wfStgName: "Closed",
+          wfSubstgName: "Cancelled",
+          appReferenceNumber: "ESP-019",
           appTypeName: "Renewal",
           invCompanyName: "Ruwais Industrial",
           appIsElectricity: false,
