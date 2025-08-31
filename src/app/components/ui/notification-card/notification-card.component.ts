@@ -10,6 +10,7 @@ export interface NotificationData {
   isRead: boolean;
   timestamp: Date;
   isActionable?: boolean;
+  applicationId?: string; // Application ID for linking to detail page
 }
 
 @Component({
@@ -20,6 +21,7 @@ export interface NotificationData {
     <div 
       class="notification-card"
       [class.unread]="!notification.isRead"
+      [class.clickable]="notification.applicationId && notification.isActionable"
       (click)="onCardClick()">
       
       <div class="notification-content">
@@ -44,8 +46,19 @@ export interface NotificationData {
           class="mark-read-btn">
           Mark as read
         </button>
+        <span 
+          *ngIf="notification.applicationId && notification.isActionable" 
+          class="view-application-text">
+          View Application
+        </span>
         <app-icon 
-          *ngIf="notification.isActionable && notification.isRead" 
+          *ngIf="notification.applicationId && notification.isActionable" 
+          name="chevron-right" 
+          [size]="16" 
+          className="text-primary">
+        </app-icon>
+        <app-icon 
+          *ngIf="notification.isActionable && notification.isRead && !notification.applicationId" 
           name="chevron-right" 
           [size]="16" 
           className="text-gray-400">

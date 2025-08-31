@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../components/ui/page-header/page-header.component';
 import { IconComponent } from '../../components/ui/icon/icon.component';
@@ -28,30 +29,33 @@ export class NotificationsComponent {
   notifications: NotificationData[] = [
     {
       id: '1',
-      title: 'Application ESP001 Status Update',
+      title: 'Application ESP-001 Status Update',
       message: 'Your application has moved to Evaluation stage.',
       type: 'application',
       isRead: false,
       timestamp: new Date('2025-01-20T10:30:00'),
-      isActionable: true
+      isActionable: true,
+      applicationId: '1'
     },
     {
       id: '2',
       title: 'Document Submission Required',
-      message: 'Additional financial documents required for ESP002.',
+      message: 'Additional financial documents required for ESP-002.',
       type: 'alert',
       isRead: false,
       timestamp: new Date('2025-01-19T14:45:00'),
-      isActionable: true
+      isActionable: true,
+      applicationId: '2'
     },
     {
       id: '3',
-      title: 'Application ESP013 Certified',
+      title: 'Application ESP-013 Certified',
       message: 'Your application has been successfully certified.',
       type: 'application',
       isRead: true,
       timestamp: new Date('2025-01-18T09:15:00'),
-      isActionable: true
+      isActionable: true,
+      applicationId: '13'
     },
     {
       id: '4',
@@ -65,11 +69,32 @@ export class NotificationsComponent {
     {
       id: '5',
       title: 'Application Deadline Approaching',
-      message: 'ESP005 review deadline approaching.',
+      message: 'ESP-005 review deadline approaching.',
       type: 'alert',
       isRead: true,
       timestamp: new Date('2025-01-16T11:20:00'),
-      isActionable: true
+      isActionable: true,
+      applicationId: '5'
+    },
+    {
+      id: '6',
+      title: 'Application ESP-007 Requires Action',
+      message: 'Your application evaluation form needs completion.',
+      type: 'application',
+      isRead: false,
+      timestamp: new Date('2025-01-15T13:15:00'),
+      isActionable: true,
+      applicationId: '7'
+    },
+    {
+      id: '7',
+      title: 'ESP-016 Certificate Issued',
+      message: 'Your application certificate is ready for download.',
+      type: 'application',
+      isRead: false,
+      timestamp: new Date('2025-01-14T16:45:00'),
+      isActionable: true,
+      applicationId: '16'
     }
   ];
 
@@ -80,6 +105,8 @@ export class NotificationsComponent {
   currentPage: number = 1;
   perPage: number = 10;
   totalItems: number = 0;
+
+  constructor(private router: Router) {}
 
   get unreadCount(): number {
     return this.notifications.filter(n => !n.isRead).length;
@@ -103,7 +130,22 @@ export class NotificationsComponent {
       this.filterByTab(); // Refresh filtered list after marking as read
       this.updatePagination();
     }
-    console.log('Notification clicked:', notification);
+    
+    // Navigate to application detail page if notification is related to an application
+    if (notification.applicationId && notification.isActionable) {
+      this.navigateToApplicationDetail(notification.applicationId);
+    } else {
+      console.log('Notification clicked:', notification);
+    }
+  }
+
+  private navigateToApplicationDetail(applicationId: string) {
+    // Navigate to application detail page
+    this.router.navigate(['/applications', applicationId]).then(() => {
+      console.log(`Navigated to application detail page for ID: ${applicationId}`);
+    }).catch(error => {
+      console.error('Navigation failed:', error);
+    });
   }
 
   onMarkAsRead(notification: NotificationData) {
