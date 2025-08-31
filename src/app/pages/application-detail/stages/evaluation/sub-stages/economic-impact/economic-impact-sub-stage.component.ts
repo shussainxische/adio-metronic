@@ -125,12 +125,14 @@ export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
       this.loadEvaluationConfiguration(this.evaluationConfiguration);
     }
 
-    // Setup form value listeners for non-readonly mode
-    if (!this.readOnly) {
-      this.setupFormValueListeners();
-      console.log('🔓 Economic Impact - Form value listeners set up for editable mode');
+    // Handle readonly state by disabling FormControls
+    if (this.readOnly) {
+      this.disableAllFormControls();
+      console.log('🔒 Economic Impact - All FormControls disabled for readonly mode');
     } else {
-      console.log('🔒 Economic Impact - FormControls initialized as readonly');
+      this.enableAllFormControls();
+      this.setupFormValueListeners();
+      console.log('🔓 Economic Impact - All FormControls enabled and listeners set up');
     }
   }
 
@@ -706,6 +708,38 @@ export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
     };
     
     return JSON.stringify(exportData, null, 2);
+  }
+
+  /**
+   * Disable all form controls for readonly mode
+   */
+  private disableAllFormControls(): void {
+    this.grossBookValueAbuDhabiControl.disable({ emitEvent: false });
+    this.totalGrossBookValueControl.disable({ emitEvent: false });
+    this.salaryBenefitsEmiratiControl.disable({ emitEvent: false });
+    this.totalSpentManpowerControl.disable({ emitEvent: false });
+    this.originalEmiratiNumberControl.disable({ emitEvent: false });
+    this.growthEmiratiNumberControl.disable({ emitEvent: false });
+    this.totalStaffControl.disable({ emitEvent: false });
+    this.skilledStaffControl.disable({ emitEvent: false });
+    this.adLogisticsFeesControl.disable({ emitEvent: false });
+    this.uaeLogisticsFeesControl.disable({ emitEvent: false });
+  }
+
+  /**
+   * Enable all form controls for edit mode
+   */
+  private enableAllFormControls(): void {
+    this.grossBookValueAbuDhabiControl.enable({ emitEvent: false });
+    this.totalGrossBookValueControl.enable({ emitEvent: false });
+    this.salaryBenefitsEmiratiControl.enable({ emitEvent: false });
+    this.totalSpentManpowerControl.enable({ emitEvent: false });
+    this.originalEmiratiNumberControl.enable({ emitEvent: false });
+    this.growthEmiratiNumberControl.enable({ emitEvent: false });
+    this.totalStaffControl.enable({ emitEvent: false });
+    this.skilledStaffControl.enable({ emitEvent: false });
+    this.adLogisticsFeesControl.enable({ emitEvent: false });
+    this.uaeLogisticsFeesControl.enable({ emitEvent: false });
   }
 
 }

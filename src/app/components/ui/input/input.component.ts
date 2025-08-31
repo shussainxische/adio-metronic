@@ -65,6 +65,7 @@ export class InputComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() tooltip: string = '';
   @Input() tooltipPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() variant: 'default' | 'locked' = 'default';
+  @Input() numericFormat: boolean = false; // Enable numeric formatting with commas and decimals
   
   // New validation inputs
 @Input() validationType: 'email' | 'mobile' | 'name' | 'number' | 'text' | 'arabic' = 'text';
@@ -100,7 +101,7 @@ private inputRestrictionPatterns = {
   email: /[a-zA-Z0-9._%+-@]/,
   mobile: /[0-9\s()]/,
   name: /[a-zA-Z0-9\s]/,
-  number: /[0-9]/,
+  number: /[0-9.,\-]/,
   arabic: /[\u0600-\u06FF0-9\s]/
 };
 
@@ -162,6 +163,46 @@ get inputPattern(): string {
     return this.control || this.internalControl;
   }
 
+  // Format number with commas and 2 decimal places
+  formatNumber(value: string | number): string {
+    if (!value && value !== 0) return '';
+    
+    // Convert to string and remove any non-numeric characters except decimal point
+    let numStr = value.toString().replace(/[^0-9.-]/g, '');
+    
+    // Handle negative numbers
+    const isNegative = numStr.startsWith('-');
+    if (isNegative) {
+      numStr = numStr.substring(1);
+    }
+    
+    // Parse as number
+    const num = parseFloat(numStr);
+    if (isNaN(num)) return '';
+    
+    // Check if this field represents a count (has "NO" icon) or currency
+    const isCountField = this.iconBeforeContent?.nativeElement?.textContent?.trim() === 'NO';
+    
+    // Format with appropriate decimal places
+    const formatted = num.toLocaleString('en-US', {
+      minimumFractionDigits: isCountField ? 0 : 2,
+      maximumFractionDigits: isCountField ? 0 : 2
+    });
+    
+    return isNegative ? `-${formatted}` : formatted;
+  }
+
+  // Remove formatting to get raw numeric value
+  parseNumericValue(formattedValue: string): string {
+    if (!formattedValue) return '';
+    return formattedValue.replace(/[^0-9.-]/g, '');
+  }
+
+  // Check if input should use numeric formatting
+  shouldFormatAsNumeric(): boolean {
+    return this.numericFormat && (this.validationType === 'number' || this.type === 'number');
+  }
+
   ngOnInit() {
     // Create internal control if external is not provided
     if (!this.control) {
@@ -214,6 +255,18 @@ get inputPattern(): string {
     if (this.getControl()) {
       this.getControl().setValue(value, { emitEvent: false });
     }
+    
+    // Update display value with formatting if numeric
+    if (this.shouldFormatAsNumeric() && value) {
+      setTimeout(() => {
+        const formattedValue = this.formatNumber(value);
+        if (this.isRtl && this.rtlInput) {
+          this.rtlInput.nativeElement.value = formattedValue;
+        } else if (!this.isRtl && this.ltrInput) {
+          this.ltrInput.nativeElement.value = formattedValue;
+        }
+      });
+    }
   }
 
   registerOnChange(fn: any): void {
@@ -235,6 +288,26 @@ handleInput(event: any) {
   
   // Apply input restrictions based on validation type
   value = this.applyInputRestrictions(value);
+  
+  // Handle numeric formatting
+  if (this.shouldFormatAsNumeric()) {
+    // Store raw numeric value for form control
+    const rawValue = this.parseNumericValue(value);
+    
+    // Only update form control with raw value
+    if (this.getControl()) {
+      this.getControl().setValue(rawValue, { emitEvent: false });
+    }
+    
+    // Update internal state with raw value
+    this._value = rawValue;
+    this.onChange(rawValue);
+    this.value = rawValue;
+    this.valueChange.emit(rawValue);
+    this.search.emit(rawValue);
+    
+    return; // Exit early for numeric formatting
+  }
   
   // Update the input field value if it was modified
   if (value !== event.target.value) {
@@ -432,12 +505,31 @@ onPaste(event: ClipboardEvent) {
 
   onBlur(event?: FocusEvent) {
     this.onTouched();
+    
+    // Format numeric value on blur
+    if (this.shouldFormatAsNumeric()) {
+      const target = event?.target as HTMLInputElement;
+      if (target && target.value) {
+        const formattedValue = this.formatNumber(target.value);
+        target.value = formattedValue;
+      }
+    }
+    
     if (event) {
       this.blur.emit(event);
     }
   }
 
   onFocus(event: FocusEvent) {
+    // Remove formatting on focus for easier editing
+    if (this.shouldFormatAsNumeric()) {
+      const target = event.target as HTMLInputElement;
+      if (target && target.value) {
+        const rawValue = this.parseNumericValue(target.value);
+        target.value = rawValue;
+      }
+    }
+    
     this.focus.emit(event);
   }
 
@@ -473,11 +565,17 @@ onPaste(event: ClipboardEvent) {
       this.getControl().setValue(cleanedValue, { emitEvent: true });
     }
 
+    // Handle numeric formatting for display
+    let displayValue = cleanedValue;
+    if (this.shouldFormatAsNumeric() && cleanedValue) {
+      displayValue = this.formatNumber(cleanedValue);
+    }
+
     // Also directly update the input elements if they exist
     if (this.isRtl && this.rtlInput) {
-      this.rtlInput.nativeElement.value = cleanedValue;
+      this.rtlInput.nativeElement.value = displayValue;
     } else if (!this.isRtl && this.ltrInput) {
-      this.ltrInput.nativeElement.value = cleanedValue;
+      this.ltrInput.nativeElement.value = displayValue;
     }
 
     // Trigger value change and search events
