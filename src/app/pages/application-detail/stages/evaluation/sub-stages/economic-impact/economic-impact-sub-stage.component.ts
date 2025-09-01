@@ -33,19 +33,14 @@ export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     console.log('🔍 Economic Impact - ngOnChanges called:', {
       readOnly: this.readOnly,
-      changes: changes,
-      hasReadOnlyChange: !!changes['readOnly'],
-      hasEvaluationChange: !!changes['evaluation']
+      changes: changes
     });
     
-    // Only reinitialize if readOnly actually changed (not just any change detection)
-    if (changes['readOnly'] && changes['readOnly'].previousValue !== changes['readOnly'].currentValue) {
-      this.initializeFormControls();
-      this.initializeFormData();
-    }
+    // Simple action: always update form state on any change
+    this.updateFormControlsDisabledState();
     
-    // Only reload data if evaluation changed (not readOnly)
-    if (changes['evaluation'] && !changes['readOnly']) {
+    // Load data if evaluation changed
+    if (changes['evaluation']) {
       this.initializeFormData();
     }
   }
@@ -128,15 +123,8 @@ export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
       this.loadEvaluationConfiguration(this.evaluationConfiguration);
     }
 
-    // Handle readonly state by disabling FormControls
-    if (this.readOnly) {
-      this.disableAllFormControls();
-      console.log('🔒 Economic Impact - All FormControls disabled for readonly mode');
-    } else {
-      this.enableAllFormControls();
-      this.setupFormValueListeners();
-      console.log('🔓 Economic Impact - All FormControls enabled and listeners set up');
-    }
+    // Always update the form controls disabled state to match current readonly state
+    this.updateFormControlsDisabledState();
   }
 
   /**
@@ -743,6 +731,22 @@ export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
     this.skilledStaffControl.enable({ emitEvent: false });
     this.adLogisticsFeesControl.enable({ emitEvent: false });
     this.uaeLogisticsFeesControl.enable({ emitEvent: false });
+  }
+
+  /**
+   * Update FormControls disabled state without recreating them
+   */
+  private updateFormControlsDisabledState(): void {
+    console.log('🔧 Economic Impact - updating FormControls disabled state, readOnly:', this.readOnly);
+    
+    if (this.readOnly) {
+      this.disableAllFormControls();
+      console.log('🔒 Economic Impact - FormControls disabled for readonly mode');
+    } else {
+      this.enableAllFormControls();
+      this.setupFormValueListeners();
+      console.log('🔓 Economic Impact - FormControls enabled and listeners set up');
+    }
   }
 
 }

@@ -31,18 +31,14 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     console.log('🔍 Productivity - ngOnChanges called:', {
       readOnly: this.readOnly,
-      changes: changes,
-      hasReadOnlyChange: !!changes['readOnly'],
-      hasEvaluationChange: !!changes['evaluation']
+      changes: changes
     });
     
-    // Only reinitialize if readOnly actually changed (not just any change detection)
-    if (changes['readOnly'] && changes['readOnly'].previousValue !== changes['readOnly'].currentValue) {
-      this.initializeFormData();
-    }
+    // Simple action: always update form state on any change
+    this.updateFormControlsState();
     
-    // Only reload data if evaluation changed (not readOnly)
-    if (changes['evaluation'] && !changes['readOnly']) {
+    // Load data if evaluation changed
+    if (changes['evaluation']) {
       this.initializeFormData();
     }
   }
@@ -54,6 +50,35 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
     // FormControls are already initialized as class properties
     // This method is a placeholder for future enhancement to initialize with proper disabled state
     console.log('🔧 Productivity - FormControls initialization (placeholder)');
+  }
+
+  private updateFormControlsState(): void {
+    console.log('🔧 Productivity - updating form controls state, readOnly:', this.readOnly);
+    
+    // Simple enable/disable based on readonly state
+    if (this.readOnly) {
+      this.disableAllFormControls();
+      console.log('🔒 Productivity - FormControls disabled for readonly mode');
+    } else {
+      this.enableAllFormControls();
+      console.log('🔓 Productivity - FormControls enabled for edit mode');
+    }
+  }
+
+  private disableAllFormControls(): void {
+    Object.values(this).forEach(control => {
+      if (control && typeof control.disable === 'function') {
+        control.disable({ emitEvent: false });
+      }
+    });
+  }
+
+  private enableAllFormControls(): void {
+    Object.values(this).forEach(control => {
+      if (control && typeof control.enable === 'function') {
+        control.enable({ emitEvent: false });
+      }
+    });
   }
 
   private initializeFormData() {

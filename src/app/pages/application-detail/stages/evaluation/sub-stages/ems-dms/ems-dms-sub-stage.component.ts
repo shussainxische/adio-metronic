@@ -30,19 +30,28 @@ export class EmsDmsSubStageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     console.log('🔍 EMS/DMS - ngOnChanges called:', {
       readOnly: this.readOnly,
-      changes: changes,
-      hasReadOnlyChange: !!changes['readOnly'],
-      hasEvaluationChange: !!changes['evaluation']
+      changes: changes
     });
     
-    // Only reinitialize if readOnly actually changed (not just any change detection)
-    if (changes['readOnly'] && changes['readOnly'].previousValue !== changes['readOnly'].currentValue) {
+    // Simple action: always update form state on any change
+    this.updateFormControlsState();
+    
+    // Load data if evaluation changed
+    if (changes['evaluation']) {
       this.initializeFormData();
     }
+  }
+
+  private updateFormControlsState(): void {
+    console.log('🔧 EMS/DMS - updating form controls state, readOnly:', this.readOnly);
     
-    // Only reload data if evaluation changed (not readOnly)
-    if (changes['evaluation'] && !changes['readOnly']) {
-      this.initializeFormData();
+    // Simple enable/disable based on readonly state
+    if (this.readOnly) {
+      this.demandSideConsumptionControl.disable({ emitEvent: false });
+      console.log('🔒 EMS/DMS - FormControls disabled for readonly mode');
+    } else {
+      this.demandSideConsumptionControl.enable({ emitEvent: false });
+      console.log('🔓 EMS/DMS - FormControls enabled for edit mode');
     }
   }
 
