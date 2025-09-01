@@ -17,40 +17,36 @@
       </div>
     </div>
 
-    <!-- Certificate Content -->
-    <div class="certificate-content">
-      <p class="certificate-text">
-        {{ companyName }} has been approved for the Energy Support Program and is entitled to receive incentive 
-        support in the amount of <span class="amount-highlight">AED {{ incentiveAmount }}</span> based on their qualifying investment of AED {{ qualifyingInvestment }}.
-      </p>
-    </div>
-
     <!-- Certificate Details Grid -->
     <div class="certificate-details">
       <div class="detail-row">
         <div class="detail-item">
-          <p class="detail-label">Certificate Number</p>
-          <p class="detail-value">{{ certificateNumber }}</p>
+          <p class="detail-label">Company Name</p>
+          <p class="detail-value">{{ companyName }}</p>
         </div>
         <div class="detail-item">
-          <p class="detail-label">Application ID</p>
-          <p class="detail-value">{{ applicationId }}</p>
+          <p class="detail-label">Ind. Licenses No.</p>
+          <p class="detail-value">{{ industrialLicenseNo }}</p>
         </div>
       </div>
       <div class="detail-row">
         <div class="detail-item">
+          <p class="detail-label">Transaction No.</p>
+          <p class="detail-value">{{ transactionNo }}</p>
+        </div>
+        <div class="detail-item">
           <p class="detail-label">Issue Date</p>
           <p class="detail-value">{{ issueDate }}</p>
         </div>
+      </div>
+      <div class="detail-row">
         <div class="detail-item">
-          <p class="detail-label">Valid Until</p>
-          <p class="detail-value">{{ validUntil }}</p>
+          <p class="detail-label">Expiry Date</p>
+          <p class="detail-value">{{ expiryDate }}</p>
+        </div>
+        <div class="detail-item">
+          <!-- Empty cell for grid layout -->
         </div>
       </div>
-    </div>
-
-    <!-- Certificate Footer -->
-    <div class="certificate-footer">
-      <p>This certificate is issued by the Abu Dhabi Investment Office and is valid for the period specified above. Any amendments or extensions require prior approval from ADIO.</p>
     </div>
 </div>

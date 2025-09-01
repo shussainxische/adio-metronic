@@ -18,35 +18,22 @@ export class CompletedStageComponent {
 
   // Dynamic getters for certificate data
   get companyName(): string {
-    return this.licenseDetails?.invCompanyName || 'Alpha Manufacturing Ltd';
+    return this.licenseDetails?.invCompanyName || 'DEMO Company LLC';
   }
 
-  get incentiveAmount(): string {
-    // You can modify this logic based on your actual calculation
-    const amount = this.evaluationData?.appInvestmentTopUpGbvAdScore || 2;
-    return amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  get industrialLicenseNo(): string {
+    return this.licenseDetails?.invLicenseId || 'in2781801';
   }
 
-  get qualifyingInvestment(): string {
-    // You can modify this logic based on your actual calculation  
-    const investment = this.evaluationData?.appInvestmentGbvTotalProprities || 195;
-    return investment.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-  }
-
-  get certificateNumber(): string {
-    // Generate certificate number based on application data
-    const year = new Date().getFullYear();
-    const appId = this.applicationData?.appId || '001234';
-    return `ESP-${year}-${appId.toString().padStart(6, '0')}`;
-  }
-
-  get applicationId(): string {
-    return this.applicationData?.id || 'IETR-4315434';
+  get transactionNo(): string {
+    return this.applicationData?.id || 'ESP-192732';
   }
 
   get issueDate(): string {
-    // Use current date or a specific issue date from the application
-    const date = this.applicationData?.issueDate ? new Date(this.applicationData.issueDate) : new Date();
+    // Return dash if no issue date available
+    if (!this.applicationData?.issueDate) return '-';
+    
+    const date = new Date(this.applicationData.issueDate);
     return date.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
@@ -54,13 +41,12 @@ export class CompletedStageComponent {
     });
   }
 
-  get validUntil(): string {
-    // Certificate is valid for 3 years from issue date
-    const issueDate = this.applicationData?.issueDate ? new Date(this.applicationData.issueDate) : new Date();
-    const validUntilDate = new Date(issueDate);
-    validUntilDate.setFullYear(validUntilDate.getFullYear() + 3);
+  get expiryDate(): string {
+    // Return dash if no expiry date available
+    if (!this.applicationData?.expiryDate) return '-';
     
-    return validUntilDate.toLocaleDateString('en-US', { 
+    const date = new Date(this.applicationData.expiryDate);
+    return date.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
