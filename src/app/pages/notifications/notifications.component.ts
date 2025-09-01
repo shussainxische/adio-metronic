@@ -8,6 +8,7 @@ import { TablePaginationComponent } from '../../components/ui/table/table-pagina
 import { NotificationCardComponent, NotificationData } from '../../components/ui/notification-card/notification-card.component';
 import { TabNavigationComponent, Tab } from '../../components/ui/tab-navigation/tab-navigation.component';
 import { TableNoDataComponent } from '../../components/ui/table/table/table-no-data/table-no-data.component';
+import { NotificationService } from '../../services/notification.service';
 
 
 @Component({
@@ -26,79 +27,8 @@ export class NotificationsComponent {
   ];
   activeTabId: string = 'all';
 
-  notifications: NotificationData[] = [
-    {
-      id: '1',
-      title: 'Application ESP-001 Status Update',
-      message: 'Your application has moved to Evaluation stage.',
-      type: 'application',
-      isRead: false,
-      timestamp: new Date('2025-01-20T10:30:00'),
-      isActionable: true,
-      applicationId: '1'
-    },
-    {
-      id: '2',
-      title: 'Document Submission Required',
-      message: 'Additional financial documents required for ESP-002.',
-      type: 'alert',
-      isRead: false,
-      timestamp: new Date('2025-01-19T14:45:00'),
-      isActionable: true,
-      applicationId: '2'
-    },
-    {
-      id: '3',
-      title: 'Application ESP-013 Certified',
-      message: 'Your application has been successfully certified.',
-      type: 'application',
-      isRead: true,
-      timestamp: new Date('2025-01-18T09:15:00'),
-      isActionable: true,
-      applicationId: '13'
-    },
-    {
-      id: '4',
-      title: 'System Maintenance Scheduled',
-      message: 'Maintenance on January 25, 2025 from 2:00 AM to 4:00 AM.',
-      type: 'system',
-      isRead: false,
-      timestamp: new Date('2025-01-17T16:00:00'),
-      isActionable: false
-    },
-    {
-      id: '5',
-      title: 'Application Deadline Approaching',
-      message: 'ESP-005 review deadline approaching.',
-      type: 'alert',
-      isRead: true,
-      timestamp: new Date('2025-01-16T11:20:00'),
-      isActionable: true,
-      applicationId: '5'
-    },
-    {
-      id: '6',
-      title: 'Application ESP-007 Requires Action',
-      message: 'Your application evaluation form needs completion.',
-      type: 'application',
-      isRead: false,
-      timestamp: new Date('2025-01-15T13:15:00'),
-      isActionable: true,
-      applicationId: '7'
-    },
-    {
-      id: '7',
-      title: 'ESP-016 Certificate Issued',
-      message: 'Your application certificate is ready for download.',
-      type: 'application',
-      isRead: false,
-      timestamp: new Date('2025-01-14T16:45:00'),
-      isActionable: true,
-      applicationId: '16'
-    }
-  ];
-
-  filteredNotifications: NotificationData[] = [...this.notifications];
+  notifications: NotificationData[] = [];
+  filteredNotifications: NotificationData[] = [];
   paginatedNotifications: NotificationData[] = [];
   
   // Pagination
@@ -106,13 +36,17 @@ export class NotificationsComponent {
   perPage: number = 10;
   totalItems: number = 0;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private notificationService: NotificationService
+  ) {}
 
   get unreadCount(): number {
     return this.notifications.filter(n => !n.isRead).length;
   }
 
   ngOnInit() {
+    this.notifications = this.notificationService.getNotifications();
     this.filterByTab();
     this.updatePagination();
   }
@@ -125,11 +59,10 @@ export class NotificationsComponent {
   }
 
   onNotificationClick(notification: NotificationData) {
-    if (!notification.isRead) {
-      notification.isRead = true;
-      this.filterByTab(); // Refresh filtered list after marking as read
-      this.updatePagination();
-    }
+    this.notificationService.markAsRead(notification.id);
+    this.notifications = this.notificationService.getNotifications(); // Refresh local copy
+    this.filterByTab(); // Refresh filtered list after marking as read
+    this.updatePagination();
     
     // Navigate to application detail page if notification is related to an application
     if (notification.applicationId && notification.isActionable) {
@@ -149,7 +82,8 @@ export class NotificationsComponent {
   }
 
   onMarkAsRead(notification: NotificationData) {
-    notification.isRead = true;
+    this.notificationService.markAsRead(notification.id);
+    this.notifications = this.notificationService.getNotifications(); // Refresh local copy
     this.filterByTab(); // Refresh filtered list after marking as read
     this.updatePagination();
   }

@@ -38,9 +38,14 @@
                 tabindex="0">
                 <!-- Level 1: Display icon -->
                 <ng-container *ngIf="level === 1">
-                  <span *ngIf="item.icon" class="menu-icon items-start text-gray-900">
+                  <span *ngIf="item.icon" class="menu-icon items-start text-gray-900 relative">
                     <!-- <i [class]="item.icon + ' text-xl'"></i> -->
                     <span class="material-symbols-outlined text-xl">{{item.icon}}</span>
+                    <!-- Notification count badge on icon -->
+                    <div *ngIf="isNotificationsPage(item) && unreadNotificationCount > 0" 
+                         class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full min-w-[16px] h-[16px] flex items-center justify-center font-medium">
+                      {{ unreadNotificationCount > 99 ? '99+' : unreadNotificationCount }}
+                    </div>
                   </span>
                 </ng-container>
                 <!-- Level 2+: Display bullet -->
@@ -73,9 +78,14 @@
                 tabindex="0">
                 <!-- Level 1: Display icon -->
                 <ng-container *ngIf="level === 1">
-                  <span *ngIf="item.icon" class="menu-icon items-start menu-item-show:text-primary-on-surface">
+                  <span *ngIf="item.icon" class="menu-icon items-start menu-item-show:text-primary-on-surface relative">
                     <!-- <i [class]="item.icon + ' text-xl'"></i> -->
                     <span class="material-symbols-outlined text-xl">{{item.icon}}</span>
+                    <!-- Notification count badge on icon -->
+                    <div *ngIf="isNotificationsPage(item) && unreadNotificationCount > 0" 
+                         class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full min-w-[16px] h-[16px] flex items-center justify-center font-medium">
+                      {{ unreadNotificationCount > 99 ? '99+' : unreadNotificationCount }}
+                    </div>
                   </span>
                 </ng-container>
                 <!-- Level 2+: Display bullet -->

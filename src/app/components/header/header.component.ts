@@ -30,6 +30,8 @@ import { AdioButtonComponent } from '../ui/adio-button/adio-button.component';
 import { BackComponentComponent } from '../ui/back-component/back-component.component';
 // import { NavigationService } from '../../navigation.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
+import { NotificationData } from '../ui/notification-card/notification-card.component';
 
 // Add interface for Application
 interface Application {
@@ -92,6 +94,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedApplication: Application | null = null;
   private selectedApplicationSubscription: Subscription;
 
+  // Notification properties
+  unreadCount: number = 0;
+  private unreadCountSubscription: Subscription;
+  recentNotifications: NotificationData[] = [];
+
   constructor(
     // private msalService: MsalService,
     // private authService: AuthService,
@@ -99,6 +106,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     // private nav: NavigationService,
     // private sweetAlertService: SweetAlertService,
     private appLauncherService: AppLauncherService,
+    private notificationService: NotificationService,
     private el: ElementRef,
     private renderer: Renderer2
   ) {
@@ -121,6 +129,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.appLauncherService.setLauncherActive(false);
         }
       });
+
+    // Subscribe to notification unread count
+    this.unreadCountSubscription = this.notificationService.unreadCount$.subscribe(
+      count => {
+        this.unreadCount = count;
+        this.recentNotifications = this.notificationService.getRecentNotifications(5);
+      }
+    );
   }
 
   ngAfterViewInit() {
@@ -136,6 +152,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.selectedApplicationSubscription) {
       this.selectedApplicationSubscription.unsubscribe();
+    }
+    if (this.unreadCountSubscription) {
+      this.unreadCountSubscription.unsubscribe();
     }
   }
   isAppSelected(app: Application): boolean {
@@ -465,4 +484,40 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     Retail: 'retail/list',
     Tasks: 'tasks',
   };
+
+  // Notification methods
+  onNotificationClick(notification: NotificationData): void {
+    this.notificationService.markAsRead(notification.id);
+    
+    if (notification.applicationId && notification.isActionable) {
+      this.router.navigate(['/applications', notification.applicationId]);
+    }
+  }
+
+  navigateToNotifications(): void {
+    this.router.navigate(['/notifications']);
+  }
+
+  trackByNotificationId(index: number, notification: NotificationData): string {
+    return notification.id;
+  }
+
+  formatTimestamp(timestamp: Date): string {
+    const now = new Date();
+    const diff = now.getTime() - new Date(timestamp).getTime();
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 7) return `${days}d ago`;
+    
+    return new Date(timestamp).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
 }

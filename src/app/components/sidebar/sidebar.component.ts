@@ -11,6 +11,7 @@ import { PageWrapperComponent } from "../../wrappers/page-wrapper/page-wrapper.c
 import { Subscription } from 'rxjs';
 import { AppLauncherService } from '../../services/app-launcher/app-launcher.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
 
 // Define the Application interface
 interface Application {
@@ -33,9 +34,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   selectedApplication: Application | null = null;
   private selectedApplicationSubscription: Subscription;
 
+  // Notification properties
+  unreadNotificationCount: number = 0;
+  private unreadCountSubscription: Subscription;
+
   constructor(
     // public nav: NavigationService,
     private appLauncherService: AppLauncherService,
+    private notificationService: NotificationService,
     private http: HttpClient
   ) {}
 
@@ -50,11 +56,21 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     // Initial load
     this.loadAndFilterNavigationMenu();
+
+    // Subscribe to notification unread count
+    this.unreadCountSubscription = this.notificationService.unreadCount$.subscribe(
+      count => {
+        this.unreadNotificationCount = count;
+      }
+    );
   }
 
   ngOnDestroy() {
     if (this.selectedApplicationSubscription) {
       this.selectedApplicationSubscription.unsubscribe();
+    }
+    if (this.unreadCountSubscription) {
+      this.unreadCountSubscription.unsubscribe();
     }
   }
 
@@ -129,6 +145,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   get sidebarClasses(): string {
     const baseClasses = 'sidebar bg-surface-header-and-sider border-e border-e-gray-200 dark:border-e-coal-100 fixed z-20 hidden lg:flex flex-col items-stretch shrink-0 max-h-[100vh] h-screen lg:!z-10';
     return baseClasses;
+  }
+
+  isNotificationsPage(item: any): boolean {
+    return item.pageCode === '/notifications' || item.label === 'notifications';
   }
 
   toggleTheme(isDarkMode: boolean) {

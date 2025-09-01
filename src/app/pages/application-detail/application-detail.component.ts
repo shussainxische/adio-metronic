@@ -983,7 +983,7 @@ export class ApplicationDetailComponent implements OnInit {
       // You can implement logic to determine compliance status from activity log
       return latestActivity.message.includes('approved') ? 'Compliant' : 'Pending Review';
     }
-    return this.getApplicationDetail('compliance') || 'Unknown Compliance Status';
+    return this.getApplicationDetail('compliance') || 'Pending Review';
   }
 
   // Utility methods for API data
