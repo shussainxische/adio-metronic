@@ -613,37 +613,37 @@ export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
     return [
       {
         component: 'Investment',
-        score: Math.round(allScores.investment.appInvestmentScore * 100),
+        score: allScores.investment.appInvestmentScore.toFixed(2),
         weight: Math.round(config.investmentWeightedScoreMultiplier * 100) + '%',
         result: allScores.investment.appInvestmentWeightedScore.toFixed(2)
       },
       {
         component: 'Investment Top-Up',
-        score: Math.round(allScores.investment.appInvestmentTopUpGbvAdScore * 100),
+        score: allScores.investment.appInvestmentTopUpGbvAdScore.toFixed(2),
         weight: '10%', // Static for top-up
         result: (allScores.investment.appInvestmentTopUpGbvAdScore * 0.1).toFixed(2)
       },
       {
         component: 'Emiratization - Salary',
-        score: Math.round(allScores.emiratization.appEmiratizationSalaryBenefitsScore * 100),
+        score: allScores.emiratization.appEmiratizationSalaryBenefitsScore.toFixed(2),
         weight: Math.round(config.emiratizationPercentageMultiplier * 100) + '%',
         result: (allScores.emiratization.appEmiratizationSalaryBenefitsScore * config.emiratizationPercentageMultiplier).toFixed(2)
       },
       {
         component: 'Emiratization - Growth',
-        score: Math.round(allScores.emiratization.appEmiratizationNoScore * 100),
+        score: allScores.emiratization.appEmiratizationNoScore.toFixed(2),
         weight: Math.round(config.emiratizationNoWeightedMultiplier * 100) + '%',
         result: allScores.emiratization.appEmiratizationNoWeightedScore.toFixed(2)
       },
       {
         component: 'Skilled Staff',
-        score: Math.round(allScores.emiratization.appSkilledStaffScore * 100),
+        score: allScores.emiratization.appSkilledStaffScore.toFixed(2),
         weight: Math.round(config.skilledStaffWeightedMultiplier * 100) + '%',
         result: allScores.emiratization.appSkilledStaffWeightedScore.toFixed(2)
       },
       {
         component: 'Supply Chain',
-        score: Math.round(allScores.logistics.appLogisticsSupplyChainSupportScore * 100),
+        score: allScores.logistics.appLogisticsSupplyChainSupportScore.toFixed(2),
         weight: Math.round(config.logisticsWeightedMultiplier * 100) + '%',
         result: allScores.logistics.appLogisticsSupplyChainSupportWeightedScore.toFixed(2)
       }
