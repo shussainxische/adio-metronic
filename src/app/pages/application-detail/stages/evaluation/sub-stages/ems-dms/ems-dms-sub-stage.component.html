@@ -42,7 +42,7 @@
         variant="blue"
         [label]="emsData.calculatedFields.dmsScore.label"
         [value]="dmsScore"
-        [tooltip]="emsData.calculatedFields.dmsScore.tooltip">
+        [tooltip]="dmsScoreDescription || emsData.calculatedFields.dmsScore.tooltip">
       </app-input-calculated>
     </div>
   </div>

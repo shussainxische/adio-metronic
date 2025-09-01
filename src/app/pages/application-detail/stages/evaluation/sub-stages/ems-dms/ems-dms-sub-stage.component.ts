@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputValidationComponent } from '../../../../../../components/ui/input-validation/input-validation.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
 import { EvaluationDataService } from '../../../../../../services/evaluation-data.service';
+import { EvaluationCalculationsService } from '../../../../../../services/evaluation-calculations.service';
 
 @Component({
   selector: 'app-ems-dms-sub-stage',
@@ -17,7 +18,10 @@ export class EmsDmsSubStageComponent implements OnInit, OnChanges {
   @Input() evaluation: any = null;
   @Input() evaluationConfiguration: any = null;
 
-  constructor(private evaluationDataService: EvaluationDataService) {}
+  constructor(
+    private evaluationDataService: EvaluationDataService,
+    private evaluationCalculations: EvaluationCalculationsService
+  ) {}
 
   ngOnInit() {
     this.initializeFormData();
@@ -34,6 +38,11 @@ export class EmsDmsSubStageComponent implements OnInit, OnChanges {
     
     // Set readonly state in the centralized service
     this.evaluationDataService.setReadOnlyState(this.readOnly);
+    
+    // Load configuration if provided
+    if (this.evaluationConfiguration) {
+      this.loadEvaluationConfiguration(this.evaluationConfiguration);
+    }
     
     // Load data from evaluation API if available, otherwise load saved form data
     if (this.evaluation) {
@@ -98,7 +107,11 @@ export class EmsDmsSubStageComponent implements OnInit, OnChanges {
 
     this.connectionLoadMeterControl.valueChanges.subscribe(() => debouncedSave());
     this.emsAvailabilityControl.valueChanges.subscribe(() => debouncedSave());
-    this.demandSideConsumptionControl.valueChanges.subscribe(() => debouncedSave());
+    this.demandSideConsumptionControl.valueChanges.subscribe((value) => {
+      debouncedSave();
+      // Trigger change detection for DMS score calculation
+      console.log('DMS consumption changed to:', value, 'Score:', this.dmsScore);
+    });
 
     console.log('🔄 Form value change listeners set up for EMS/DMS component');
   }
@@ -107,14 +120,18 @@ export class EmsDmsSubStageComponent implements OnInit, OnChanges {
    * Save form data to the centralized data service
    */
   private saveFormData(): void {
+    const consumptionPercentage = Number(this.demandSideConsumptionControl.value) || 0;
+    const dmsScore = this.evaluationCalculations.calculateAppDmsScore(consumptionPercentage);
+    
     const formData = {
       connectionLoadMeter: Number(this.connectionLoadMeterControl.value) || 0,
       emsAvailability: this.emsAvailabilityControl.value || 'Available',
-      demandSideConsumption: Number(this.demandSideConsumptionControl.value) || 0
+      demandSideConsumption: consumptionPercentage,
+      dmsScore: dmsScore
     };
 
     this.evaluationDataService.updateFormData(formData);
-    console.log('💾 EMS/DMS form data saved to centralized service');
+    console.log('💾 EMS/DMS form data saved to centralized service, DMS Score:', dmsScore);
   }
 
   /**
@@ -153,14 +170,13 @@ export class EmsDmsSubStageComponent implements OnInit, OnChanges {
         label: 'Demand Side Consumption (%)',
         placeholder: 'Select Consumption Range',
         options: [
-          { value: 'below-75', label: 'Below 75%' },
-          { value: '75-79', label: '75% to 79%' },
-          { value: '80-84', label: '80% to 84%' },
-          { value: '85-89', label: '85% to 89%' },
-          { value: '90-94', label: '90% to 94%' },
-          { value: '95-100', label: '95% to 100%' },
-          { value: '101-105', label: '101% to 105%' },
-          { value: 'above-105', label: 'Above 105%' }
+          { value: 37.5, label: 'Below 75%' },
+          { value: 77, label: '75% to 79%' },
+          { value: 82, label: '80% to 84%' },
+          { value: 87, label: '85% to 89%' },
+          { value: 92, label: '90% to 94%' },
+          { value: 100, label: '95% to 105%' },
+          { value: 110, label: 'Above 105%' }
         ]
       }
     },
@@ -173,19 +189,23 @@ export class EmsDmsSubStageComponent implements OnInit, OnChanges {
   };
 
   get dmsScore(): string {
-    const consumption = this.demandSideConsumptionControl.value;
-    if (!consumption) return '0%';
+    const consumptionPercentage = Number(this.demandSideConsumptionControl.value);
+    if (!consumptionPercentage) return '0.00';
     
-    switch (consumption) {
-      case 'above-105': return '100%';
-      case '101-105': return '95%';
-      case '95-100': return '90%';
-      case '90-94': return '85%';
-      case '85-89': return '80%';
-      case '80-84': return '75%';
-      case '75-79': return '70%';
-      case 'below-75': return '65%';
-      default: return '0%';
-    }
+    const score = this.evaluationCalculations.calculateAppDmsScore(consumptionPercentage);
+    return score.toFixed(2);
+  }
+
+  get dmsScoreDescription(): string {
+    const consumptionPercentage = Number(this.demandSideConsumptionControl.value);
+    if (!consumptionPercentage) return '';
+    
+    return this.evaluationCalculations.getDmsScoreDescription(consumptionPercentage);
+  }
+
+  // Method to load new configuration from API
+  loadEvaluationConfiguration(config: any): void {
+    this.evaluationCalculations.loadConfiguration(config);
+    console.log('🔧 EMS/DMS - Evaluation configuration loaded:', config);
   }
 }

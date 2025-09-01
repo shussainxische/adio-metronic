@@ -159,8 +159,8 @@ export class EvaluationCalculationsService {
         if (appEmiratizationGrowthInEmiratiNo === 0 || appEmiratizationNumberOfEmiratis === 0) {
             return 0;
         }
-        const denominator = appEmiratizationNumberOfEmiratis * this.config.emiratizationPercentageMultiplier;
-        const ratio = appEmiratizationGrowthInEmiratiNo / denominator;
+        //const denominator = appEmiratizationNumberOfEmiratis * this.config.emiratizationPercentageMultiplier;
+        const ratio = appEmiratizationGrowthInEmiratiNo / appEmiratizationNumberOfEmiratis;
         return Math.min(this.config.investmentScoreMaxValue, ratio);
     }
 
@@ -308,6 +308,7 @@ export class EvaluationCalculationsService {
         appProductTotalGeneralAdminExpenses: number,
         appProductWagesSalariesBonusesCashGa: number,
         appProductBenefitsGrantedEmpGa: number,
+        appDepreciationGa: number,
         appProductBankingCharges: number
     ): number {
         return appTotalCostofProduction
@@ -317,6 +318,7 @@ export class EvaluationCalculationsService {
              + appProductTotalGeneralAdminExpenses
              - appProductWagesSalariesBonusesCashGa
              - appProductBenefitsGrantedEmpGa
+             - appDepreciationGa
              + appProductBankingCharges;
     }
 

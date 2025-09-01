@@ -469,6 +469,7 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
     appProductTotalGeneralAdminExpenses: number,
     appProductWagesSalariesBonusesCashGa: number,
     appProductBenefitsGrantedEmpGa: number,
+    appDepreciationGa: number,
     appProductBankingCharges: number
   ): number {
     return this.evaluationCalculations.calculateAppProductIntermediateConsumptionTotal(
@@ -479,6 +480,7 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
       appProductTotalGeneralAdminExpenses,
       appProductWagesSalariesBonusesCashGa,
       appProductBenefitsGrantedEmpGa,
+      appDepreciationGa,
       appProductBankingCharges
     );
   }
@@ -549,6 +551,7 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
       totalAdminExpenses,
       wagesAdmin,
       benefitsAdmin,
+      depreciationAdmin,
       bankingCharges
     );
   }
