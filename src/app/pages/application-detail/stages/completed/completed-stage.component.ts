@@ -13,27 +13,33 @@ export class CompletedStageComponent {
   @Input() applicationData: any = null;
   @Input() licenseDetails: any = null;
   @Input() evaluationData: any = null;
+  @Input() application: any = null;
 
   constructor(private http: HttpClient) {}
 
   // Dynamic getters for certificate data
   get companyName(): string {
-    return this.licenseDetails?.invCompanyName || 'DEMO Company LLC';
+    return this.application?.companyName || this.licenseDetails?.invCompanyName || 'DEMO Company LLC';
   }
 
   get industrialLicenseNo(): string {
-    return this.licenseDetails?.invLicenseId || 'in2781801';
+    const licenseId = this.licenseDetails?.invLicenseId;
+    return licenseId ? `in${licenseId}` : 'in2781801';
   }
 
   get transactionNo(): string {
-    return this.applicationData?.id || 'ESP-192732';
+    return this.application?.id || this.applicationData?.id || 'ESP-192732';
   }
 
   get issueDate(): string {
-    // Return dash if no issue date available
-    if (!this.applicationData?.issueDate) return '-';
+    // Try multiple sources for issue date
+    let dateString = this.licenseDetails?.invLicenseIssueDate || this.application?.date || this.applicationData?.issueDate;
     
-    const date = new Date(this.applicationData.issueDate);
+    if (!dateString) return '-';
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '-';
+    
     return date.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
@@ -42,10 +48,24 @@ export class CompletedStageComponent {
   }
 
   get expiryDate(): string {
-    // Return dash if no expiry date available
-    if (!this.applicationData?.expiryDate) return '-';
+    // Try multiple sources for expiry date, fallback to 30 days from now
+    let dateString = this.licenseDetails?.invLicenseExpiryDate || this.application?.deadline || this.applicationData?.expiryDate;
     
-    const date = new Date(this.applicationData.expiryDate);
+    let date: Date;
+    
+    if (!dateString) {
+      // If no expiry date available, set to 30 days from now
+      date = new Date();
+      date.setDate(date.getDate() + 30);
+    } else {
+      date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        // If invalid date, set to 30 days from now
+        date = new Date();
+        date.setDate(date.getDate() + 30);
+      }
+    }
+    
     return date.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 

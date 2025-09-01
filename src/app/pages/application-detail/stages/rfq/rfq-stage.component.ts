@@ -70,7 +70,7 @@ export class RfqStageComponent implements OnInit, OnChanges {
     const amount = this.quotationAmountControl.value;
     const files = this.proposalDocumentControl.value;
     
-    if (!amount || !this.acceptTerms || !this.application?.appId || !this.hasUploadedFile()) {
+    if (!amount || !this.acceptTerms || !this.application?.appId) {
       return;
     }
 
@@ -156,17 +156,8 @@ export class RfqStageComponent implements OnInit, OnChanges {
   get isFormValid(): boolean {
     const hasAmount = !!this.quotationAmountControl.value;
     const hasTermsAccepted = this.acceptTerms;
-    const hasFile = this.hasUploadedFile();
     
-    // Debug logging to check validation state
-    console.log('Form validation check:', {
-      hasAmount,
-      hasTermsAccepted,
-      hasFile,
-      filesValue: this.proposalDocumentControl.value
-    });
-    
-    return hasAmount && hasTermsAccepted && hasFile;
+    return hasAmount && hasTermsAccepted;
   }
 
   private convertFileToBase64(files: any): string {
