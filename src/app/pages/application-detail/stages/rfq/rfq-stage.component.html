@@ -31,9 +31,6 @@
           (filesChanged)="onFilesChanged($event)">
         </app-file-upload>
         <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB (Required)</p>
-        <p *ngIf="!hasUploadedFile() && quotationAmountControl.value && acceptTerms" class="text-xs text-red-600 mt-1">
-          Please upload a proposal document to continue
-        </p>
       </div>
 
       <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
