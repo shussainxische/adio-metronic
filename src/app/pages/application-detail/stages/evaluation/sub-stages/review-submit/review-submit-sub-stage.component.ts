@@ -55,11 +55,6 @@ export class ReviewSubmitSubStageComponent {
       return;
     }
 
-    if (!this.economicImpactData || !this.productivityData) {
-      alert('Evaluation data is not available. Please complete all previous sections.');
-      return;
-    }
-
     if (!this.appId) {
       alert('Application ID is not available.');
       return;
@@ -71,8 +66,8 @@ export class ReviewSubmitSubStageComponent {
       // Create evaluation request using the service helper method
       const evaluationRequest = this.evaluationSubmitService.createEvaluationRequest(
         this.appId,
-        this.economicImpactData,
-        this.productivityData
+        this.economicImpactData || {},
+        this.productivityData || {}
       );
 
       // Submit evaluation
