@@ -29,7 +29,20 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['evaluation'] || changes['readOnly']) {
+    console.log('🔍 Productivity - ngOnChanges called:', {
+      readOnly: this.readOnly,
+      changes: changes,
+      hasReadOnlyChange: !!changes['readOnly'],
+      hasEvaluationChange: !!changes['evaluation']
+    });
+    
+    // Only reinitialize if readOnly actually changed (not just any change detection)
+    if (changes['readOnly'] && changes['readOnly'].previousValue !== changes['readOnly'].currentValue) {
+      this.initializeFormData();
+    }
+    
+    // Only reload data if evaluation changed (not readOnly)
+    if (changes['evaluation'] && !changes['readOnly']) {
       this.initializeFormData();
     }
   }

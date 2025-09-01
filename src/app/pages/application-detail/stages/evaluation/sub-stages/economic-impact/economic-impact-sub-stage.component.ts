@@ -38,11 +38,14 @@ export class EconomicImpactSubStageComponent implements OnInit, OnChanges {
       hasEvaluationChange: !!changes['evaluation']
     });
     
-    if (changes['readOnly']) {
+    // Only reinitialize if readOnly actually changed (not just any change detection)
+    if (changes['readOnly'] && changes['readOnly'].previousValue !== changes['readOnly'].currentValue) {
       this.initializeFormControls();
+      this.initializeFormData();
     }
     
-    if (changes['evaluation'] || changes['readOnly']) {
+    // Only reload data if evaluation changed (not readOnly)
+    if (changes['evaluation'] && !changes['readOnly']) {
       this.initializeFormData();
     }
   }
