@@ -406,16 +406,13 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
     title: 'Productivity Score Summary',
     staticValues: {
       valueAdded: {
-        label: 'Value Added',
-        value: '10,000,000 AED'
+        label: 'Value Added'
       },
       averageEmployees: {
-        label: 'Average Employees',
-        value: '108'
+        label: 'Average Employees'
       },
       productivityPerEmployee: {
-        label: 'Productivity (per employee)',
-        value: '92,593 AED'
+        label: 'Productivity (per employee)'
       }
     },
     benchmarkInfo: {
@@ -563,5 +560,19 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
   get productivityScore(): number {
     const avgEmployees = parseFloat(this.averageEmployeesControl.value || '1');
     return this.calculateAppProductProductivity(this.valueAdded, avgEmployees);
+  }
+
+  // Formatted getters for display in template
+  get formattedValueAdded(): string {
+    return `${this.valueAdded.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} AED`;
+  }
+
+  get formattedAverageEmployees(): string {
+    const avgEmployees = parseFloat(this.averageEmployeesControl.value || '0');
+    return avgEmployees.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  get formattedProductivityPerEmployee(): string {
+    return `${this.productivityScore.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} AED`;
   }
 }
