@@ -68,11 +68,10 @@ export class EvaluationStageComponent implements OnInit, OnDestroy {
 
   get isReadOnly(): boolean {
     // Simple condition: disable fields if application status is 'Initial Review'
-    const readonly = this.applicationSummary?.wfSubstgName === 'Initial Review';
+    const readonly = this.application?.status === 'Initial Review';
     console.log('🔍 Evaluation Stage - isReadOnly check:', {
       application: this.application,
-      applicationSummary: this.applicationSummary,
-      wfSubstgName: this.applicationSummary?.wfSubstgName,
+      status: this.application?.status,
       isReadOnly: readonly
     });
     return readonly;

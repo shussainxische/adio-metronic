@@ -55,7 +55,7 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
   private updateFormControlsState(): void {
     console.log('🔧 Productivity - updating form controls state, readOnly:', this.readOnly);
     
-    // Simple enable/disable based on readonly state
+    // Use the existing methods at the end of the class
     if (this.readOnly) {
       this.disableAllFormControls();
       console.log('🔒 Productivity - FormControls disabled for readonly mode');
@@ -65,21 +65,6 @@ export class ProductivitySubStageComponent implements OnInit, OnChanges {
     }
   }
 
-  private disableAllFormControls(): void {
-    Object.values(this).forEach(control => {
-      if (control && typeof control.disable === 'function') {
-        control.disable({ emitEvent: false });
-      }
-    });
-  }
-
-  private enableAllFormControls(): void {
-    Object.values(this).forEach(control => {
-      if (control && typeof control.enable === 'function') {
-        control.enable({ emitEvent: false });
-      }
-    });
-  }
 
   private initializeFormData() {
     console.log('🔍 Productivity - initializeFormData called with readOnly:', this.readOnly);
