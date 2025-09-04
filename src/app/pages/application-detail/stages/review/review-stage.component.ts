@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../../../components/ui/icon/icon.component';
+// import { IconComponent } from '../../../../components/ui/icon/icon.component';
 import { StatusBadgeComponent, StatusBadgeVariant } from '../../../../components/ui/status-badge/status-badge.component';
 import { Application } from '../../../../services/application-status.service';
 
@@ -12,7 +12,7 @@ export interface EntityReview {
 @Component({
   selector: 'app-review-stage',
   standalone: true,
-  imports: [CommonModule, IconComponent, StatusBadgeComponent],
+  imports: [CommonModule, StatusBadgeComponent],
   templateUrl: './review-stage.component.html',
   styleUrl: './review-stage.component.scss'
 })

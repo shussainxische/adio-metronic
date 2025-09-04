@@ -3,69 +3,69 @@
     <h3 class="section-title">{{revenueData.title}}</h3>
   </div>
   <div class="field-grid">
-    <app-input 
+    <app-input-numeric 
       [control]="totalRevenueMainActivityControl" 
       [label]="revenueData.fields.totalRevenueMainActivity.label" 
       [placeholder]="revenueData.fields.totalRevenueMainActivity.placeholder"
                 [validationType]="revenueData.fields.totalRevenueMainActivity.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
     <div></div>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input-numeric 
       [control]="finishedGoodsBeginningControl" 
       [label]="revenueData.fields.finishedGoodsBeginning.label" 
       [placeholder]="revenueData.fields.finishedGoodsBeginning.placeholder"
                 [validationType]="revenueData.fields.finishedGoodsBeginning.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
-    <app-input 
+    </app-input-numeric>
+    <app-input-numeric 
       [control]="finishedGoodsEndControl" 
       [label]="revenueData.fields.finishedGoodsEnd.label" 
       [placeholder]="revenueData.fields.finishedGoodsEnd.placeholder"
                 [validationType]="revenueData.fields.finishedGoodsEnd.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input-numeric 
      [control]="workInProgressBeginningControl" 
       [label]="revenueData.fields.workInProgressBeginning.label" 
       [placeholder]="revenueData.fields.workInProgressBeginning.placeholder"
                 [validationType]="revenueData.fields.workInProgressBeginning.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
-    <app-input 
+    </app-input-numeric>
+    <app-input-numeric 
      [control]="workInProgressEndControl" 
       [label]="revenueData.fields.workInProgressEnd.label" 
       [placeholder]="revenueData.fields.workInProgressEnd.placeholder"
                 [validationType]="revenueData.fields.workInProgressEnd.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input-numeric 
      [control]="otherMiscellaneousIncomeControl" 
       [label]="revenueData.fields.otherMiscellaneousIncome.label" 
       [placeholder]="revenueData.fields.otherMiscellaneousIncome.placeholder"
                 [validationType]="revenueData.fields.otherMiscellaneousIncome.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
-    <app-input 
+    </app-input-numeric>
+    <app-input-numeric 
      [control]="rentalsOfBuildingControl" 
       [label]="revenueData.fields.rentalsOfBuilding.label" 
       [placeholder]="revenueData.fields.rentalsOfBuilding.placeholder"
                 [validationType]="revenueData.fields.rentalsOfBuilding.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
   </div>
   <div class="field-grid with-spacing">
     <app-input-calculated 
@@ -101,88 +101,88 @@
   </div>
   <div class="subsection-title">{{intermediateConsumptionData.cogsSubtitle}}</div>
   <div class="field-grid">
-    <app-input 
+    <app-input-numeric 
      [control]="totalCostOfProductionControl" 
       [label]="intermediateConsumptionData.fields.totalCostOfProduction.label" 
       [placeholder]="intermediateConsumptionData.fields.totalCostOfProduction.placeholder"
                 [validationType]="intermediateConsumptionData.fields.totalCostOfProduction.validationType"
                 [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
-    <app-input 
+    </app-input-numeric>
+    <app-input-numeric 
      [control]="wagesSalariesBonusesCogsControl" 
       [label]="intermediateConsumptionData.fields.wagesSalariesBonusesCogs.label" 
       [placeholder]="intermediateConsumptionData.fields.wagesSalariesBonusesCogs.placeholder"
                [validationType]="intermediateConsumptionData.fields.wagesSalariesBonusesCogs.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input-numeric 
      [control]="benefitsGrantedEmployeesCogsControl" 
       [label]="intermediateConsumptionData.fields.benefitsGrantedEmployeesCogs.label" 
       [placeholder]="intermediateConsumptionData.fields.benefitsGrantedEmployeesCogs.placeholder"
                [validationType]="intermediateConsumptionData.fields.benefitsGrantedEmployeesCogs.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
-    <app-input 
+    </app-input-numeric>
+    <app-input-numeric 
      [control]="depreciationCogsControl" 
       [label]="intermediateConsumptionData.fields.depreciationCogs.label" 
       [placeholder]="intermediateConsumptionData.fields.depreciationCogs.placeholder"
                [validationType]="intermediateConsumptionData.fields.depreciationCogs.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
   </div>
   
   <div class="subsection-title with-spacing">{{intermediateConsumptionData.generalAdminSubtitle}}</div>
   <div class="field-grid">
-    <app-input 
+    <app-input-numeric 
      [control]="totalGeneralAdminExpensesControl" 
       [label]="intermediateConsumptionData.fields.totalGeneralAdminExpenses.label" 
       [placeholder]="intermediateConsumptionData.fields.totalGeneralAdminExpenses.placeholder"
                [validationType]="intermediateConsumptionData.fields.totalGeneralAdminExpenses.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
-    <app-input 
+    </app-input-numeric>
+    <app-input-numeric 
      [control]="wagesSalariesBonusesAdminControl" 
       [label]="intermediateConsumptionData.fields.wagesSalariesBonusesAdmin.label" 
       [placeholder]="intermediateConsumptionData.fields.wagesSalariesBonusesAdmin.placeholder"
                [validationType]="intermediateConsumptionData.fields.wagesSalariesBonusesAdmin.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input-numeric 
      [control]="benefitsGrantedEmployeesAdminControl" 
       [label]="intermediateConsumptionData.fields.benefitsGrantedEmployeesAdmin.label" 
       [placeholder]="intermediateConsumptionData.fields.benefitsGrantedEmployeesAdmin.placeholder"
                [validationType]="intermediateConsumptionData.fields.benefitsGrantedEmployeesAdmin.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
-    <app-input 
+    </app-input-numeric>
+    <app-input-numeric 
      [control]="depreciationAdminControl" 
       [label]="intermediateConsumptionData.fields.depreciationAdmin.label" 
       [placeholder]="intermediateConsumptionData.fields.depreciationAdmin.placeholder"
                [validationType]="intermediateConsumptionData.fields.depreciationAdmin.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
   </div>
   <div class="field-grid with-spacing">
-    <app-input 
+    <app-input-numeric 
      [control]="bankingChargesControl" 
       [label]="intermediateConsumptionData.fields.bankingCharges.label" 
       [placeholder]="intermediateConsumptionData.fields.bankingCharges.placeholder"
                [validationType]="intermediateConsumptionData.fields.bankingCharges.validationType"
                [numericFormat]="true">
       <span iconBefore class="aed-currency">AED</span>
-    </app-input>
+    </app-input-numeric>
     <div></div>
   </div>
   
@@ -234,12 +234,12 @@
     <h3 class="section-title">{{averageEmployeesData.title}}</h3>
   </div>
   <div class="field-grid">
-    <app-input [disabled]="readOnly" [control]="averageEmployeesControl"
+    <app-input-numeric [disabled]="readOnly" [control]="averageEmployeesControl"
                [label]="averageEmployeesData.fields.averageEmployees.label"
                [placeholder]="averageEmployeesData.fields.averageEmployees.placeholder"
                [validationType]="averageEmployeesData.fields.averageEmployees.validationType">
       <span iconBefore class="aed-currency">NO</span>
-    </app-input>
+    </app-input-numeric>
     <div></div>
   </div>
 </div>

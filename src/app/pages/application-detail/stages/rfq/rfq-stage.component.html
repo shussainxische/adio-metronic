@@ -7,7 +7,7 @@
     
     <div class="space-y-6">
       <div>
-        <app-input 
+        <app-input-numeric 
           [control]="quotationAmountControl"
           label="Quotation Amount"
           labelStyle="standard"
@@ -16,7 +16,7 @@
           validationType="number"
           [numericFormat]="true">
           <span iconBefore class="aed-currency">AED</span>
-        </app-input>
+        </app-input-numeric>
         <p class="text-xs text-gray-500 mt-1">VAT Exclusive</p>
       </div>
 

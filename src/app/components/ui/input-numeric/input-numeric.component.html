@@ -4,8 +4,7 @@
     class="block mb-2 text-base font-normal"
     [ngClass]="{
       'text-xs': size === 'small',
-      'text-base': size === 'medium' || size === 'large',
-      'text-red': hasError,
+      'text-base': size === 'medium' || size === 'large'
     }"
   >
     {{ label | translate }}
@@ -16,14 +15,16 @@
 <!-- Fieldset with conditional legend -->
 <fieldset
   (click)="onClick($event)"
-  class="border rounded-md relative group flex items-center w-full max-h-full"
+  class="border rounded-md relative group flex items-center w-full max-h-full has-icon-before"
   [ngClass]="{
-    'border-gray-700': !hasError,
+    'border-gray-700': !hasError && !isLocked,
+    'border-gray-300': isLocked && !hasError,
     'border-red': hasError,
-    'hover:border-gray-900': !disabled && !hasError,
-    'focus-within:border-primary-light': !disabled && !hasError,
-    'active:border-gray-700': !disabled && !hasError,
-    'bg-transparent': true
+    'hover:border-gray-900': !isDisabled && !hasError && !isLocked,
+    'focus-within:border-primary-light': !isDisabled && !hasError && !isLocked,
+    'active:border-gray-700': !isDisabled && !hasError && !isLocked,
+    'bg-transparent': !isLocked,
+    'bg-gray-50': isLocked
   }"
   [pTooltip]="tooltip"
   [tooltipPosition]="tooltipPosition"
@@ -41,10 +42,10 @@
     </span>
   </legend>
 
-  <!-- Icon Before -->
+  <!-- Icon Before - Always render, let CSS handle visibility -->
   <div
     (click)="onClick($event)"
-    class="cursor-pointer"
+    class="icon-before-container cursor-pointer"
     (mousedown)="onIconMouseDown($event)"
   >
     <ng-content select="[iconBefore]"></ng-content>
@@ -69,19 +70,20 @@
       'text-xs h-4': size === 'small',
       'text-sm h-5': size === 'medium',
       'text-base h-6': size === 'large',
-      'text-gray-800': true,
-      'hover:text-gray-900': !disabled,
-      'focus:text-gray-900': !hasError,
-      'active:text-primary-on-surface': !hasError,
+      'text-gray-800': !isLocked,
+      'text-gray-500': isLocked,
+      'hover:text-gray-900': !isDisabled && !isLocked,
+      'focus:text-gray-900': !hasError && !isLocked,
+      'active:text-primary-on-surface': !hasError && !isLocked,
       'bg-transparent': true,
-      'placeholder:text-gray-700': true
+      'placeholder:text-gray-700': !isLocked,
+      'placeholder:text-gray-400': isLocked
     }"
+         style="margin-left: 30px;"
     (focus)="onFocus($event)"
     (blur)="onBlur($event)"
     (keypress)="onKeyPress($event)"
     (paste)="onPaste($event)"
-    [disabled]="disabled"
-    appReplaceEnglishWithArabic
     *ngIf="isRtl"
     (input)="handleInput($event)"
     [readonly]="readOnly"
@@ -107,18 +109,20 @@
       'text-xs h-4': size === 'small',
       'text-sm h-5': size === 'medium',
       'text-base h-6': size === 'large',
-      'text-gray-800': true,
-      'hover:text-gray-900': !disabled,
-      'focus:text-gray-900': !hasError,
-      'active:text-primary-on-surface': !hasError,
+      'text-gray-800': !isLocked,
+      'text-gray-500': isLocked,
+      'hover:text-gray-900': !isDisabled && !isLocked,
+      'focus:text-gray-900': !hasError && !isLocked,
+      'active:text-primary-on-surface': !hasError && !isLocked,
       'bg-transparent': true,
-      'placeholder:text-gray-700': true
+      'placeholder:text-gray-700': !isLocked,
+      'placeholder:text-gray-400': isLocked
     }"
+          style="margin-left: 30px;"
     (focus)="onFocus($event)"
     (blur)="onBlur($event)"
     (keypress)="onKeyPress($event)"
     (paste)="onPaste($event)"
-    [disabled]="disabled"
     *ngIf="!isRtl"
     (input)="handleInput($event)"
     [readonly]="readOnly"

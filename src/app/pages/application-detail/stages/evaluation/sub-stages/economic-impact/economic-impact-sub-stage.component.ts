@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { InputComponent } from '../../../../../../components/ui/input/input.component';
+import { InputNumericComponent } from '../../../../../../components/ui/input-numeric/input-numeric.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
 import { EvaluationCalculationsService } from '../../../../../../services/evaluation-calculations.service';
 import { EvaluationDataService } from '../../../../../../services/evaluation-data.service';
@@ -9,7 +9,7 @@ import { EvaluationDataService } from '../../../../../../services/evaluation-dat
 @Component({
   selector: 'app-economic-impact-sub-stage',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, InputCalculatedComponent],
+  imports: [CommonModule, ReactiveFormsModule, InputNumericComponent, InputCalculatedComponent],
   templateUrl: './economic-impact-sub-stage.component.html',
   styleUrl: './economic-impact-sub-stage.component.scss'
 })

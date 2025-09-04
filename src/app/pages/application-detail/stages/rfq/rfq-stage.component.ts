@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FileUploadComponent } from '../../../../components/ui/file-upload/file-upload.component';
-import { InputComponent } from '../../../../components/ui/input/input.component';
+import { InputNumericComponent } from '../../../../components/ui/input-numeric/input-numeric.component';
 import { ButtonComponent } from '../../../../components/ui/button/button.component';
 import { QuotationStatusComponent, QuotationStatusData } from './quotation-status/quotation-status.component';
 import { Application } from '../../../../services/application-status.service';
@@ -11,7 +11,7 @@ import { BaseRfqApplicationService, QuotationSubmissionRequest } from '../../../
 @Component({
   selector: 'app-rfq-stage',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, FileUploadComponent, InputComponent, ButtonComponent, QuotationStatusComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, FileUploadComponent, InputNumericComponent, ButtonComponent, QuotationStatusComponent],
   templateUrl: './rfq-stage.component.html',
   styleUrl: './rfq-stage.component.scss'
 })
