@@ -1,0 +1,381 @@
+// Main style
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Global grid patterns */
+  .responsive-grid {
+    @apply grid md:grid-cols-2 lg:grid-cols-4 gap-6;
+  }
+  
+  /* Global header patterns */
+  .page-header {
+    @apply mb-4 flex items-start justify-between;
+    
+    h2 {
+      @apply text-lg font-semibold text-primary-on-surface;
+    }
+    
+    p {
+      @apply text-sm text-gray-600;
+    }
+  }
+  
+  .header-controls {
+    @apply flex items-center gap-6;
+  }
+}
+
+// Keenicons
+@import "./metronic/vendors/keenicons/duotone/style.css";
+@import "./metronic/vendors/keenicons/filled/style.css";
+@import "./metronic/vendors/keenicons/outline/style.css";
+@import "./metronic/vendors/keenicons/solid/style.css";
+
+@import "./_font.css";
+@import "./_intro.css";
+@import "./_scale.css";
+
+// @import './metronic/css/styles.css'
+
+@import "./metronic/css/demos/demo1.css";
+
+/* @import 'material-icons/iconfont/material-icons.css'; */
+
+@import "quill/dist/quill.snow.css";
+
+// date
+.p-datepicker-day.p-disabled,
+.p-datepicker-month.p-disabled,
+.p-datepicker-year.p-disabled {
+  color: var(--tw-gray-600) !important;
+  opacity: 1;
+}
+.p-datepicker-next-button:hover,
+.p-datepicker-prev-button:hover {
+  color: var(--tw-primary-on-surface) !important;
+  background-color: var(--tw-surface-active-status) !important;
+}
+
+.ql-snow .rich-text-area {
+  padding: 8px;
+  margin: -8px;
+  width: calc(100% + 16px);
+}
+
+.rich-text-area {
+  height: 41px;
+}
+
+.p-editor {
+  &:not(.border-red) {
+    &:hover {
+      .rich-text-area,
+      .p-editor-content {
+        border-color: var(--tw-gray-900) !important;
+      }
+    }
+    &:focus-within {
+      .rich-text-area,
+      .p-editor-content {
+        border-color: var(--tw-primary-light) !important;
+      }
+    }
+    &:active {
+      .rich-text-area,
+      .p-editor-content {
+        // border-color: var(--tw-gray-700) !important;
+      }
+    }
+  }
+}
+
+// give priority to hover focus-within over hover for inputs
+.group {
+  &:focus-within {
+    &:hover {
+      border-color: var(--tw-primary-light) !important;
+    }
+  }
+}
+
+.p-tooltip .p-tooltip-text {
+  --p-tooltip-background: var(--tw-surface-support-info);
+  --p-tooltip-color: var(--tw-primary-on-surface);
+  --p-tooltip-shadow: 0px 2px 6px 0px rgba(25, 25, 25, 0.15);
+  font-size: 14px;
+}
+
+.p-tooltip.p-tooltip-top .p-tooltip-arrow {
+  border-top-color: var(--tw-surface-support-info);
+}
+
+.p-tooltip.p-tooltip-bottom .p-tooltip-arrow {
+  border-bottom-color: var(--tw-surface-support-info);
+}
+
+.p-tooltip.p-tooltip-left .p-tooltip-arrow {
+  border-left-color: var(--tw-surface-support-info);
+}
+
+.p-tooltip.p-tooltip-right .p-tooltip-arrow {
+  border-right-color: var(--tw-surface-support-info);
+}
+
+:root {
+  // editor
+  --p-editor-toolbar-border-color: rbga(0, 0, 0, 0) !important;
+  --p-editor-content-background: rbga(0, 0, 0, 0) !important;
+  --p-editor-toolbar-background: rbga(0, 0, 0, 0) !important;
+  --p-editor-content-color: var(--tw-gray-800) !important;
+  // date
+  --p-datepicker-date-selected-background: #d97706 !important;
+  --p-datepicker-date-hover-background: #f59e0b !important;
+  --p-datepicker-today-color: var(--tw-primary-on-surface) !important;
+  --p-datepicker-header-background: var(--tw-surface) !important;
+  --p-datepicker-date-color: var(--tw-primary-on-surface) !important;
+  --p-datepicker-date-border-radius: 6px !important;
+  --p-datepicker-today-background: unset !important;
+  --p-datepicker-date-selected-color: var(--tw-surface) !important;
+  --p-datepicker-week-day-color: var(--tw-gray-800) !important;
+  --p-datepicker-date-hover-color: var(--tw-surface) !important;
+  --p-button-text-primary-color: var(--tw-gray-800) !important;
+  --p-button-text-primary-hover-background: var(
+    --tw-surface-support-info
+  ) !important;
+  --p-button-icon-only-width: 30px !important;
+  --p-datepicker-select-month-color: var(--tw-primary-on-surface) !important;
+  --p-datepicker-select-year-color: var(--tw-primary-on-surface) !important;
+  --p-datepicker-header-color: var(--tw-primary-on-surface) !important;
+  --p-datepicker-select-month-hover-background: #d97706 !important;
+  --p-datepicker-select-month-hover-color: var(--tw-gray-200) !important;
+  --p-datepicker-select-year-hover-background: #d97706 !important;
+  --p-datepicker-select-year-hover-color: var(--tw-gray-200) !important;
+}
+
+.ql-container {
+  font-size: unset !important;
+}
+.ql-editor.ql-blank::before {
+  color: var(--tw-gray-700) !important;
+  font-style: normal !important;
+}
+
+.table .rounded-table-head th:first-child {
+  border-start-start-radius: 20px;
+}
+
+.table .rounded-table-head th:last-child {
+  border-start-end-radius: 20px;
+}
+
+.table th:first-child,
+.table th:last-child {
+  border-start-start-radius: 0rem;
+  border-start-end-radius: 0rem;
+}
+
+thead th {
+  background-color: var(--tw-surface-support-info) !important;
+}
+
+.ql-editor li[data-list="bullet"]::before {
+  content: none;
+}
+
+.ql-editor li[data-list="ordered"]::before {
+  content: none;
+}
+
+.ql-editor[dir="rtl"] li {
+  direction: rtl;
+  text-align: right;
+}
+
+.ql-editor[dir="rtl"] li::before {
+  float: right;
+  margin-left: 0.5em;
+  margin-right: 0;
+}
+
+.ql-editor[dir="rtl"] li > .ql-ui::before {
+  margin-right: -1.5rem;
+  margin-left: 0.3rem;
+}
+
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: unset !important;
+}
+
+.material-symbols-outlined {
+  direction: unset;
+}
+.material-icon-wrapper .material-symbols-outlined {
+  font-size: inherit;
+}
+
+a {
+  color: var(--tw-gray-800);
+  cursor: pointer;
+}
+a:hover {
+  color: var(--tw-blue2);
+}
+a.active {
+  color: var(--tw-blue2-active);
+  font-weight: bold;
+}
+
+ol,
+ul {
+  list-style-type: decimal;
+  /* margin-block-start: 1rem;
+  margin-block-end: 1rem; */
+  padding-inline-start: 2rem;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+.p-editor-container {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.p-editor-content.ql-container[style] {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.p-editor .p-editor-toolbar.ql-snow .ql-stroke,
+.p-editor .p-editor-toolbar.ql-snow .ql-fill {
+  --p-editor-toolbar-item-color: var(--tw-gray-800);
+  --p-editor-toolbar-item-hover-color: var(--tw-gray-900);
+  --p-editor-toolbar-item-active-color: var(--tw-primary);
+}
+
+.swal2-html-container {
+  padding: 24px;
+}
+
+.menu-icon {
+  margin-inline-start: 1rem;
+}
+.sidebar-wrapper {
+  .menu-item:has(.menu-accordion .menu-item.active) {
+    .level-1 {
+      background-color: var(--tw-surface-active-status);
+      &:hover {
+        transition: unset;
+      }
+      &:not(:hover) {
+        transition: unset;
+      }
+    }
+  }
+}
+.sidebar-collapse {
+  .sidebar-wrapper {
+    &:hover {
+      .menu-item:has(.menu-accordion .menu-item.active) {
+        .level-1 {
+          background-color: var(--tw-surface-active-status);
+          &:hover {
+            transition: unset;
+          }
+          &:not(:hover) {
+            transition: unset;
+          }
+        }
+      }
+    }
+
+    .menu-title,
+    .menu-group-title,
+    .app-title {
+      // Added .app-title here
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+    }
+    .menu-accordion {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .menu-icon {
+      margin-inline-start: 0rem;
+      transition: margin-inline-start 0.3s ease-in-out;
+    }
+    .menu-link {
+      width: 46px;
+      overflow: hidden;
+      transition: width 0.3s ease-in-out;
+    }
+    .menu-accordion {
+      height: 0;
+    }
+    .menu-group-title {
+      height: 0;
+      transition: width 0.3s ease-in-out;
+    }
+    &:hover {
+      .menu-item:has(.menu-accordion .menu-item.active) {
+        .level-1 {
+          &:hover {
+            background-color: var(--tw-surface-active-status);
+          }
+          // background-color: transparent;
+        }
+      }
+      .menu-title,
+      .menu-group-title,
+      .app-title {
+        // Added .app-title here
+        opacity: 1;
+      }
+      .menu-accordion {
+        opacity: 1;
+      }
+      .menu-icon {
+        margin-inline-start: 1rem;
+      }
+      .menu-link {
+        width: 100%;
+      }
+      .menu-accordion {
+        height: unset;
+      }
+      .menu-group-title {
+        height: 36px;
+      }
+    }
+  }
+}
+.menu-item:has(.menu-accordion .menu-item.active) {
+  .level-1 {
+    background-color: var(--tw-surface-active-status);
+    transition: background-color 0.3s ease-in-out;
+  }
+}
+
+.app-launcher {
+  padding-top: var(--tw-header-height);
+}
+
+.list-mode {
+  .p-editor-toolbar.ql-toolbar.ql-snow {
+    display: none;
+  }
+
+  .p-editor-content {
+    border-radius: 6px !important;
+  }
+}

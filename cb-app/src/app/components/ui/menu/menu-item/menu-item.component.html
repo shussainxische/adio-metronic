@@ -1,0 +1,30 @@
+<div
+  class="px-4 py-3 cursor-pointer group mx-4 rounded-md"
+  [class]="class"
+  (click)="onClick($event)"
+  [ngClass]="{
+    'text-gray-700': !selected && !checked,
+    'bg-surface-active-status text-gray-900 font-semibold': checked,
+    'hover:bg-surface-active-status': true,
+    'bg-surface-active-status': selected
+  }"
+>
+  <div *ngIf="checkable" class="flex items-center">
+    <app-checkbox-input
+      [checked]="checked"
+      [label]="label | translate"
+      (change)="onCheckChange($event)"
+      [disabled]="false"
+      (click)="$event.stopPropagation()"
+      [disabledAppearance]="false"
+    >
+    </app-checkbox-input>
+  </div>
+  <div
+    *ngIf="!checkable"
+    [ngClass]="checked ? 'text-on-surface' : 'text-gray-900'"
+  >
+    {{ label }}
+  </div>
+  <ng-content></ng-content>
+</div>

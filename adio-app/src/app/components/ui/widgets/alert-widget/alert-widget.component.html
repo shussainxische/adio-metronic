@@ -1,0 +1,30 @@
+<div class="widget-container">
+  <div class="widget-header" (click)="toggleCollapsed()">
+    <div class="flex items-center justify-between cursor-pointer">
+      <div class="flex items-center gap-2">
+        <app-icon 
+          [name]="headerIcon" 
+          [size]="16" 
+          [className]="headerIconClass">
+        </app-icon>
+        <h3 class="widget-title">{{ title }}</h3>
+      </div>
+      <app-icon 
+        [name]="collapsed ? 'chevron-down' : 'chevron-up'" 
+        [size]="16" 
+        className="text-gray-500">
+      </app-icon>
+    </div>
+  </div>
+  
+  <div class="widget-content" [class.hidden]="collapsed">
+    <div class="alert-content-wrapper">
+      <div class="days-left">
+        <span class="days-number" [ngClass]="headerIconClass">{{ data.daysLeft }}</span>
+        <span class="days-text text-gray-600">{{ data.daysLeft === 1 ? 'day' : 'days' }} left</span>
+      </div>
+      
+      <div class="alert-message text-gray-700">{{ data.message }}</div>
+    </div>
+  </div>
+</div>

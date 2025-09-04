@@ -1,0 +1,39 @@
+<div
+  class="rounded-lg border border-stroke-cards-inner py-6 px-4 flex justify-between items-center"
+  [class]="className"
+  [ngClass]="{
+    'opacity-50': !document
+  }"
+>
+  <div class="justify-between flex items-center gap-2">
+    <!-- Show file type icon -->
+    <div class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded">
+      <span class="text-gray-600 text-sm font-medium">
+        {{ isPdf ? 'PDF' : 'DOC' }}
+      </span>
+    </div>
+    <div
+      class="text-primary-on-surface text-sm"
+      [ngClass]="{
+        'text-gray-400': !document
+      }"
+    >
+      {{ displayFileName }}
+    </div>
+  </div>
+  <span
+    *ngIf="canDownload"
+    class="material-symbols-outlined text-sm cursor-pointer text-gray-800 hover:text-gray-900"
+    (click)="downloadFile()"
+    title="Download file"
+  >
+    arrow_downward
+  </span>
+  <span
+    *ngIf="!canDownload"
+    class="material-symbols-outlined text-sm text-gray-400 cursor-not-allowed"
+    title="No file available"
+  >
+    arrow_downward
+  </span>
+</div>

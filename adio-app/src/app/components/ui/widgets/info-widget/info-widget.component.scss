@@ -1,0 +1,39 @@
+.widget-container {
+  @apply bg-white rounded-lg border border-gray-200 mb-4;
+}
+
+.widget-header {
+  @apply px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-lg;
+}
+
+.widget-title {
+  @apply text-sm font-semibold text-gray-900 m-0;
+}
+
+.widget-content {
+  @apply p-4 space-y-3;
+}
+
+.info-details {
+  @apply text-center;
+}
+
+.info-name {
+  @apply text-lg font-semibold text-gray-900 mb-1;
+}
+
+.info-position {
+  @apply text-sm text-gray-600;
+}
+
+.info-contacts {
+  @apply space-y-3;
+}
+
+.info-item {
+  @apply flex items-center gap-3;
+}
+
+.info-link {
+  @apply text-sm text-gray-900 hover:text-blue-600 transition-colors;
+}

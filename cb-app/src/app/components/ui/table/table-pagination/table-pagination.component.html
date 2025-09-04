@@ -1,0 +1,55 @@
+<div class="card-footer flex justify-between items-center px-4 py-3 border-t-0">
+  <div class="text-gray-700 text-sm">
+  {{ 'table.info' | translate:{
+    from: (currentPage - 1) * perPage + 1,
+    to: Math.min(currentPage * perPage, totalItems),
+    total: totalItems
+  } }}
+</div>
+
+  <div class="flex items-center gap-3">
+    <span class="text-gray-800 text-sm">{{'table.rows_per_page' | translate}}:</span>
+    <app-menu-dropdown [placement]="'bottom-start'" [trigger]="'click'" [offset]="'0, 5px'">
+
+      <div class="inline-flex items-center border border-gray-700 rounded py-1 text-xs cursor-pointer leading-none menu-toggle w-16 h-8 px-3">
+        <div class="flex items-center gap-1 w-full justify-between">
+          <span class="text-primary-on-surface">{{ perPage }}</span>
+          <i class="ki-outline ki-down text-xs text-primary-on-surface"></i>
+        </div>
+      </div>
+
+      <app-dropdown-wrapper class="w-24">
+        <app-menu-item *ngFor="let size of pageSizes" class="group">
+          <div class="menu-item">
+            <a (click)="selectPerPage(size, $event)" class="text-gray-900 group-hover:text-primary-on-surface group-hover:font-semibold">
+              {{ size }}
+            </a>
+          </div>
+        </app-menu-item>
+        </app-dropdown-wrapper>
+    </app-menu-dropdown>
+
+    <div class="pagination flex items-center">
+      <button class="!text-gray-800 btn btn-sm rounded-full disabled:!text-gray-600" (click)="pageChange.emit(currentPage - 1)" [disabled]="currentPage === 1">
+    <span class="material-symbols-outlined text-lg" *ngIf="!isRtl">arrow_back</span>
+    <span class="material-symbols-outlined text-lg" *ngIf="isRtl">arrow_forward</span>
+      </button>
+
+      <ng-container *ngFor="let page of getPageNumbers()">
+        <ng-container [ngSwitch]="page">
+          <button *ngSwitchCase="'...'" class="btn btn-sm disabled">
+            ...
+          </button>
+          <button *ngSwitchDefault class="!text-gray-800 btn btn-sm rounded-full focus:font-semibold hover:font-semibold hover:!bg-surface-active-status hover:!text-primary-on-surface focus:!bg-surface-input-2 focus:!text-primary-on-surface" [class.active]="page === currentPage" [ngClass]="{'!bg-surface-input-2 !text-primary-on-surface font-semibold': page === currentPage}" (click)="pageChange.emit(+page)">
+            {{page}}
+          </button>
+        </ng-container>
+      </ng-container>
+
+      <button class="!text-gray-800 btn btn-sm rounded-full disabled:!text-gray-600" (click)="pageChange.emit(currentPage + 1)" [disabled]="isLastPage" >
+    <span class="material-symbols-outlined text-lg" *ngIf="isRtl">arrow_back</span>
+    <span class="material-symbols-outlined text-lg" *ngIf="!isRtl">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</div>

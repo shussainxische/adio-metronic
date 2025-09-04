@@ -1,0 +1,147 @@
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{investmentData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <app-input 
+      [control]="grossBookValueAbuDhabiControl" 
+      [label]="investmentData.fields.grossBookValueAbuDhabi.label" 
+      [placeholder]="investmentData.fields.grossBookValueAbuDhabi.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
+    </app-input>
+    <app-input 
+      [control]="totalGrossBookValueControl" 
+      [label]="investmentData.fields.totalGrossBookValue.label" 
+      [placeholder]="investmentData.fields.totalGrossBookValue.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
+    </app-input>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="investmentData.calculatedFields.investmentScore.label" 
+      [value]="investmentScore"
+      [tooltip]="investmentData.calculatedFields.investmentScore.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      [label]="investmentData.calculatedFields.investmentTopUpScore.label" 
+      [value]="investmentTopUpScore"
+      [tooltip]="investmentData.calculatedFields.investmentTopUpScore.tooltip">
+    </app-input-calculated>
+  </div>
+</div>
+
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{manpowerData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <app-input 
+      [control]="salaryBenefitsEmiratiControl" 
+      [label]="manpowerData.fields.salaryBenefitsEmirati.label" 
+      [placeholder]="manpowerData.fields.salaryBenefitsEmirati.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
+    </app-input>
+    <app-input 
+      [control]="totalSpentManpowerControl" 
+      [label]="manpowerData.fields.totalSpentManpower.label" 
+      [placeholder]="manpowerData.fields.totalSpentManpower.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
+    </app-input>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input 
+      [control]="originalEmiratiNumberControl" 
+      [label]="manpowerData.fields.originalEmiratiNumber.label" 
+      [placeholder]="manpowerData.fields.originalEmiratiNumber.placeholder">
+    </app-input>
+    <app-input 
+      [control]="growthEmiratiNumberControl" 
+      [label]="manpowerData.fields.growthEmiratiNumber.label" 
+      [placeholder]="manpowerData.fields.growthEmiratiNumber.placeholder">
+    </app-input>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input 
+      [control]="totalStaffControl" 
+      [label]="manpowerData.fields.totalStaff.label" 
+      [placeholder]="manpowerData.fields.totalStaff.placeholder">
+    </app-input>
+    <app-input 
+      [control]="skilledStaffControl" 
+      [label]="manpowerData.fields.skilledStaff.label" 
+      [placeholder]="manpowerData.fields.skilledStaff.placeholder">
+    </app-input>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.emiratisationSalaryScore.label" 
+      [value]="emiratisationSalaryScore"
+      [tooltip]="manpowerData.calculatedFields.emiratisationSalaryScore.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.emiratisationGrowthScore.label" 
+      [value]="emiratisationGrowthScore"
+      [tooltip]="manpowerData.calculatedFields.emiratisationGrowthScore.tooltip">
+    </app-input-calculated>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.skilledLabourScore.label" 
+      [value]="skilledLabourScore"
+      [tooltip]="manpowerData.calculatedFields.skilledLabourScore.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{logisticsData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <app-input 
+      [control]="adLogisticsFeesControl" 
+      [label]="logisticsData.fields.adLogisticsFees.label" 
+      [placeholder]="logisticsData.fields.adLogisticsFees.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
+    </app-input>
+    <app-input 
+      [control]="uaeLogisticsFeesControl" 
+      [label]="logisticsData.fields.uaeLogisticsFees.label" 
+      [placeholder]="logisticsData.fields.uaeLogisticsFees.placeholder">
+      <span iconBefore class="aed-currency">AED</span>
+    </app-input>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="logisticsData.calculatedFields.supplyChainScore.label" 
+      [value]="supplyChainScore"
+      [tooltip]="logisticsData.calculatedFields.supplyChainScore.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<div class="score-summary-container">
+  <div class="score-summary-header">
+    <h3 class="section-title">{{scoreSummaryData.title}}</h3>
+    <div class="total-score-badge">
+      {{ totalEconomicImpactScore.toFixed(1) }}
+    </div>
+  </div>
+  
+  <div class="economic-score-table">
+    <div class="score-table-header">
+      <div class="score-header-cell" *ngFor="let header of scoreSummaryData.headers">{{ header }}</div>
+    </div>
+    
+    <div *ngFor="let row of scoreSummaryTableData" class="score-table-row">
+      <div class="score-cell-component">{{ row.component }}</div>
+      <div class="score-cell-score">{{ row.score }}</div>
+      <div class="score-cell-weight">{{ row.weight }}</div>
+      <div class="score-cell-result">
+        <span class="result-badge">{{ row.result }}</span>
+      </div>
+    </div>
+  </div>
+</div>

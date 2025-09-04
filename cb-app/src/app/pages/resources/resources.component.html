@@ -1,0 +1,48 @@
+<div class="container-fixed space-y-8">
+  <app-page-header
+    title="Resources"
+    subtitle="Access important documents, templates, and training materials">
+  </app-page-header>
+
+  <!-- Document Cards -->
+  <div class="space-y-4">
+    <div 
+      *ngFor="let resource of filteredResources" 
+      class="document-card"
+      (click)="downloadResource(resource)">
+      
+      <div class="document-content">
+        <div class="document-header">
+          <app-icon 
+            [name]="resource.icon" 
+            [size]="20" 
+            className="text-gray-600">
+          </app-icon>
+          <div class="document-info">
+            <h3 class="document-title">{{ resource.title }}</h3>
+          </div>
+        </div>
+        
+        <p class="document-description">{{ resource.description }}</p>
+        
+        <div class="document-meta">
+          <span class="document-file-info">{{ resource.type }} • {{ resource.size }}</span>
+        </div>
+      </div>
+      
+      <div class="document-download">
+        <div class="download-button">
+          <app-icon name="download" [size]="16" className="text-gray-600"></app-icon>
+          <span>Download</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredResources.length === 0" class="text-center py-12">
+    <app-icon name="folder" [size]="48" className="text-gray-400 mb-4"></app-icon>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No resources found</h3>
+    <p class="text-gray-600">No resources match the selected category.</p>
+  </div>
+</div>

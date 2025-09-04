@@ -1,0 +1,35 @@
+.widget-container {
+  @apply bg-white rounded-lg border border-gray-200 mb-4;
+}
+
+.widget-header {
+  @apply px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-lg;
+}
+
+.widget-title {
+  @apply text-sm font-semibold text-gray-900 m-0;
+}
+
+.widget-content {
+  @apply p-4;
+}
+
+.alert-content-wrapper {
+  @apply space-y-2;
+}
+
+.days-left {
+  @apply flex items-baseline gap-2;
+}
+
+.days-number {
+  @apply text-2xl font-bold;
+}
+
+.days-text {
+  @apply text-sm font-medium;
+}
+
+.alert-message {
+  @apply text-sm;
+}

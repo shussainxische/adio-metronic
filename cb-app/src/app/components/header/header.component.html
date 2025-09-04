@@ -1,0 +1,145 @@
+
+<header class="fixed top-0 z-10 !start-0 end-0 flex items-stretch shrink-0" data-sticky="true" data-sticky-class="shadow-sm" data-sticky-name="header" id="header">
+  <div class="bg-surface-header-and-sider shadow-0-1 header container-fixed flex justify-between items-stretch gap-12 z-25" id="header_container">
+
+    <!-- Updated structure using SortMenuComponent pattern -->
+    <div class="gap-4 hidden lg:flex items-center relative">
+      <div #parentWrapper class="relative inline-block">
+        <div class="relative w-full" #menuDropdownWrapper>
+          <app-menu-dropdown #menuDropdown>
+            <div class="relative cursor-pointer menu-toggle">
+              <app-icon-wrapper [mode]="'neutral'" size='large'>
+                <span class="material-symbols-outlined cursor-pointer">apps</span>
+              </app-icon-wrapper>
+            </div>
+
+            <!-- Dropdown using app-dropdown-wrapper -->
+            <app-dropdown-wrapper
+                 [style.width]="dropdownWidth"
+                 [style.min-width]="dropdownWidth"
+                 [style.max-width]="dropdownWidth">
+              <ng-container [ngTemplateOutlet]="appLauncherTemplate"></ng-container>
+            </app-dropdown-wrapper>
+          </app-menu-dropdown>
+        </div>
+      </div>
+
+      <div class="gap-2 flex items-center">
+          <app-adio-logo variant='full'></app-adio-logo>
+      </div>
+    </div>
+
+    <!-- Mobile Logo -->
+    <div class="flex gap-1 lg:hidden items-center -ms-1">
+      <a class="shrink-0" href="html/demo1.html">
+        <img class="max-h-[25px] w-full" src="assets/media/app/mini-logo.svg" />
+      </a>
+      <div class="flex items-center">
+        <button class="btn btn-icon btn-light btn-clear btn-sm" data-drawer-toggle="#sidebar">
+          <i class="ki-filled ki-menu">
+          </i>
+        </button>
+        <button class="btn btn-icon btn-light btn-clear btn-sm" data-drawer-toggle="#mega_menu_wrapper">
+          <i class="ki-filled ki-burger-menu-2">
+          </i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex items-center flex-1 justify-center" id="mega_menu_container">
+
+      <!-- TODO uncomment later -->
+      <!-- <div class="flex items-center flex-1 h-[42px]" data-reparent="true" data-reparent-mode="prepend|lg:prepend" data-reparent-target="body|lg:#mega_menu_container">
+        <app-input
+              type="text"
+              [placeholder]="'Search'"
+          [className]="'w-full max-w-[1000px] m-auto'"
+              (search)="onSearch($event)">
+              <div class="w-[40px] h-[40px] flex items-center rounded-md" iconBefore>
+                <span class="material-symbols-outlined text-gray-800 text-2xl w-[42px] ps-2">search</span>
+              </div>
+            </app-input>
+      </div> -->
+    </div>
+
+    <div class="flex items-center gap-8">
+      <!-- TODO uncomment later -->
+      <!-- <app-icon-wrapper size='large'>
+        <span class="material-symbols-outlined cursor-pointer">notifications</span>
+      </app-icon-wrapper> -->
+      <div class="menu" data-menu="true">
+        <div #profileDropdown class="menu-item" data-menu-item-offset="20px, 10px" data-menu-item-offset-rtl="-20px, 10px" data-menu-item-placement="bottom-end" data-menu-item-placement-rtl="bottom-start" data-menu-item-toggle="dropdown" data-menu-item-trigger="click|lg:click">
+          <div class="menu-toggle btn btn-icon rounded-full">
+            @if(profilePictureExist) {
+              @if(photoUrl) {
+                <app-profile-picture [photoUrl]="photoUrl"></app-profile-picture>
+              }
+            }
+            @else {
+              <app-profile-picture [name]="authenitcationRes?.account?.name"></app-profile-picture>
+            }
+          </div>
+          <div #profileContent class="menu-dropdown menu-default light:border-gray-300 w-screen max-w-[250px]">
+            <div class="flex items-center justify-between px-5 py-1.5 gap-1.5">
+              <div class="flex items-center gap-2">
+                @if(profilePictureExist) {
+                  @if(photoUrl) {
+                    <app-profile-picture [photoUrl]="photoUrl"></app-profile-picture>
+                  }
+                }
+                @else {
+                  <app-profile-picture [name]="authenitcationRes?.account?.name"></app-profile-picture>
+                }
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-sm text-gray-800 font-semibold leading-none">
+                    {{authenitcationRes?.account.name}}
+                  </span>
+                  <a class="text-xs text-gray-600 hover:text-primary font-medium leading-none" href="html/demo1/account/home/get-started.html">
+                    {{authenitcationRes?.account.username}}
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="menu-separator">
+            </div>
+            <div class="flex flex-col">
+              <app-language-switcher
+                [size]="'small'"
+                [label]="'user_settings.language'"
+                  [profileContent]="profileContent"
+  [profileDropdown]="profileDropdown"
+              ></app-language-switcher>
+            </div>
+            <div class="menu-separator">
+            </div>
+            <div class="flex flex-col">
+              <!-- TODO uncomment later -->
+              <!-- <div class="menu-item mb-0.5">
+                <div class="menu-link">
+                  <span class="menu-icon">
+                    <i class="ki-filled ki-moon">
+                    </i>
+                  </span>
+                  <span class="menu-title">
+                    Dark Mode
+                  </span>
+                  <label class="switch switch-sm">
+                    <input data-theme-state="dark" data-theme-toggle="true" name="check" type="checkbox" value="1" />
+                  </label>
+                </div>
+              </div> -->
+              <div class="menu-item px-4 py-1.5">
+                <a class="btn btn-sm btn-light justify-center" (click)="logout()">
+                  {{ 'user_settings.logout' }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of Topbar -->
+  </div>
+  <!-- End of Container -->
+</header>
+<ng-content></ng-content>

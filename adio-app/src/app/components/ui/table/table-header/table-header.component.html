@@ -1,0 +1,39 @@
+<thead>
+  <tr class="h-16 text-gray-800 font-normal">
+    <!-- Checkbox column -->
+<th *ngIf="showCheckbox" [class]="checkboxClass" class="!px-6 w-[60px] h-[56px] text-gray-800 font-normal border-b border-t border-stroke-container !border-b-stroke-container">
+  <ng-container *ngIf="headerCheckboxTemplate; else defaultCheckbox">
+    <ng-container *ngTemplateOutlet="headerCheckboxTemplate"></ng-container>
+  </ng-container>
+
+  <ng-template #defaultCheckbox>
+    <app-checkbox-input
+      [checked]="allSelected"
+      (click)="onCheckboxChange($event)">
+    </app-checkbox-input>
+  </ng-template>
+</th>
+
+
+    <!-- Regular columns -->
+    <ng-container *ngFor="let col of columns">
+      <th *appHasPermission="col.permissions || ''" [class]="col.class"
+        class="!px-6 h-[56px] text-gray-800 font-normal border-b border-t border-stroke-container !bg-surface-header-and-sider !border-b-stroke-container">
+        <ng-container *ngIf="customHeaders[col.field]">
+          <ng-container *ngTemplateOutlet="customHeaders[col.field]"></ng-container>
+        </ng-container>
+        <ng-container *ngIf="!customHeaders[col.field]">
+          <span *ngIf="col.sortable" class="inline-flex items-center gap-1.5 cursor-pointer leading-none" [ngClass]="{
+          'asc': sortColumn === col.field && sortDirection === 'asc',
+          'desc': sortColumn === col.field && sortDirection === 'desc'
+        }" (click)="$event.preventDefault(); onSort(col.field)" [pTooltip]="getSortTooltip(col.field)"
+            tooltipPosition="top">
+            <span class="sort-label text-gray-800 font-bold text-sm">{{ col.label | translate }}</span>
+            <span class="sort-icon"></span>
+          </span>
+          <span *ngIf="!col.sortable" class="text-gray-800 font-bold text-sm">{{col.label | translate}}</span>
+        </ng-container>
+      </th>
+    </ng-container>
+  </tr>
+</thead>

@@ -1,0 +1,79 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full">
+  <app-form-fields-wrapper className="p-4 m-4">
+    <ng-container *ngFor="let field of fields; trackBy: trackByFn">
+      <div class="form-group">
+        <!-- Input Field -->
+        <ng-container *ngIf="field.type === 'input'">
+          <div class="flex flex-col">
+            <label [for]="field.controlName">{{ field.label }}</label>
+            <app-input
+              [control]="getControl(field.controlName)"
+              [placeholder]="field.placeholder | translate"
+              type="text"
+              class="bg-gray-100"
+              [readOnly]="field.readOnly"
+              [language]="field.language"
+            >
+            </app-input>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="field.type === 'textarea'">
+          <div class="flex flex-col">
+            <label [for]="field.controlName">{{ field.label }}</label>
+            <textarea
+              class="form-control"
+              [formControlName]="field.controlName"
+              [placeholder]="field.placeholder"
+              [attr.readonly]="field.readOnly ? true : null"
+              title="field.placeholder"
+            >
+            </textarea>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="field.type === 'select'">
+          <div class="flex flex-col">
+            <label [for]="field.controlName">{{ field.label }}</label>
+            <select
+              class="form-control"
+              [formControlName]="field.controlName"
+              title="select"
+            >
+              <option
+                *ngFor="let option of field.options"
+                [value]="option.value"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+        </ng-container>
+        <div
+          *ngIf="
+            form.get(field.controlName)?.touched &&
+            form.get(field.controlName)?.invalid
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          <div *ngIf="form.get(field.controlName)?.errors?.['required']">
+            {{ field.label }} is required.
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </app-form-fields-wrapper>
+
+  <div class="flex justify-end p-2">
+    <app-button
+      type="submit"
+      className="btn btn-success"
+      [disabled]="form.invalid"
+      [hidden]="mode === 'view'"
+    >
+      {{
+        mode === "edit"
+          ? ("land-bank.update" | translate)
+          : ("land-bank.submit" | translate)
+      }}
+    </app-button>
+  </div>
+</form>

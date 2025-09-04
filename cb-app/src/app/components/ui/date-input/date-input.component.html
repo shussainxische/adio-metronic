@@ -1,0 +1,16 @@
+<div class="form-group">
+  <label *ngIf="label" class="form-label" [class.required]="required">
+    {{ label }}
+  </label>
+  <input
+    type="date"
+    class="form-control"
+    [formControl]="control"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [class.error]="hasError"
+  />
+  <div *ngIf="hasError" class="error-message">
+    {{ control.errors | keyvalue | json }}
+  </div>
+</div>

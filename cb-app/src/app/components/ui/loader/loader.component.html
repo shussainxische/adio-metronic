@@ -1,0 +1,18 @@
+<div *ngIf="inline" [ngClass]="{
+  'size-4 border-2': size === 'sm',
+  'size-6 border-3': size === 'md',
+  'size-8 border-4': size === 'lg'
+}" class="animate-spin inline-block border-current border-t-transparent text-primary rounded-full" role="status"
+  aria-label="loading">
+</div>
+<!-- Full-screen overlay loader -->
+<div *ngIf="!inline && (isLoading$ | async)" class="loader-overlay">
+  <div class="loader-container">
+    <div [ngClass]="{
+    'size-4 border-2': size === 'sm',
+    'size-6 border-3': size === 'md',
+    'size-8 border-4': size === 'lg'
+  }" class="loader animate-spin rounded-full border-current border-t-transparent text-primary">
+    </div>
+  </div>
+</div>

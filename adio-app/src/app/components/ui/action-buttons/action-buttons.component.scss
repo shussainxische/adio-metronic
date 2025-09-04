@@ -1,0 +1,17 @@
+.action-buttons-card-header {
+  
+}
+
+.action-buttons-card-footer {
+  
+}
+
+.action-buttons-table {
+  @apply flex items-center gap-2 justify-end;
+}
+
+button {
+  min-width: 2rem !important;
+  min-height: 2rem !important;
+  flex-shrink: 0 !important;
+}

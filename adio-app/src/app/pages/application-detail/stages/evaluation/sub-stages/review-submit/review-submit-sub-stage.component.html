@@ -1,0 +1,53 @@
+<div *ngIf="!isSubmitted" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">Upload & Submit</h3>
+  </div>
+  
+  <div class="subsection-title">Upload Additional Documents</div>
+  <p class="text-sm text-gray-600 mb-4">
+    Upload any additional supporting documents for your evaluation submission (optional).
+  </p>
+  <div class="w-full">
+    <app-file-upload
+      [accept]="'.pdf,.doc,.docx'"
+      [allowedTypes]="['.pdf', '.doc', '.docx']"
+      [maxSize]="10485760"
+      [multiple]="true"
+      [(ngModel)]="uploadedFiles">
+    </app-file-upload>
+  </div>
+  
+  <div class="subsection-title with-spacing">Submit Evaluation</div>
+  <p class="text-sm text-gray-600 mb-6">
+    Please review all your responses and submit your evaluation for review.
+  </p>
+  
+  <!-- Confirmation Checkbox -->
+  <div class="flex items-start gap-3 mb-6">
+    <input type="checkbox" id="confirmSubmission" class="mt-0.5 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" [(ngModel)]="confirmSubmission">
+    <label for="confirmSubmission" class="text-sm text-gray-700">
+      I confirm that all information provided in this evaluation is accurate and complete. I understand that this submission will be reviewed by ADIO for processing.
+    </label>
+  </div>
+  
+  <!-- Submit Button -->
+  <button 
+    [disabled]="!confirmSubmission || isSubmitting" 
+    (click)="submitEvaluation()"
+    class="w-full bg-gray-900 text-white py-4 px-6 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+    <span *ngIf="!isSubmitting">Submit Evaluation</span>
+    <span *ngIf="isSubmitting" class="flex items-center justify-center gap-2">
+      <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Submitting...
+    </span>
+  </button>
+</div>
+
+<app-evaluation-status 
+  *ngIf="isSubmitted"
+  [statusData]="statusData"
+  (backToForm)="resetForm()">
+</app-evaluation-status>

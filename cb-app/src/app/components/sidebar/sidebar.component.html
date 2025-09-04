@@ -1,0 +1,214 @@
+<div [ngClass]="sidebarClasses" data-drawer="true" data-drawer-class="drawer relative drawer-start top-0 bottom-0"
+  data-drawer-enable="true|lg:false" id="sidebar" class="sidebar-wrapper">
+  <div class="sidebar-header  hidden lg:flex items-center relative !h-auto justify-between shrink-0"
+    id="sidebar_header">
+    <p class="font-bold text-2xl text-primary default-logo mx-auto"></p>
+
+  </div>
+  <div class="sidebar-content flex flex-1 py-5 pe-2 max-h-[calc(100%-177px)] overflow-auto" id="sidebar_content">
+    <div class="scrollable-y-hover grow shrink-0 flex ps-2 lg:ps-12 pe-1 lg:pe-10 max-h-full" data-scrollable="true"
+      data-scrollable-dependencies="#sidebar_header" data-scrollable-height="auto" data-scrollable-offset="0px"
+      data-scrollable-wrappers="#sidebar_content" id="sidebar_scrollable">
+      <div class="menu flex flex-col grow gap-1" data-menu="true" data-menu-accordion-expand-all="false"
+        id="sidebar_menu">
+        <ng-template #recursiveList let-items let-level="level">
+          <ng-container *ngFor="let item of items">
+            <!-- Level 0: Section Headers (no icons) -->
+            <div class="menu-item" *ngIf="level === 0">
+              <span class="menu-group-title uppercase text-gray-700 text-sm h-9 ms-3 flex items-center">
+                  {{ 'sidebar.'+ item.label | translate }}
+              </span>
+              <!-- Render children of level 0 -->
+              <ng-container *ngIf="item.children?.length">
+                <ng-container *ngTemplateOutlet="
+                    recursiveList;
+                    context: { $implicit: item.children, level: level + 1 }
+                  "></ng-container>
+              </ng-container>
+            </div>
+
+            <!-- Level 1+: Regular menu items with appropriate styling -->
+            <div class="menu-item" [routerLink]="[item.pageCode]" routerLinkActive="active"
+              *ngIf="level > 0 && !item.children?.length">
+              <a class="mb-1 group menu-link border-transparent items-center grow menu-item-active:bg-surface-active-status menu-item-active:rounded-lg hover:bg-surface-active-status hover:rounded-lg gap-[14px] ms-[1px]"
+                [ngClass]="{
+                  'px-3 h-[54px]': level===1,
+                'px-2.5 py-2': level>1
+                }"
+                tabindex="0">
+                <!-- Level 1: Display icon -->
+                <ng-container *ngIf="level === 1">
+                  <span *ngIf="item.icon" class="menu-icon items-start text-gray-900">
+                    <!-- <i [class]="item.icon + ' text-xl'"></i> -->
+                    <span class="material-symbols-outlined text-xl">{{item.icon}}</span>
+                  </span>
+                </ng-container>
+                <!-- Level 2+: Display bullet -->
+                <ng-container *ngIf="level > 1">
+                  <span
+                    class="before:ms-[0.5px] menu-bullet flex w-[6px] -start-[4px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-primary-on-surface menu-item-hover:before:bg-primary"></span>
+                </ng-container>
+                <span
+                  class="menu-title text-gray-800 group-hover:text-gray-900 menu-item-active:text-primary-on-surface menu-item-active:font-bold"
+
+[ngClass]="{
+                  'text-base': level===1 || level===2,
+                'text-sm': level>2
+                }"
+                >
+                  {{ 'sidebar.'+ item.label | translate}}
+                </span>
+              </a>
+            </div>
+
+            <!-- Collapsible menu items -->
+            <div class="menu-item" data-menu-item-toggle="accordion" data-menu-item-trigger="click"
+              *ngIf="level > 0 && item.children?.length">
+              <div
+                class="mb-1 hover:bg-surface-active-status rounded-lg menu-link flex items-center grow cursor-pointer border border-transparent gap-[10px] text-gray-800 hover:text-gray-900 menu-item-show:text-primary-on-surface"
+                [ngClass]="{
+                  'p-3 level-1': level===1,
+                  'px-2.5 py-2': level>1,
+                }"
+                tabindex="0">
+                <!-- Level 1: Display icon -->
+                <ng-container *ngIf="level === 1">
+                  <span *ngIf="item.icon" class="menu-icon items-start menu-item-show:text-primary-on-surface">
+                    <!-- <i [class]="item.icon + ' text-xl'"></i> -->
+                    <span class="material-symbols-outlined text-xl">{{item.icon}}</span>
+                  </span>
+                </ng-container>
+                <!-- Level 2+: Display bullet -->
+                <ng-container *ngIf="level > 1">
+                  <span
+                    class="before:ms-[0.5px] menu-bullet flex w-[6px] -start-[4px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-primary menu-item-hover:before:bg-primary menu-item-show:text-primary-on-surface"></span>
+                </ng-container>
+                <span
+                  class="menu-title menu-item-active:text-primary ms-1"
+[ngClass]="{
+                  'text-base': level===1 || level===2,
+                'text-sm': level>2
+                }"
+                >
+                  {{ 'sidebar.'+ item.label | translate }}
+                </span>
+                <span class="menu-arrow w-[20px] shrink-0 justify-end ms-1 menu-item-show:text-primary-on-surface">
+                  <span class="material-symbols-outlined text-xl menu-item-show:hidden">expand_more</span>
+                  <span class="material-symbols-outlined text-xl hidden menu-item-show:inline-flex">expand_less</span>
+                </span>
+              </div>
+              <div
+                class="menu-accordion ps-[26px] relative before:absolute before:start-[36px] before:top-0 before:bottom-0 before:border-s before:border-stroke-vertical-divider">
+                <ng-container *ngTemplateOutlet="
+                    recursiveList;
+                    context: { $implicit: item.children, level: level + 1 }
+                  "></ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </ng-template>
+
+        <div class="menu flex flex-col">
+          <ng-container *ngTemplateOutlet="
+              recursiveList;
+              context: { $implicit: sideNavPages, level: 0 }
+            "></ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+<app-page-wrapper className="mb-8 absolute bottom-0 w-full">
+  <div class="sidebar-header hidden lg:flex items-center relative justify-between shrink-0"
+    id="sidebar_header">
+    <div class="w-full">
+      <div class="mt-3 h-[1px] bg-stroke-horizantal-divider w-full"></div>
+      <div class="mt-3">
+        <app-icon-wrapper [mode]="'neutral'" size='medium'>
+          <span class="material-symbols-outlined toggle-active:rotate-180 transition-all duration-300 rtl:translate rtl:rotate-180 rtl:toggle-active:rotate-0 absolute start-[-150px]" data-toggle=".demo1" data-toggle-class="sidebar-collapse" id="sidebar_toggle">keyboard_tab_rtl</span>
+          <span class="material-symbols-outlined toggle-active:rotate-180 transition-all duration-300 rtl:translate rtl:rotate-180 rtl:toggle-active:rotate-0" data-toggle=".demo1" data-toggle-class="sidebar-collapse" id="sidebar_toggle">keyboard_tab_rtl</span>
+        </app-icon-wrapper>
+      </div>
+    </div>
+    <!-- <a class="dark:hidden" href="html/demo1.html">
+      <img class="default-logo min-h-[22px] max-w-full pe-3" src="assets/media/adio/ADIO_Logo_1_Horizontal.png" alt="image" />
+      <img class="small-logo min-h-[22px] max-w-none" src="assets/media/adio/gold_icon-02.svg" alt="image"/>
+    </a>
+    <a class="hidden dark:block" href="html/demo1.html">
+      <img class="default-logo min-h-[22px] max-w-full pe-3" src="assets/media/adio/ADIO_Logo_1_Horizontal.png" alt="image"/>
+      <img class="small-logo min-h-[22px] max-w-none" src="assets/media/adio/gold_icon-02.svg" alt="image" />
+    </a>
+    <div
+      class="btn btn-icon btn-icon-md size-[30px] rounded-lg border border-gray-200 dark:border-gray-300 bg-light text-gray-500 hover:text-gray-700 toggle absolute start-full top-2/4 -translate-x-2/4 -translate-y-2/4 rtl:translate-x-2/4"
+      data-toggle=".demo1" data-toggle-class="sidebar-collapse" id="sidebar_toggle">
+      <i
+        class="ki-filled ki-black-left-line toggle-active:rotate-180 transition-all duration-300 rtl:translate rtl:rotate-180 rtl:toggle-active:rotate-0"></i>
+    </div> -->
+  </div>
+  </app-page-wrapper>
+  <!-- <div (mouseenter)="launcherHover = true" (mouseleave)="launcherHover = false"
+    (click)="launcherActive = !launcherActive" [ngClass]="{ 'group-hover': launcherActive || launcherHover }"
+    class="absolute z-40 ltr:right-0 rtl:left-0 ltr:translate-x-1/2 rtl:-translate-x-1/2 mt-5 group cursor-pointer transition-all duration-500 *:transition-all *:duration-500 ease-[cubic-bezier(.74,.81,.26,1.24)] *:ease-[cubic-bezier(.74,.81,.26,1.24)]">
+
+    <div
+      class="grid grid-cols-2 gap-2 p-0.5 bg-white :dark:bg-coal-600 rotate-45 border border-gray-200 rounded-lg gap-0 *:border *:border-transparent relative *:rounded-md  *:size-10 *:bg-white *:dark:bg-coal-600"
+      [ngClass]="{ 'border-transparent rotate-[135deg] *:!border-gray-300 ': launcherActive || launcherHover, ' !grid-cols-3 *:!size-6': launcherActive  }">
+      <div [ngClass]="{ '': launcherActive || launcherHover }"></div>
+      <div [ngClass]="{ ' !bg-gray-200 ': launcherActive || launcherHover }"></div>
+      <div [ngClass]="{ '': launcherActive || launcherHover }"></div>
+      <div [ngClass]="{ ' !bg-gray-200 ': launcherActive || launcherHover }"></div>
+      <div class="hidden" [ngClass]="{ '!block scale-up': launcherActive, '': launcherActive || launcherHover }"></div>
+      <div class="hidden" [ngClass]="{ '!block scale-up': launcherActive, '': launcherActive || launcherHover }"></div>
+      <div class="hidden"
+        [ngClass]="{ '!block scale-up': launcherActive, ' !bg-gray-200 !rounded-full': launcherActive || launcherHover }">
+      </div>
+      <div class="hidden"
+        [ngClass]="{ '!block scale-up': launcherActive, ' !bg-gray-200 !rounded-full': launcherActive || launcherHover }">
+      </div>
+      <div class="hidden" [ngClass]="{ '!block scale-up': launcherActive, '': launcherActive || launcherHover }"></div>
+    </div>
+
+    <img src="assets/media/adio/gold_icon-02.svg" alt="icon"
+      class="absolute top-0 left-1/2 -translate-x-1/2 border-none drop-shadow !w-full !h-full p-2 grayscale !bg-transparent"
+      [ngClass]="{ 'grayscale-0 drop-shadow-xl': launcherActive || launcherHover }" />
+  </div> -->
+  <div *ngIf="launcherActive"
+    class="flex items-center justify-center bg-white bg-center bg-repeat hero-bg absolute w-screen h-screen z-[25] top-0 left-0"
+    style="background-image: url('assets/media/images/2600x1200/bg-1.png');">
+    <div class="container-fixed ">
+      <div class="container-fixed ">
+        <div class="grid gap-12 w-full grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+          <div class="bg-white rounded-md border border-primary shadow p-4 intro-y">
+            <div class="w-full gap-2 flex items-center justify-start">
+              <div>
+                <i class="ki-filled ki-map text-3xl text-primary"></i>
+              </div>
+              <div class="w-full flex items-center justify-between">
+                <p class="text-xl font-semibold text-primary">Musataha</p>
+                <span class="badge badge-outline badge-success">
+                  Current
+                </span>
+              </div>
+            </div>
+            <p class="mt-2 text-sm font-normal text-gray-600">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Porro, quam vel. autem ut dolorum?</p>
+          </div>
+          <div *ngFor="let item of ['Musataha', 'Retail', 'Investor Care', 'Enquiry Management']; let i = index" class="bg-white rounded-md border shadow p-3 intro-y">
+            <div class="w-full gap-2 flex items-center justify-start">
+              <div>
+                <i class="ki-filled ki-map text-3xl"></i>
+              </div>
+              <div class="w-full flex items-center justify-between">
+                <p class="text-xl font-semibold">{{item}}</p>
+                <span *ngIf="i == -1" class="badge badge-outline badge-success">
+                  Current
+                </span>
+              </div>
+            </div>
+            <p class="mt-2 text-sm font-normal text-gray-600">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Porro, quam vel. autem ut dolorum?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+<div *ngIf="layout === 'card-header'" class="action-buttons-card-header">
+  <button 
+    *ngIf="showSLA"
+    class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors"
+    (click)="onSLAClick($event)"
+    title="SLA Violation">
+    <app-icon 
+      name="alert-circle" 
+      [size]="16" 
+      className="text-red-600">
+    </app-icon>
+  </button>
+</div>
+
+<div *ngIf="layout === 'card-footer'" class="action-buttons-card-footer">
+  <button 
+    *ngIf="showNotifications"
+    class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors relative"
+    (click)="onNotificationClick($event)"
+    title="Notifications">
+    <app-icon 
+      name="bell" 
+      [size]="16" 
+      className="text-gray-700">
+    </app-icon>
+    <div 
+      *ngIf="hasNewNotifications"
+      class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full">
+    </div>
+  </button>
+</div>
+
+<div *ngIf="layout === 'table'" class="action-buttons-table">
+  <button 
+    *ngIf="showSLA"
+    class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors"
+    (click)="onSLAClick($event)"
+    title="SLA Violation">
+    <app-icon 
+      name="alert-circle" 
+      [size]="16" 
+      className="text-red-600">
+    </app-icon>
+  </button>
+  
+  <button 
+    *ngIf="showNotifications"
+    class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors relative"
+    (click)="onNotificationClick($event)"
+    title="Notifications">
+    <app-icon 
+      name="bell" 
+      [size]="16" 
+      className="text-gray-700">
+    </app-icon>
+    <div 
+      *ngIf="hasNewNotifications"
+      class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full">
+    </div>
+  </button>
+  
+  <button 
+    *ngIf="showView"
+    class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+    (click)="onViewClick($event)"
+    title="View Details">
+    <app-icon 
+      name="chevron-right" 
+      [size]="16" 
+      className="text-gray-600">
+    </app-icon>
+  </button>
+</div>

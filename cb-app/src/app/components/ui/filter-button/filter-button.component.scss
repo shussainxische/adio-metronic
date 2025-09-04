@@ -1,0 +1,11 @@
+.filter-button {
+  @apply px-4 py-2 text-sm rounded-lg border transition-colors;
+  
+  &.active {
+    @apply ring-2 ring-primary bg-gray-50;
+  }
+  
+  .count {
+    @apply ml-1;
+  }
+}

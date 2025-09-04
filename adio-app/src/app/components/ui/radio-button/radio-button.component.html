@@ -1,0 +1,19 @@
+<div class="flex items-center">
+  <input
+    type="radio"
+    [class]="radioClasses"
+    [id]="id"
+    [name]="name"
+    [value]="value"
+    [checked]="checked"
+    [disabled]="disabled"
+    (change)="onChange($event)"
+  />
+  <label
+    [for]="id"
+    class="ms-3 block text-sm/6 font-medium text-gray-900 cursor-pointer"
+    (click)="onLabelClick()"
+  >
+    {{ label | translate }}
+  </label>
+</div>

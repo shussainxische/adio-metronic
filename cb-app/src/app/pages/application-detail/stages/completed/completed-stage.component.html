@@ -1,0 +1,56 @@
+<div class="certificate-card">
+    <!-- Certificate Header -->
+    <div class="certificate-header">
+      <div class="header-content">
+        <h1 class="certificate-title">Certificate of Approval</h1>
+        <p class="certificate-issuer">Abu Dhabi Investment Office</p>
+      </div>
+      <div class="header-actions">
+        <button class="download-button" (click)="downloadCertificate()">
+          <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7,10 12,15 17,10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Certificate
+        </button>
+      </div>
+    </div>
+
+    <!-- Certificate Content -->
+    <div class="certificate-content">
+      <p class="certificate-text">
+        {{ application?.companyName || 'Company Name' }} has been approved for the Energy Support Program and is entitled to receive incentive 
+        support in the amount of <span class="amount-highlight">AED 2</span> based on their qualifying investment of AED 195.
+      </p>
+    </div>
+
+    <!-- Certificate Details Grid -->
+    <div class="certificate-details">
+      <div class="detail-row">
+        <div class="detail-item">
+          <p class="detail-label">Certificate Number</p>
+          <p class="detail-value">ESP-2025-001234</p>
+        </div>
+        <div class="detail-item">
+          <p class="detail-label">Application ID</p>
+          <p class="detail-value">{{ application?.id || 'N/A' }}</p>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-item">
+          <p class="detail-label">Issue Date</p>
+          <p class="detail-value">{{ application?.issueDate || 'N/A' }}</p>
+        </div>
+        <div class="detail-item">
+          <p class="detail-label">Valid Until</p>
+          <p class="detail-value">{{ application?.expiryDate || 'N/A' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certificate Footer -->
+    <div class="certificate-footer">
+      <p>This certificate is issued by the Abu Dhabi Investment Office and is valid for the period specified above. Any amendments or extensions require prior approval from ADIO.</p>
+    </div>
+</div>

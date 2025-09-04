@@ -1,0 +1,70 @@
+{
+  "sideNavPages": [
+    {
+      "id": 1,
+      "label": "ENERGY_SUPPORT_PROGRAM",
+      "icon": "dashboard",
+      "parentId": null,
+      "children": [
+        {
+          "id": 3,
+          "label": "DASHBOARD",
+          "icon": "apps",
+          "parentId": 1,
+          "pageCode": "/applications",
+          "applications": [
+            {
+              "id": "musataha",
+              "name": "Musataha"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "label": "RESOURCES",
+          "icon": "folder",
+          "parentId": 1,
+          "pageCode": "/resources",
+          "applications": [
+            {
+              "id": "musataha",
+              "name": "Musataha"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "label": "NOTIFICATIONS",
+          "icon": "notifications",
+          "parentId": 1,
+          "pageCode": "/notifications",
+          "applications": [
+            {
+              "id": "musataha",
+              "name": "Musataha"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "label": "PROFILE_SETTINGS",
+          "icon": "settings",
+          "parentId": 1,
+          "pageCode": "/profile-settings",
+          "applications": [
+            {
+              "id": "musataha",
+              "name": "Musataha"
+            }
+          ]
+        }
+      ],
+      "applications": [
+        {
+          "id": "musataha",
+          "name": "Musataha"
+        }
+      ]
+    }
+  ]
+}

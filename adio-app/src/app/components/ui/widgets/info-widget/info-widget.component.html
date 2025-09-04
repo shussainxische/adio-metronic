@@ -1,0 +1,31 @@
+<div class="widget-container">
+  <div class="widget-header" (click)="toggleCollapsed()">
+    <div class="flex items-center justify-between cursor-pointer">
+      <h3 class="widget-title">{{ title }}</h3>
+      <app-icon 
+        [name]="collapsed ? 'chevron-down' : 'chevron-up'" 
+        [size]="16" 
+        className="text-gray-500">
+      </app-icon>
+    </div>
+  </div>
+  
+  <div class="widget-content" [class.hidden]="collapsed">
+    <div class="info-details">
+      <div class="info-name">{{ data.name }}</div>
+      <div class="info-position">{{ data.position }}</div>
+    </div>
+    
+    <div class="info-contacts">
+      <div class="info-item">
+        <app-icon name="mail" [size]="16" className="text-gray-500"></app-icon>
+        <a [href]="'mailto:' + data.email" class="info-link">{{ data.email }}</a>
+      </div>
+      
+      <div class="info-item">
+        <app-icon name="phone" [size]="16" className="text-gray-500"></app-icon>
+        <a [href]="'tel:' + data.phone" class="info-link">{{ data.phone }}</a>
+      </div>
+    </div>
+  </div>
+</div>

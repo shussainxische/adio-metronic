@@ -1,0 +1,46 @@
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{applicationDetails.title}}</h3>
+  </div>
+  <div class="grid grid-cols-2 gap-6">
+    <app-input [control]="applicationTypeControl" [label]="applicationDetails.fields.applicationType.label" [placeholder]="applicationDetails.fields.applicationType.placeholder" variant="locked"></app-input>
+    <div>
+      <label class="block text-sm font-semibold text-gray-900 mb-2">{{applicationDetails.fields.utilitiesRequired.label}}</label>
+      <div class="flex gap-2 flex-wrap">
+        <span *ngFor="let utility of applicationData.utilitiesRequired" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">{{utility}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-6">
+    <app-date-input [control]="financialYearEndControl" [label]="applicationDetails.fields.financialYearEnd.label" [placeholder]="applicationDetails.fields.financialYearEnd.placeholder"></app-date-input>
+    <div></div>
+  </div>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{pastRenewals.title}} - Component Demo</h3>
+    <p class="text-sm text-gray-600">{{pastRenewals.description}}</p>
+    
+  </div>
+
+  <!-- Certificate Files -->
+  <div class="certificate-files-container">
+    <div 
+      *ngFor="let doc of viewFileData" 
+      class="certificate-file-item"
+      (click)="downloadCertificate(doc)">
+      <div class="certificate-file-content">
+        <div class="certificate-file-icon">
+          <app-icon name="file-text" [size]="16" className="text-red-600"></app-icon>
+        </div>
+        <div class="certificate-file-name">
+          {{ doc.fileName }}
+        </div>
+      </div>
+      <div class="certificate-download-icon">
+        <app-icon name="download" [size]="12" className="text-gray-500"></app-icon>
+      </div>
+    </div>
+  </div>
+</div>

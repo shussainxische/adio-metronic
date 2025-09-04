@@ -1,0 +1,36 @@
+.activity-item {
+  @apply flex gap-3 pb-4;
+}
+
+.activity-icon {
+  @apply flex-shrink-0;
+}
+
+.icon-circle {
+  @apply w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.activity-content {
+  @apply flex-1 min-w-0;
+}
+
+.activity-message {
+  @apply text-sm font-medium text-gray-900 mb-1;
+}
+
+.activity-meta {
+  @apply flex items-center gap-2 text-xs text-gray-500;
+}
+
+.activity-user {
+  @apply font-medium;
+}
+
+.activity-timestamp {
+  @apply relative;
+  
+  &::before {
+    content: '•';
+    @apply absolute -left-2 text-gray-400;
+  }
+}

@@ -1,0 +1,18 @@
+<!-- dropdown-menu.component.html -->
+<div class="menu" data-menu="true">
+  <div class="menu-item" data-menu-item-offset="0, 10px" data-menu-item-placement="bottom-end" data-menu-item-placement-rtl="bottom-start" data-menu-item-toggle="dropdown" data-menu-item-trigger="click|lg:click">
+    <app-icon-wrapper shape="rounded" mode="neutral" class="menu-toggle"><i class="ki-filled ki-dots-vertical"></i></app-icon-wrapper>
+    <app-dropdown-wrapper class="w-[135px]" data-menu-dismiss="true">
+      <ng-container *ngFor="let item of menuItems">
+        <div class="menu-item flex gap-2 w-full cursor-pointer" *appHasPermission="item.permission">
+          <a class="menu-link text-center" [ngClass]="item.danger ? 'text-danger hover:text-danger' : 'text-gray-900 hover:text-gray-900'" (click)="onItemClick(item)">
+            <span class="material-symbols-outlined text-lg pe-1" [ngClass]="item.danger ? 'text-danger' : 'text-gray-900'" iconBefore>
+              {{item.icon}}
+            </span>
+            <span>{{item.label | translate}}</span>
+          </a>
+        </div>
+      </ng-container>
+    </app-dropdown-wrapper>
+  </div>
+</div>
