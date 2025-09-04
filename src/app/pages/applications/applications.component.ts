@@ -47,6 +47,7 @@ export class ApplicationsComponent implements OnInit {
   filteredApplications: Application[] = [];
   paginatedApplications: Application[] = [];
   viewMode: 'grid' | 'table' = 'grid';
+  isAdioView: boolean = false;
   
   // Pagination properties
   currentPage: number = 1;
@@ -65,6 +66,8 @@ export class ApplicationsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Detect if we're in ADIO view based on URL
+    this.isAdioView = this.router.url.startsWith('/adio');
     this.loadApplicationsData();
   }
 
@@ -91,6 +94,10 @@ export class ApplicationsComponent implements OnInit {
     if (subStatus === 'All') {
       this.selectedSubStatus = '';
     } else {
+      // Prevent selecting "Not Awarded" or "Rejected" for ADIO users
+      if (this.isAdioView && (subStatus === 'Not Awarded' || subStatus === 'Rejected')) {
+        return;
+      }
       this.selectedSubStatus = this.selectedSubStatus === subStatus ? '' : subStatus;
     }
     this.updateFilteredApplications();
@@ -101,6 +108,11 @@ export class ApplicationsComponent implements OnInit {
     let filtered = this.applicationStatusService.filterApplications(
       this.applications, this.selectedFilter, this.selectedSubStatus
     );
+    
+    // Remove "Not Awarded" and "Rejected" applications for ADIO users
+    if (this.isAdioView) {
+      filtered = filtered.filter(app => app.status !== 'Not Awarded' && app.status !== 'Rejected');
+    }
     
     // Then apply application type filtering
     if (this.selectedApplicationType !== 'all') {
@@ -173,13 +185,103 @@ export class ApplicationsComponent implements OnInit {
            app.stage === 'Closed';
   }
 
-  navigateToDetail(applicationId: string) {
-    this.router.navigate(['/applications', applicationId]);
+  navigateToDetail(applicationId: string, app?: Application) {
+    const role = sessionStorage.getItem('selectedRole') || 'cb';
+    const rolePrefix = role === 'adio' ? '/adio' : '/cb';
+    
+    // Check if stage is "Quotation" with "Pending" status and navigate to Quotation stage
+    if (app?.stage === 'Quotation' && app?.status === 'Pending') {
+      this.router.navigate([rolePrefix + '/applications', applicationId], {
+        queryParams: { stage: 'Quotation', step: '0' }
+      });
+    } else {
+      this.router.navigate([rolePrefix + '/applications', applicationId]);
+    }
   }
 
-  getApplicationCount = (stage: string) => this.applicationStatusService.getApplicationCount(this.applications, stage);
+  getCardClasses(app: Application): string {
+    // ADIO view logic takes priority
+    if (this.isAdioView) {
+      // Closed applications maintain their normal styling
+      if (app.stage === 'Closed') {
+        return this.applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : '';
+      }
+      
+      // Quotation Submitted and External Review should be grey
+      if ((app.stage === 'Quotation' && app.status === 'Submitted') || 
+          app.status === 'External Review') {
+        return 'border-transparent bg-gray-50';
+      }
+      
+      // Initial Review and Final Review statuses should always be white in ADIO view
+      if (app.status === 'Initial Review' || app.status === 'Final Review') {
+        return 'bg-white';
+      }
+      
+      // External/other entity assignees get grey background (same as locked applications)
+      if (app.assignee && 
+          app.assignee !== 'ADIO' && 
+          (app.assignee.toLowerCase().includes('body') || 
+           app.assignee.toLowerCase().includes('external') ||
+           app.assignee.toLowerCase().includes('third party') ||
+           app.assignee === 'Certifying Body')) {
+        return 'border-transparent bg-gray-50';
+      }
+      
+      // ADIO assigned applications get white background (default)
+      return 'bg-white';
+    }
+    
+    // CB view or default logic
+    return this.applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : '';
+  }
+
+  getAdioCardClasses(app: any): string {
+    if (!this.isAdioView) {
+      return '';
+    }
+    
+    // Closed applications maintain their normal styling
+    if (app.status === 'Closed' || app.stage === 'Closed') {
+      return '';
+    }
+    
+    // Initial Review and Final Review statuses should always be white in ADIO view
+    if (app.status === 'Initial Review' || app.status === 'Final Review') {
+      return 'bg-white';
+    }
+    
+    // External/other entity assignees get grey background (same as locked applications)
+    if (app.assignee && 
+        app.assignee !== 'ADIO' && 
+        (app.assignee.toLowerCase().includes('body') || 
+         app.assignee.toLowerCase().includes('external') ||
+         app.assignee.toLowerCase().includes('third party') ||
+         app.assignee === 'Certifying Body')) {
+      return 'border-transparent bg-gray-50';
+    }
+    
+    // ADIO assigned applications get white background (default)
+    return 'bg-white';
+  }
+
+  getApplicationCount = (stage: string) => {
+    let apps = this.applications;
+    // Remove "Not Awarded" and "Rejected" applications for ADIO users
+    if (this.isAdioView) {
+      apps = apps.filter(app => app.status !== 'Not Awarded' && app.status !== 'Rejected');
+    }
+    return this.applicationStatusService.getApplicationCount(apps, stage);
+  };
   isFilterActive = (stage: string) => this.selectedFilter === stage;
-  getSubStatuses = (stage: string) => this.applicationStatusService.getSubStatuses(this.applications, stage);
+  getSubStatuses = (stage: string) => {
+    let apps = this.applications;
+    // Remove "Not Awarded" and "Rejected" applications for ADIO users
+    if (this.isAdioView) {
+      apps = apps.filter(app => app.status !== 'Not Awarded' && app.status !== 'Rejected');
+    }
+    return this.applicationStatusService.getSubStatuses(apps, stage);
+  };
   shouldShowSubStatus = (stage: string) => stage !== 'All' && this.getSubStatuses(stage).length > 0;
 
   toggleView(mode: 'grid' | 'table') {
@@ -283,7 +385,7 @@ export class ApplicationsComponent implements OnInit {
     if (app.status === 'Cancelled') {
       return; // Prevent navigation for cancelled applications
     }
-    this.navigateToDetail(app.id);
+    this.navigateToDetail(app.id, app);
   }
 
   onCardHover(app: Application, isHovering: boolean) {
@@ -310,6 +412,8 @@ export class ApplicationsComponent implements OnInit {
         return app.rejectionReason || 'Quotation Not Approved';
       case 'Rejected':
         return app.rejectionReason || 'Evaluation Rejected';
+      case 'Not Certified':
+        return app.rejectionReason || 'Evaluation not approved';
       case 'Cancelled':
         return app.cancellationReason || 'No response from applicant';
       default:

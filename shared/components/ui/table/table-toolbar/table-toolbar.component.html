@@ -1,0 +1,85 @@
+<div
+  *ngIf="hasActiveFilters && totalItems"
+  class="text-primary-on-surface ps-6 pt-5 gap-2 flex items-center self-stretch leading-[28px]"
+>
+  {{
+    "table.showing_filtered_results"
+      | translate : { start: displayedStartIndex, total: totalItems }
+  }}
+</div>
+<div
+  *ngIf="!hasActiveFilters && totalItems"
+  class="text-primary-on-surface ps-6 pt-5 gap-2 flex items-center self-stretch leading-[28px]"
+>
+  {{ "table.showing_all_results" | translate }}
+</div>
+<div
+  *ngIf="!totalItems"
+  class="text-primary-on-surface ps-6 pt-5 gap-2 flex items-center self-stretch leading-[28px]"
+>
+  {{ "common.no_results_found" | translate }}
+</div>
+<div class="flex px-6 pb-5 pt-2 border-b-0 rounded-t-[20px]">
+  <div class="w-full flex justify-start items-center h-[42px]">
+    <div
+      class="relative flex items-center gap-4 flex-shrink-0 justify-between w-full h-full"
+    >
+      <div
+        class="flex flex-row items-center gap-3 flex-1 min-w-0 whitespace-nowrap h-full"
+      >
+        <ng-content select="[filterSection]"></ng-content>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <div
+            class="min-h-[42px] min-w-[42px]"
+            [dir]="isRtl() ? 'ltr' : 'rtl'"
+            *ngIf="isSearchEnabled"
+          >
+            <app-input
+              type="text"
+              [placeholder]="searchPlaceholder"
+              [className]="inputClassName"
+              [inputClass]="inputClass"
+              [dir]="isRtl ? 'ltr' : 'rtl'"
+              (focus)="onInputFocus()"
+              (blur)="onInputBlur()"
+              [tooltip]="
+                !isInputFocused ? ('common.search' | translate) : tooltipMessage
+              "
+              [tooltipPosition]="!isInputFocused ? 'top' : 'left'"
+              (search)="onSearch($event)"
+            >
+              <div
+                [class]="
+                  isInputFocused
+                    ? ''
+                    : 'hover:shadow-[0_0_0_1.5px_var(--tw-gray-900)]'
+                "
+                class="w-[40px] h-[40px] flex items-center rounded-md"
+                iconBefore
+              >
+                <span
+                  class="material-symbols-outlined text-gray-800 text-2xl w-[42px] ps-2"
+                  >search</span
+                >
+              </div>
+            </app-input>
+          </div>
+          <app-sort-menu
+            [selectedSort]="currentSort"
+            [sortOptions]="sortOptions"
+            (sortChange)="onSortBy($event)"
+          >
+          </app-sort-menu>
+        </div>
+        <div
+          *ngIf="!hideSeparator"
+          class="w-px h-[32px] bg-stroke-vertical-divider"
+        ></div>
+        <ng-content select="[extraButtons]"></ng-content>
+      </div>
+    </div>
+  </div>
+  <ng-content></ng-content>
+</div>

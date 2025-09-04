@@ -78,8 +78,8 @@
   <div *ngIf="viewMode === 'grid'" class="responsive-grid">
     <app-preview-card 
       *ngFor="let app of paginatedApplications"
-      [className]="applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : ''"
-      [showShadow]="!applicationAssignmentService.isLocked(app)"
+      [className]="getCardClasses(app)"
+      [showShadow]="!applicationAssignmentService.isLocked(app) || (isAdioView && (app.status === 'Initial Review' || app.status === 'Final Review'))"
       class="application-card"
       [class.locked]="applicationAssignmentService.isLocked(app)"
       [class.cancelled]="app.status === 'Cancelled'"
@@ -144,13 +144,15 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-1" *ngIf="!isClosedApplication(app)">
-          <app-icon 
-            [name]="getAssigneeIcon(app.assignee)" 
-            [size]="16" 
-            className="text-gray-500">
-          </app-icon>
-          <span class="text-xs text-gray-600">{{ app.assignee }}</span>
+        <div class="flex flex-col gap-1" *ngIf="!isClosedApplication(app)">
+          <div class="flex items-center gap-1">
+            <app-icon 
+              [name]="getAssigneeIcon(app.assignee)" 
+              [size]="16" 
+              className="text-gray-500">
+            </app-icon>
+            <span class="text-xs text-gray-600">{{ app.assignee }}</span>
+          </div>
         </div>
         
         <app-action-buttons

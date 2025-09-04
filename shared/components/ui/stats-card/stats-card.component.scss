@@ -1,0 +1,27 @@
+.stats-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.stats-title {
+  @apply text-gray-600 text-2sm;
+}
+
+.stats-icon {
+  @apply text-gray-400;
+}
+
+.stats-content {
+  @apply flex items-end justify-between;
+}
+
+.stats-count {
+  @apply text-3xl font-bold text-primary-on-surface;
+}
+
+.stats-alert {
+  @apply flex items-center text-red text-2sm;
+}
+
+.alert-icon {
+  @apply mr-1;
+}

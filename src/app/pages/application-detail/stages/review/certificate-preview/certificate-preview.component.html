@@ -1,0 +1,194 @@
+<div class="certificate-container bg-white p-8 max-w-4xl mx-auto">
+  <!-- Header Section -->
+  <div class="flex justify-between items-start mb-8">
+    <div class="flex items-center">
+      <div class="text-blue-600 mr-4">
+        <!-- IDB Logo Placeholder -->
+        <div class="w-16 h-16 bg-blue-100 flex items-center justify-center rounded">
+          <span class="text-xs text-blue-600">IDB</span>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-sm text-gray-600">مكتب تنمية الصناعية</div>
+        <div class="text-sm text-gray-600">Industrial Development Bureau</div>
+      </div>
+    </div>
+    
+    <div class="flex items-center">
+      <div class="text-right mr-4">
+        <div class="text-sm text-gray-600">دائرة التنمية الاقتصادية</div>
+        <div class="text-sm text-gray-600">DEPARTMENT OF ECONOMIC DEVELOPMENT</div>
+      </div>
+      <!-- UAE Crest Logo -->
+      <div class="w-16 h-16 bg-red-100 flex items-center justify-center rounded">
+        <span class="text-xs text-red-600">UAE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Energy Support Program Logo -->
+  <div class="text-center mb-8">
+    <div class="inline-block p-4">
+      <div class="w-20 h-20 bg-blue-200 mx-auto mb-2 flex items-center justify-center rounded">
+        <span class="text-sm text-blue-700">ESP</span>
+      </div>
+      <div class="text-xs text-gray-600">برنامج دعم الطاقة</div>
+      <div class="text-xs text-gray-600">Energy Support Program</div>
+    </div>
+  </div>
+
+  <!-- Certificate Title -->
+  <div class="bg-blue-400 text-white py-6 px-8 rounded-lg text-center mb-8">
+    <h1 class="text-2xl font-bold mb-2">شهادة برنامج دعم الطاقة</h1>
+    <h1 class="text-2xl font-bold">Energy Support Program Certificate</h1>
+  </div>
+
+  <!-- Company Information -->
+  <div class="grid grid-cols-3 gap-8 mb-8 text-center">
+    <div>
+      <div class="text-right text-gray-600 text-sm mb-1">اسم الشركة</div>
+      <div class="text-left font-medium">Company Name</div>
+      <div class="text-center text-lg font-bold mt-2">{{ application?.companyName || 'DEMO company LLC' }}</div>
+    </div>
+    
+    <div>
+      <div class="text-right text-gray-600 text-sm mb-1">رقم الرخصة الصناعية</div>
+      <div class="text-left font-medium">Ind. Licenses No.</div>
+      <div class="text-center text-lg font-bold mt-2">IN2781801</div>
+    </div>
+    
+    <div>
+      <div class="text-right text-gray-600 text-sm mb-1">رقم الطلب</div>
+      <div class="text-left font-medium">Transaction No.</div>
+      <div class="text-center text-lg font-bold mt-2">ESP-192732</div>
+    </div>
+  </div>
+
+  <!-- Gas Section -->
+  <div class="grid grid-cols-5 gap-0 mb-4 border border-gray-300">
+    <div class="bg-blue-200 p-4 text-center font-bold text-lg border-r border-gray-300">
+      <div class="text-right mb-2">غاز</div>
+      <div class="text-left">Gas</div>
+    </div>
+    <div class="p-4 bg-blue-50 border-r border-gray-300">
+      <div class="text-right text-gray-600 text-xs mb-1">النتيجة المعتمدة:</div>
+      <div class="text-left text-xs mb-1">Approved Score:</div>
+      <div class="font-bold">45.50%</div>
+    </div>
+    <div class="p-4 bg-blue-50 border-r border-gray-300">
+      <div class="text-right text-gray-600 text-xs mb-1">الفئة:</div>
+      <div class="text-left text-xs mb-1">Category:</div>
+      <div class="font-bold">F</div>
+    </div>
+    <div class="p-4 bg-blue-50 border-r border-gray-300">
+      <div class="text-right text-gray-600 text-xs mb-1">تاريخ الاصدار:</div>
+      <div class="text-left text-xs mb-1">Issue Date:</div>
+      <div class="font-bold">{{ formatDate(certificateIssueDate) || '07/2025' }}</div>
+      <div class="text-right text-gray-600 text-xs mb-1 mt-2">تاريخ الانتهاء:</div>
+      <div class="text-left text-xs mb-1">Expiry Date:</div>
+      <div class="font-bold">{{ formatDate(getCertificateExpiryDate()) || '07/2026' }}</div>
+    </div>
+    <div class="p-4 bg-blue-50">
+      <div class="text-right text-gray-600 text-xs mb-1">رقم الحساب:</div>
+      <div class="text-left text-xs mb-1">Account Number:</div>
+      <div class="font-bold text-sm">892542</div>
+    </div>
+  </div>
+
+  <!-- Electricity Section -->
+  <div class="grid grid-cols-5 gap-0 mb-8 border border-gray-300">
+    <div class="bg-blue-200 p-4 text-center font-bold text-lg border-r border-gray-300">
+      <div class="text-right mb-2">كهرباء</div>
+      <div class="text-left">Electricity</div>
+    </div>
+    <div class="p-4 bg-blue-50 border-r border-gray-300">
+      <div class="text-right text-gray-600 text-xs mb-1">النتيجة المعتمدة:</div>
+      <div class="text-left text-xs mb-1">Approved Score:</div>
+      <div class="font-bold">60.50%</div>
+    </div>
+    <div class="p-4 bg-blue-50 border-r border-gray-300">
+      <div class="text-right text-gray-600 text-xs mb-1">الفئة:</div>
+      <div class="text-left text-xs mb-1">Category:</div>
+      <div class="font-bold">B</div>
+    </div>
+    <div class="p-4 bg-blue-50 border-r border-gray-300">
+      <div class="text-right text-gray-600 text-xs mb-1">تاريخ الاصدار:</div>
+      <div class="text-left text-xs mb-1">Issue Date:</div>
+      <div class="font-bold">{{ formatDate(certificateIssueDate) || '07/2025' }}</div>
+      <div class="text-right text-gray-600 text-xs mb-1 mt-2">تاريخ الانتهاء:</div>
+      <div class="text-left text-xs mb-1">Expiry Date:</div>
+      <div class="font-bold">{{ formatDate(getCertificateExpiryDate()) || '07/2026' }}</div>
+    </div>
+    <div class="p-4 bg-blue-50">
+      <div class="text-right text-gray-600 text-xs mb-1">رقم الحساب:</div>
+      <div class="text-left text-xs mb-1">Account Number:</div>
+      <div class="font-bold text-xs">8121640698,4477443455,7130154544</div>
+    </div>
+  </div>
+
+  <!-- Disclaimer Section -->
+  <div class="bg-blue-50 p-6 rounded-lg mb-6">
+    <h3 class="text-blue-600 font-bold mb-4 text-center">
+      <span class="block text-right">اخلاء مسؤولية</span>
+      <span class="block text-left">Disclaimer</span>
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+      <div class="text-right leading-relaxed">
+        "هذه الشهادة ليست الموافقة النهائية للحصول على دعم الكهرباء. وتتولى شركات 
+        توزيع الكهرباء (شركة أبوظبي للتوزيع وشركة العين للتوزيع) مسؤولية اصدار 
+        الأسعار النهائية ومواعيد التفعيل"
+      </div>
+      <div class="text-left leading-relaxed">
+        "This certificate is not the final approval for obtaining the 
+        electricity related assistance. The electricity distribution 
+        companies (ADDC and AADC) are responsible for 
+        assigning the final rates and activation dates."
+      </div>
+    </div>
+    
+    <div class="border-t border-blue-200 mt-4 pt-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+        <div class="text-right leading-relaxed">
+          "يرجى ملاحظة أن المنشأة الصناعية ستفقد حقها في المطالبة بالمساعدة الخاصة 
+          بالغاز أو الكهرباء المخفضة إذا مرت 3 أشهر دون تقديم طلب المساعدة للغاز عبر 
+          النظام أو إرسال الشهادة رسميا إلى شركات التوزيع."
+        </div>
+        <div class="text-left leading-relaxed">
+          "Kindly note that the manufacturing entity will lose its right 
+          to claim the assistance for gas or electricity if 3 months 
+          passed without initiating a request for assistance for gas in 
+          the system or sending the certificate officially to the 
+          distribution company."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="border-t-2 border-gray-800 pt-4">
+    <div class="flex justify-center space-x-6 mb-4">
+      <div class="w-8 h-8 bg-gray-300 rounded flex items-center justify-center">
+        <span class="text-xs">IG</span>
+      </div>
+      <div class="w-8 h-8 bg-gray-300 rounded flex items-center justify-center">
+        <span class="text-xs">TW</span>
+      </div>
+      <div class="w-8 h-8 bg-gray-300 rounded flex items-center justify-center">
+        <span class="text-xs">FB</span>
+      </div>
+      <div class="w-8 h-8 bg-gray-300 rounded flex items-center justify-center">
+        <span class="text-xs">LI</span>
+      </div>
+      <div class="w-8 h-8 bg-gray-300 rounded flex items-center justify-center">
+        <span class="text-xs">YT</span>
+      </div>
+    </div>
+    <div class="text-center text-gray-600">&#64;AbuDhabiDED</div>
+  </div>
+
+  <!-- Transaction Number Footer -->
+  <div class="text-center text-sm text-gray-600 mt-4">
+    Transaction No. IETR-4318657 الطلب رقم
+  </div>
+</div>

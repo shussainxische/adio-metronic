@@ -5,7 +5,7 @@
       <p class="text-sm text-gray-600" 
          [ngSwitch]="statusData.type">
         <span *ngSwitchCase="'under-approval'">Your quotation has been submitted successfully</span>
-        <span *ngSwitchCase="'awarded'">Quotation approved</span>
+        <span *ngSwitchCase="'awarded'">Quotation awarded</span>
         <span *ngSwitchCase="'not-awarded'">Your quotation has been submitted successfully</span>
         <span *ngSwitchCase="'missed-deadline'">Quotation submission period has ended</span>
       </p>
@@ -57,9 +57,15 @@
           <p class="text-gray-900 font-medium text-sm">{{ statusData.awardedDate }}</p>
         </div>
       </div>
-      <div class="mb-6">
-        <p class="text-gray-600 text-xs mb-1">Quotation Amount:</p>
-        <p class="text-gray-900 font-medium text-sm">AED {{ statusData.submittedAmount }}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <p class="text-gray-600 text-xs mb-1">Quotation Amount:</p>
+          <p class="text-gray-900 font-medium text-sm">AED {{ statusData.submittedAmount }}</p>
+        </div>
+        <div>
+          <p class="text-gray-600 text-xs mb-1">Quotation awarded to:</p>
+          <p class="text-gray-900 font-medium text-sm">{{ statusData.awardedToCB || 'Al Tamimi Certification' }}</p>
+        </div>
       </div>
     </div>
 
@@ -87,6 +93,7 @@
         <app-icon name="download" [size]="16" className="download-icon"></app-icon>
       </div>
     </div>
+
 
     <div *ngIf="statusConfig.showButton" class="mb-6">
       <app-button 

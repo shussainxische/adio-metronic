@@ -6,13 +6,14 @@ export interface Application {
   companyName: string;
   companyType?: string;
   stage: 'Quotation' | 'Evaluation' | 'Review' | 'Closed';
-  status: 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected';
+  status: 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected' | 'Not Certified';
   progress: number;
   date: string;
   deadline?: string;
   category?: string;
   certifyingBody?: string;
   assignee: string;
+  evaluator?: string;
   contactName?: string;
   contactPosition?: string;
   contactEmail?: string;
@@ -33,17 +34,23 @@ export class ApplicationStatusService {
     'Submitted': 'active', 'Final Review': 'active',
     'Returned': 'warning',
     'Certified': 'success',
-    'Not Awarded': 'archived', 'Cancelled': 'archived', 'Rejected': 'archived'
+    'Not Awarded': 'archived', 'Cancelled': 'archived', 'Rejected': 'archived', 'Not Certified': 'archived'
   };
 
-  private readonly closedStatusOrder = ['Certified', 'Not Awarded', 'Rejected', 'Cancelled'];
+  private readonly closedStatusOrder = ['Certified', 'Not Certified', 'Not Awarded', 'Rejected', 'Cancelled'];
   private readonly reviewStatusOrder = ['Initial Review', 'External Review', 'Final Review'];
 
   getStatusVariant(status: string): StatusBadgeVariant {
     return this.statusVariants[status] || 'pending';
   }
 
-  getBadgeText = (stage: string, status: string) => `${stage} - ${status}`;
+  getBadgeText = (stage: string, status: string) => {
+    // For completed/closed applications with certified status, show "Certified"
+    if (stage === 'Completed' && status === 'Certified') {
+      return 'Certified';
+    }
+    return `${stage} - ${status}`;
+  };
 
   getSubStatuses(applications: Application[], stage: string): string[] {
     if (stage === 'All') return [];
@@ -114,6 +121,9 @@ export class ApplicationStatusService {
       case 'Rejected':
         const rejectionReason = app.rejectionReason || 'Evaluation Rejected';
         return `Date: ${app.date}\n${rejectionReason}`;
+      case 'Not Certified':
+        const notCertifiedReason = app.rejectionReason || 'Evaluation not approved';
+        return `Date: ${app.date}\n${notCertifiedReason}`;
       case 'Cancelled':
         const cancellationReason = app.cancellationReason || 'No response from applicant';
         return `Date: ${app.date}\n${cancellationReason}`;

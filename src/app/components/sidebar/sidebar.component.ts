@@ -32,6 +32,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   sideNavPages: NavItem[] = [];
   selectedApplication: Application | null = null;
   private selectedApplicationSubscription: Subscription;
+  currentRole: string = 'cb'; // Default to CB
 
   constructor(
     // public nav: NavigationService,
@@ -40,6 +41,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    // Check session storage for selected role
+    const storedRole = sessionStorage.getItem('selectedRole');
+    if (storedRole) {
+      this.currentRole = storedRole;
+    }
+
     // Subscribe to selected application changes
     this.selectedApplicationSubscription = this.appLauncherService.selectedApplication$.subscribe(
       (application) => {
@@ -61,7 +68,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private loadAndFilterNavigationMenu(): void {
     const menu = JSON.parse(localStorage.getItem("navigationMenu") || 'null');
     if (menu) {
-      this.sideNavPages = this.filterLeafNodes(menu);
+      // Dynamically update the main section title based on current role
+      const menuData = JSON.parse(JSON.stringify(menu)); // Deep copy
+      if (menuData && menuData[0]) {
+        menuData[0].label = this.roleTitle;
+      }
+      this.sideNavPages = this.filterLeafNodes(menuData);
     } else {
       // Load menu from JSON file
       this.loadMenuFromFile();
@@ -72,7 +84,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.http.get<{sideNavPages: NavItem[]}>('assets/mock-data/sidebar-menu.json')
       .subscribe({
         next: (data) => {
-          this.sideNavPages = this.filterLeafNodes(data.sideNavPages);
+          // Dynamically update the main section title based on current role
+          const menuData = JSON.parse(JSON.stringify(data)); // Deep copy
+          if (menuData.sideNavPages && menuData.sideNavPages[0]) {
+            menuData.sideNavPages[0].label = this.roleTitle;
+          }
+          this.sideNavPages = this.filterLeafNodes(menuData.sideNavPages);
         },
         error: (error) => {
           console.error('Error loading sidebar menu:', error);
@@ -101,7 +118,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
       } else {
         // This is a leaf node - filter based on selected application
         const hasMatchingApp = this.hasMatchingApplication(item);
-        return hasMatchingApp ? item : null;
+        if (hasMatchingApp) {
+          // Add role-specific prefix to pageCode
+          const rolePrefix = this.currentRole === 'adio' ? '/adio' : '/cb';
+          return {
+            ...item,
+            pageCode: item.pageCode ? rolePrefix + item.pageCode : item.pageCode
+          };
+        }
+        return null;
       }
     }).filter(item => item !== null);
   }
@@ -129,6 +154,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   get sidebarClasses(): string {
     const baseClasses = 'sidebar bg-surface-header-and-sider border-e border-e-gray-200 dark:border-e-coal-100 fixed z-20 hidden lg:flex flex-col items-stretch shrink-0 max-h-[100vh] h-screen lg:!z-10';
     return baseClasses;
+  }
+
+  get roleTitle(): string {
+    return this.currentRole === 'adio' ? 'ADIO' : 'CERTIFYING_BODY';
   }
 
   toggleTheme(isDarkMode: boolean) {

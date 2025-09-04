@@ -1,0 +1,19 @@
+<div
+  class="rounded-2xl border border-stroke-container p-8 h-full"
+  [class]="className"
+  [ngClass]="{ 'shadow-0-1': showShadow }"
+>
+  <div
+    *ngIf="!!title && titleMode === 'primary'"
+    class="text-primary-active text-2xl mb-6"
+  >
+    {{ title | translate }}
+  </div>
+  <div
+    *ngIf="!!title && titleMode === 'secondary'"
+    class="text-xl font-bold text-primary-on-surface mb-6"
+  >
+    {{ title | translate }}
+  </div>
+  <ng-content></ng-content>
+</div>

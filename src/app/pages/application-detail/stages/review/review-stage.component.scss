@@ -2,6 +2,34 @@
   @apply space-y-6;
 }
 
+.review-subtabs {
+  span {
+    @apply transition-colors duration-200;
+    
+    &:hover:not([style*="not-allowed"]) {
+      @apply text-gray-800;
+    }
+  }
+}
+
+.tab-content {
+  .review-form {
+    @apply space-y-6;
+  }
+  
+  .review-entity {
+    @apply bg-gray-50;
+  }
+  
+  .certification-form {
+    @apply space-y-6;
+    
+    .form-actions-simple {
+      @apply flex justify-center;
+    }
+  }
+}
+
 .section-card {
   @apply bg-white rounded-2xl shadow-sm border border-gray-200 p-6;
 }
@@ -18,23 +46,297 @@
   @apply text-gray-600 text-sm mb-4;
 }
 
-.entity-cards {
+.accordion-cards {
   @apply space-y-4;
 }
 
-.entity-card {
-  @apply flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200;
+.accordion-card {
+  @apply border border-gray-200 rounded-lg overflow-hidden;
   
-  .entity-info {
-    @apply flex-1;
+  .accordion-header {
+    @apply flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200;
     
-    .entity-name {
-      @apply text-base font-medium text-gray-900;
+    .accordion-header-content {
+      @apply flex items-center justify-between flex-1 mr-4;
+      
+      .entity-name {
+        @apply text-base font-medium text-gray-900;
+      }
+      
+      .entity-status {
+        @apply flex items-center;
+      }
+    }
+    
+    .accordion-chevron {
+      @apply flex items-center;
     }
   }
   
-  .entity-status {
-    @apply flex items-center;
+  .accordion-content {
+    @apply border-t border-gray-200 bg-gray-50;
+    
+    .review-actions {
+      @apply p-6 space-y-6;
+      
+      .comments-section {
+        @apply space-y-3;
+        
+        .comments-title {
+          @apply text-base font-semibold text-gray-900;
+        }
+        
+        .comments-note {
+          @apply text-sm text-gray-600;
+        }
+      }
+      
+      .action-buttons {
+        @apply grid grid-cols-3 gap-3;
+      }
+    }
+    
+    .review-content {
+      @apply p-6;
+    }
+    
+    // Initial Review Content
+    .initial-review-content,
+    .initial-review-accepted {
+      @apply p-6 space-y-6;
+      
+      .review-header {
+        @apply border-b border-gray-200 pb-4 mb-6;
+        
+        .review-title {
+          @apply text-lg font-semibold text-gray-900 mb-1;
+        }
+        
+        .review-subtitle {
+          @apply text-sm text-gray-600;
+        }
+      }
+      
+      .review-details {
+        @apply space-y-4;
+        
+        .detail-item {
+          @apply space-y-2;
+          
+          &.full-width {
+            @apply col-span-1 md:col-span-2;
+          }
+          
+          .detail-label {
+            @apply text-sm font-medium text-gray-600;
+          }
+          
+          .comment-box {
+            @apply p-3 bg-gray-50 border border-gray-200 rounded-md;
+            
+            .comment-text {
+              @apply text-sm text-gray-900 leading-relaxed;
+            }
+          }
+        }
+      }
+    }
+    
+    // TAQA Review Content
+    .taqa-review-content {
+      @apply p-6 space-y-6;
+      
+      .review-header {
+        @apply border-b border-gray-200 pb-4 mb-6;
+        
+        .review-title {
+          @apply text-lg font-semibold text-gray-900 mb-1;
+        }
+        
+        .review-subtitle {
+          @apply text-sm text-gray-600;
+        }
+      }
+      
+      .review-details-grid {
+        @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+        
+        .detail-item {
+          @apply space-y-2;
+          
+          &.full-width {
+            @apply col-span-1 md:col-span-2;
+          }
+          
+          .detail-label {
+            @apply text-sm font-medium text-gray-600;
+          }
+          
+          .detail-value {
+            @apply text-sm text-gray-900;
+          }
+          
+          .detail-value-with-check {
+            @apply flex items-center gap-2;
+            
+            .check-icon {
+              @apply w-4 h-4 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-bold;
+            }
+          }
+          
+          .meter-list {
+            @apply space-y-1;
+            
+            li {
+              @apply text-sm text-gray-900;
+            }
+          }
+          
+          .comment-box {
+            @apply p-3 bg-gray-50 border border-gray-200 rounded-md;
+            
+            .comment-text {
+              @apply text-sm text-gray-900 leading-relaxed;
+            }
+          }
+        }
+      }
+    }
+    
+    // AD Ports Review Content  
+    .ad-ports-review-content {
+      @apply p-6 space-y-6;
+      
+      .review-header {
+        @apply border-b border-gray-200 pb-4 mb-6;
+        
+        .review-title {
+          @apply text-lg font-semibold text-gray-900 mb-1;
+        }
+        
+        .review-subtitle {
+          @apply text-sm text-gray-600;
+        }
+      }
+      
+      .review-details-grid {
+        @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+        
+        .detail-item {
+          @apply space-y-2;
+          
+          .detail-label {
+            @apply text-sm font-medium text-gray-600;
+          }
+          
+          .detail-value {
+            @apply text-sm text-gray-900;
+          }
+          
+          .detail-value-with-check {
+            @apply flex items-center gap-2;
+            
+            .check-icon {
+              @apply w-4 h-4 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-bold;
+            }
+          }
+          
+          .meter-list {
+            @apply space-y-1;
+            
+            li {
+              @apply text-sm text-gray-900;
+            }
+          }
+        }
+      }
+    }
+    
+    // Re-evaluation Section
+    .re-evaluation-section {
+      @apply mt-6 pt-6 space-y-4;
+      
+      .section-divider {
+        @apply border-t border-gray-200 mb-4;
+      }
+      
+      .section-subtitle {
+        @apply text-base font-semibold text-gray-900;
+      }
+      
+      .section-note {
+        @apply text-sm text-gray-600 mb-4;
+      }
+      
+      .form-group {
+        @apply space-y-2;
+        
+        .form-label {
+          @apply block text-sm font-medium text-gray-700;
+        }
+        
+        .form-textarea {
+          @apply w-full px-3 py-2 border border-gray-300 rounded-md text-sm resize-none h-16 focus:border-blue-500 focus:outline-none;
+        }
+      }
+      
+      .action-buttons-inline {
+        @apply flex gap-3;
+        
+        .action-btn-outline {
+          @apply px-4 py-2 rounded text-sm inline-flex items-center gap-2 cursor-pointer border-2 bg-transparent transition-all duration-200;
+        }
+      }
+    }
+    
+    // Final Review Content
+    .final-review-content {
+      @apply p-6 space-y-6;
+      
+      .review-header {
+        @apply border-b border-gray-200 pb-4 mb-6;
+        
+        .review-title {
+          @apply text-lg font-semibold text-gray-900 mb-1;
+        }
+        
+        .review-subtitle {
+          @apply text-sm text-gray-600;
+        }
+      }
+      
+      .certification-form {
+        @apply space-y-6;
+        
+        .form-group {
+          @apply space-y-3;
+          
+          .checkbox-wrapper {
+            @apply flex items-center gap-2 cursor-pointer;
+            
+            input[type="checkbox"] {
+              @apply w-4 h-4;
+            }
+            
+            .checkbox-text {
+              @apply text-sm text-gray-900;
+            }
+          }
+          
+          .checkbox-note {
+            @apply text-sm text-gray-600 leading-relaxed ml-6;
+          }
+        }
+        
+        .form-actions-simple {
+          @apply flex justify-center pt-4;
+          
+          .certification-btn {
+            @apply px-6 py-3 bg-green-600 text-white rounded-lg text-sm inline-flex items-center gap-2 cursor-pointer hover:bg-green-700 transition-colors duration-200 font-medium;
+          }
+        }
+      }
+    }
   }
 }
 

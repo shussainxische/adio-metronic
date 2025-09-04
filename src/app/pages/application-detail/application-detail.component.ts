@@ -197,15 +197,25 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   private updateStageTabs() {
-    // For Closed applications with Certified status, only show Completed tab
+    // For Closed applications with Certified status
     if (this.application?.stage === 'Closed' && this.application?.status === 'Certified') {
-      this.stageTabs = this.stages.filter(stage => 
-        stage.id === 'Completed'
-      ).map(stage => ({ 
-        id: stage.id, 
-        label: stage.name,
-        icon: stage.icon
-      }));
+      if (this.isAdioView) {
+        // ADIO users see all stages including Completed for certified applications
+        this.stageTabs = this.stages.map(stage => ({ 
+          id: stage.id, 
+          label: stage.name,
+          icon: stage.icon
+        }));
+      } else {
+        // CB users only see Completed tab
+        this.stageTabs = this.stages.filter(stage => 
+          stage.id === 'Completed'
+        ).map(stage => ({ 
+          id: stage.id, 
+          label: stage.name,
+          icon: stage.icon
+        }));
+      }
       return;
     }
     
@@ -320,7 +330,13 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/applications']);
+    // Detect if we're in ADIO view and navigate to appropriate applications page
+    const isAdioView = this.router.url.startsWith('/adio');
+    if (isAdioView) {
+      this.router.navigate(['/adio/applications']);
+    } else {
+      this.router.navigate(['/cb/applications']);
+    }
   }
 
   isSLAViolation(): boolean {
@@ -533,8 +549,11 @@ export class ApplicationDetailComponent implements OnInit {
     if (this.application?.stage === 'Quotation') {
       // Only add Compliance row for Quotation stage applications
       baseRows.push({ label: 'Compliance', value: this.getCompliance(), type: 'compliance' });
+    } else if (this.application?.stage === 'Evaluation' || this.application?.stage === 'Review') {
+      // Add Evaluator row for Evaluation and Review stage applications
+      baseRows.push({ label: 'Evaluator', value: this.getEvaluator() });
     } else if (this.application?.stage === 'Closed') {
-      // Add closed-specific information based on status
+      // Add closed-specific information based to status
       this.addClosedStatusRows(baseRows);
     }
 
@@ -580,6 +599,11 @@ export class ApplicationDetailComponent implements OnInit {
 
   private getCompliance(): string {
     return this.getApplicationDetail('compliance') || 'Unknown Compliance Status';
+  }
+
+  private getEvaluator(): string {
+    // Return the CB name that was awarded the contract and is now evaluating
+    return 'Al Tamimi Certification';
   }
 
   private getApplicationDetail(key: string): any {
@@ -650,9 +674,16 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   private setDefaultStage(): void {
-    // For Closed applications with Certified status, force Completed stage
+    // Don't override if stage was already set from query parameters
+    if (this.route.snapshot.queryParams['stage']) {
+      return;
+    }
+    
+    // For Closed applications with Certified status
     if (this.application?.stage === 'Closed' && this.application?.status === 'Certified') {
+      // Both ADIO and CB users start at Completed stage by default for certified applications
       this.currentStage = 'Completed';
+      this.currentStep = 0; // Reset to first step
       this.updateUrl();
       return;
     }
@@ -668,6 +699,36 @@ export class ApplicationDetailComponent implements OnInit {
       this.currentStage = 'Application';
     }
     this.updateUrl();
+  }
+
+  get isAdioView(): boolean {
+    return this.router.url.startsWith('/adio');
+  }
+
+  showCancelApplicationModal(): void {
+    // TODO: Implement cancel application modal
+    // This would show a modal with:
+    // - Text input for cancellation reason
+    // - Confirm and Cancel buttons
+    console.log('Show cancel application modal');
+    
+    // For now, just show a browser confirm dialog
+    const reason = prompt('Please provide a reason for cancelling this application:');
+    if (reason && reason.trim()) {
+      if (confirm(`Are you sure you want to cancel this application?\n\nReason: ${reason}`)) {
+        this.cancelApplication(reason);
+      }
+    }
+  }
+
+  private cancelApplication(reason: string): void {
+    console.log(`Cancelling application ${this.applicationId} with reason: ${reason}`);
+    // TODO: Implement actual cancellation logic
+    // This would make an API call to cancel the application
+    alert('Application has been cancelled successfully.');
+    
+    // Navigate back to applications list
+    this.router.navigate(['/adio/applications']);
   }
 
 }

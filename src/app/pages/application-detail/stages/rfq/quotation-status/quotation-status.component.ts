@@ -11,6 +11,7 @@ export interface QuotationStatusData {
   submittedAmount?: string;
   submissionDate?: string;
   awardedDate?: string;
+  awardedToCB?: string;
   decisionDate?: string;
   rfqDeadline?: string;
   uploadedFileName?: string;

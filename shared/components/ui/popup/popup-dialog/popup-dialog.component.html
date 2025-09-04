@@ -1,0 +1,36 @@
+<div class="text-center text-primary-on-surface">
+  <div class="absolute -top-12 left-1/2 -translate-x-1/2">
+    <div class="flex rounded-full bg-surface-dropdown-popups w-[88px] h-[88px] shadow-lg items-center justify-center">
+      <div class="relative">
+        <div class="flex rounded-full bg-surface-dropdown-popups w-[88px] h-[88px] shadow-lg items-center justify-center flex-shrink-0">
+          <ng-container [ngSwitch]="iconType">
+            <span *ngSwitchCase="'success'" class="material-symbols-outlined text-[40px] leading-none text-green font-semibold">check</span>
+            <span *ngSwitchCase="'error'" class="material-symbols-outlined text-[40px] leading-none text-red font-semibold">close</span>
+            <span *ngSwitchCase="'exclamation'" class="material-symbols-outlined text-[56px] leading-none text-yellow font-semibold">exclamation</span>
+            <span *ngSwitchCase="'trash'" class="material-symbols-outlined text-[40px] leading-none text-red font-semibold">delete</span>
+            <span *ngSwitchCase="'info'" class="material-symbols-outlined text-[40px] font-semibold text-blue">info_i</span>
+
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="text-[20px] font-bold leading-[28px] font-english mb-2">{{ title }}</p>
+  <p class="mt-2" *ngIf="description">{{ description }}</p>
+
+  <div class="flex gap-2 mt-12 w-full flex-col sm:flex-row">
+    <div class="w-full" *ngIf="secondaryButtonText">
+      <app-adio-button (click)="onSecondaryClick()" mode="outline" variant="regular"
+        [className]="secondaryButtonClass">
+        {{ secondaryButtonText }}
+      </app-adio-button>
+    </div>
+    <div class="w-full">
+      <app-adio-button (click)="onPrimaryClick()" mode="filled" [variant]="variant" [className]="primaryButtonClass">
+        {{ primaryButtonText }}
+      </app-adio-button>
+    </div>
+  </div>
+</div>

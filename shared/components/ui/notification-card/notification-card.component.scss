@@ -1,0 +1,111 @@
+.notification-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  &.unread {
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    position: relative;
+    
+    &:hover {
+      background-color: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    
+    // Add subtle left border for unread indication
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background-color: var(--primary-color);
+      border-radius: 0.5rem 0 0 0.5rem;
+    }
+  }
+}
+
+// Read notifications - light grey background, no border
+.notification-card:not(.unread) {
+  background-color: #f9fafb;
+  border: none;
+  
+  &:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.notification-text {
+  flex: 1;
+  min-width: 0;
+}
+
+
+.notification-message {
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 0 0 0.125rem 0;
+  line-height: 1.4;
+
+  .unread & {
+    color: #1f2937;
+    font-weight: 500;
+  }
+
+  strong {
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+}
+
+.notification-time {
+  font-size: 0.6875rem; // Much smaller - 11px
+  color: #9ca3af;
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+
+.notification-actions {
+  display: flex;
+  align-items: center;
+  margin-left: 0.75rem;
+}
+
+.mark-read-btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--primary-dark-color);
+  }
+}

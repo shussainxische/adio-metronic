@@ -1,0 +1,12 @@
+// Preview card component styles
+:host {
+  display: block;
+}
+
+.group:hover .hover-overlay {
+  opacity: 1;
+}
+
+.progress-bar {
+  transition: width 0.3s ease-in-out;
+}

@@ -1,0 +1,6 @@
+<tbody *ngIf="showContent" class="contents">
+  <tr *ngIf="!!emptyContentMessage">
+    <td colspan="10" class="text-center py-4">{{emptyContentMessage}}</td>
+  </tr>
+  <ng-content></ng-content>
+</tbody>

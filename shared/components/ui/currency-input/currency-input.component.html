@@ -1,0 +1,51 @@
+<label
+  class="block mb-2 text-base font-normal"
+  *ngIf="label"
+>
+  {{ label | translate }}
+</label>
+
+<fieldset
+  (click)="focusInput()"
+  class="border rounded-md relative group flex items-center w-full max-h-full"
+  [ngClass]="{
+    'border-gray-700': !hasError,
+    'border-red': hasError,
+    'hover:border-gray-900': !disabled && !hasError,
+    'focus-within:border-primary-light': !disabled && !hasError,
+    'active:border-gray-700': !disabled && !hasError,
+    'bg-transparent': true
+  }"
+>
+  <input
+    #inputElement
+    [formControl]="getControl()"
+    [placeholder]="placeholder | translate"
+    type="text"
+    class="border-0 w-full outline-none"
+    [ngClass]="{
+      'py-[23px] pr-16 pl-3': true,
+      'rounded-md': true,
+      'text-sm h-5': true,
+      'text-gray-800': true,
+      'hover:text-gray-900': !disabled,
+      'focus:text-gray-900': !hasError,
+      'active:text-primary-on-surface': !hasError,
+      'bg-transparent': true,
+      'placeholder:text-gray-700': true
+    }"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)"
+    [disabled]="disabled"
+    (input)="onInput($event)"
+    autocomplete="off"
+  />
+  
+  <div class="currency-unit">
+    {{ unit }}
+  </div>
+</fieldset>
+
+<div *ngIf="hasError && getControl()?.touched" class="text-red text-sm mt-1">
+  <span *ngIf="getControl()?.errors?.['required']">This field is required</span>
+</div>

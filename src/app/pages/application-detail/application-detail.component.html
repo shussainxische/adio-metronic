@@ -13,12 +13,23 @@
             <span class="text-sm font-medium">Back to Applications</span>
           </app-button>
           
-          <app-button 
-            (click)="exportActivityLog()"
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 bg-transparent border border-gray-300 px-3 py-2 rounded-md hover:bg-gray-50">
-            <app-icon name="download" [size]="16"></app-icon>
-            <span class="text-sm font-medium">Export</span>
-          </app-button>
+          <div class="flex items-center gap-2">
+            <!-- Cancel Application Button - ADIO only, not for Closed applications -->
+            <app-button 
+              *ngIf="isAdioView && currentStage !== 'Closed'"
+              (click)="showCancelApplicationModal()"
+              className="flex items-center gap-2 text-red-600 hover:text-red-800 bg-transparent border border-red-300 px-3 py-2 rounded-md hover:bg-red-50">
+              <app-icon name="x-circle" [size]="16"></app-icon>
+              <span class="text-sm font-medium">Cancel Application</span>
+            </app-button>
+            
+            <app-button 
+              (click)="exportActivityLog()"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 bg-transparent border border-gray-300 px-3 py-2 rounded-md hover:bg-gray-50">
+              <app-icon name="download" [size]="16"></app-icon>
+              <span class="text-sm font-medium">Export</span>
+            </app-button>
+          </div>
         </div>
         
         <!-- Separator -->
@@ -43,8 +54,8 @@
         <!-- Step Content -->
         <div *ngIf="currentStageData">
           
-          <!-- Step Progress - For stages with multiple steps -->
-          <div *ngIf="hasMultipleSteps" class="bg-gray-50 border border-gray-200 px-6 py-4 rounded-2xl mb-8">
+          <!-- Step Progress - For stages with multiple steps (hide for ADIO when in Evaluation stage viewing Evaluation tab) -->
+          <div *ngIf="hasMultipleSteps && !(isAdioView && application?.stage === 'Evaluation' && currentStage === 'Evaluation')" class="bg-gray-50 border border-gray-200 px-6 py-4 rounded-2xl mb-8">
             <div class="flex items-center flex-wrap text-sm">
               <span *ngFor="let step of currentStageSteps; let i = index; let last = last" 
                     class="flex items-center">
@@ -73,12 +84,7 @@
             
             <!-- Evaluation stage without container wrapper -->
             <div *ngIf="currentStage === 'Evaluation'">
-              <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
-              <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
-              <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
-              <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
-              <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
-              <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
+              <app-evaluation-stage [application]="application"></app-evaluation-stage>
             </div>
             
             <!-- Review stage without container wrapper -->

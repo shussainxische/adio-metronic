@@ -1,9 +1,20 @@
-<app-main-layout class="antialiased flex h-full text-base text-gray-700 [--tw-page-bg:#fefefe] [--tw-page-bg-dark:var(--tw-coal-500)] demo1 sidebar-fixed header-fixed bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]"></app-main-layout>
+<!-- Show main layout for all pages except landing -->
+<app-main-layout *ngIf="showMainLayout" 
+    class="antialiased flex h-full text-base text-gray-700 [--tw-page-bg:#fefefe] [--tw-page-bg-dark:var(--tw-coal-500)] demo1 sidebar-fixed header-fixed bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]">
+</app-main-layout>
 
-<!-- <div class="antialiased flex h-full text-base text-gray-700 [--tw-page-bg:#fefefe] [--tw-page-bg-dark:var(--tw-coal-500)] demo1 sidebar-fixed header-fixed bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]"> -->
+<!-- Show only router outlet for landing page -->
+<div *ngIf="!showMainLayout" class="antialiased">
+  <router-outlet />
+</div>
+
+<!-- Floating reset button (hidden on landing page) -->
+<button *ngIf="showMainLayout" 
+        (click)="goToLanding()"
+        class="fixed bottom-6 right-6 z-50 bg-primary hover:bg-primary-dark text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200">
+  <span class="material-symbols-outlined">refresh</span>
+</button>
+
 <app-loader *ngIf="(loaderService.isLoading$ | async)"
     class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50">
 </app-loader>
-
-<!-- <router-outlet /> -->
-<!-- </div> -->
