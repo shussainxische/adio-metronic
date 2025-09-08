@@ -31,7 +31,7 @@
     <div>
       <div *ngIf="!shouldShowSubStatus(selectedFilter) && selectedFilter !== 'All'">
         <h2>Applications</h2>
-        <p>Showing {{ filteredApplications.length }} results</p>
+        <!-- Results count removed per user request -->
       </div>
       <div *ngIf="shouldShowSubStatus(selectedFilter)">
         <div class="flex flex-wrap gap-1 border-b border-gray-200">
