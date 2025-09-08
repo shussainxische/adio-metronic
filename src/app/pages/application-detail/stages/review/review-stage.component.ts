@@ -39,7 +39,7 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   
   // Initial Review properties
   initialReviewComments: string = '';
-  initialReviewStatus: 'submitted' | 'accepted' | 'returned' | 'rejected' | 'pending' = 'pending';
+  initialReviewStatus: 'submitted' | 'accepted' | 'returned' | 'rejected' | 'pending' | 'reevaluation' = 'pending';
   
   // Re-evaluation properties
   taqaReEvalComments: string = '';
@@ -48,6 +48,10 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   // Final Review properties
   continueToCertification: boolean = false;
   certificateIssueDate: string = '';
+  
+  // Certificate hold properties
+  certificateOnHold: boolean = false;
+  certificateHoldReason: string = '';
   
   // External Review accordion states
   taqaAccordionExpanded: boolean = false;
@@ -304,6 +308,7 @@ export class ReviewStageComponent implements OnInit, OnChanges {
       case 'returned': return 'Awaiting Information';
       case 'submitted': return 'Submitted';
       case 'pending': return 'Pending';
+      case 'reevaluation': return 'Re-evaluation';
       default: return 'Pending';
     }
   }
@@ -491,5 +496,21 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     this.reviewTabs[2].status = 'completed';
     
     // TODO: Implement actual certification logic
+  }
+
+  // Return for Re-evaluation method (only for Initial Review)
+  returnForReEvaluation(reviewType: 'initial') {
+    console.log(`Returning ${reviewType} review for re-evaluation`);
+    
+    if (reviewType === 'initial') {
+      this.initialReviewStatus = 'reevaluation';
+      this.certificateHoldReason = 'Initial Review returned for re-evaluation to certifying body';
+      
+      // Put certificate on hold
+      this.certificateOnHold = true;
+      
+      // Clear certificate issue date
+      this.certificateIssueDate = '';
+    }
   }
 }

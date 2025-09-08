@@ -266,10 +266,18 @@ export class ApplicationDetailComponent implements OnInit {
   get currentStageSteps() {
     return this.currentStageData?.steps.map(step => ({ 
       id: step.id,
-      label: step.name,
+      label: this.getStepDisplayName(step),
       description: step.description,
       clickable: true // Make all steps clickable for prototype
     })) || [];
+  }
+
+  private getStepDisplayName(step: any): string {
+    // Override step name for ADIO Review applications
+    if (step.id === 'review-submit' && this.isAdioView && this.application?.stage === 'Review') {
+      return 'Additional Documents';
+    }
+    return step.name;
   }
 
   onStageChange(stageId: string) {

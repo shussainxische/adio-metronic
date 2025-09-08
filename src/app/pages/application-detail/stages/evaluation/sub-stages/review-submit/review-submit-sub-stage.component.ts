@@ -1,18 +1,65 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FileUploadComponent } from '../../../../../../components/ui/file-upload/file-upload.component';
 import { EvaluationStatusComponent, EvaluationStatusData } from './evaluation-status/evaluation-status.component';
+import { IconComponent } from '../../../../../../components/ui/icon/icon.component';
+import { Application } from '../../../../../../services/application-status.service';
 
 @Component({
   selector: 'app-review-submit-sub-stage',
   standalone: true,
-  imports: [CommonModule, FormsModule, FileUploadComponent, EvaluationStatusComponent],
+  imports: [CommonModule, FormsModule, FileUploadComponent, EvaluationStatusComponent, IconComponent],
   templateUrl: './review-submit-sub-stage.component.html',
   styleUrl: './review-submit-sub-stage.component.scss'
 })
-export class ReviewSubmitSubStageComponent {
+export class ReviewSubmitSubStageComponent implements OnInit {
   @Input() readOnly: boolean = false;
+  @Input() application?: Application;
+
+  // ADIO View Detection
+  isAdioView: boolean = false;
+  
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // Detect if we're in ADIO view
+    this.isAdioView = this.router.url.startsWith('/adio');
+  }
+
+  get showAdioView(): boolean {
+    return this.isAdioView && this.application?.stage === 'Review';
+  }
+
+  // Sample documents for ADIO view
+  get sampleDocuments() {
+    return [
+      {
+        id: '1',
+        fileName: 'Financial_Statements_2024.pdf',
+        uploadDate: '15 Nov 2024',
+        size: '2.3 MB'
+      },
+      {
+        id: '2', 
+        fileName: 'Environmental_Impact_Assessment.pdf',
+        uploadDate: '12 Nov 2024',
+        size: '4.7 MB'
+      },
+      {
+        id: '3',
+        fileName: 'Technical_Specifications.docx',
+        uploadDate: '10 Nov 2024',
+        size: '1.8 MB'
+      }
+    ];
+  }
+
+  downloadDocument(document: any) {
+    console.log('Downloading document:', document.fileName);
+    alert(`Would download: ${document.fileName}`);
+  }
   uploadedFiles: File[] = [];
   confirmSubmission = false;
   isSubmitting = false;

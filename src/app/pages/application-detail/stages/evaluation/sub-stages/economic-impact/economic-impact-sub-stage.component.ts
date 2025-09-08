@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
+import { Application } from '../../../../../../services/application-status.service';
 
 @Component({
   selector: 'app-economic-impact-sub-stage',
@@ -13,8 +15,17 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
 })
 export class EconomicImpactSubStageComponent implements OnInit {
   @Input() readOnly: boolean = false;
+  @Input() application?: Application;
+
+  // ADIO View Detection
+  isAdioView: boolean = false;
   
+  constructor(private router: Router) {}
+
   ngOnInit() {
+    // Detect if we're in ADIO view
+    this.isAdioView = this.router.url.startsWith('/adio');
+
     if (this.readOnly) {
       this.grossBookValueAbuDhabiControl.disable();
       this.totalGrossBookValueControl.disable();
@@ -27,6 +38,10 @@ export class EconomicImpactSubStageComponent implements OnInit {
       this.adLogisticsFeesControl.disable();
       this.uaeLogisticsFeesControl.disable();
     }
+  }
+
+  get showAdioView(): boolean {
+    return this.isAdioView && this.application?.stage === 'Review';
   }
   // Investment Form Controls
   grossBookValueAbuDhabiControl = new FormControl('0');

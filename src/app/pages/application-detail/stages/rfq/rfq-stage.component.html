@@ -1,12 +1,12 @@
 <!-- ADIO Management View -->
-<div *ngIf="isAdioView && (application?.stage === 'Quotation' || (application?.stage === 'Evaluation' && (application?.status === 'In Progress' || application?.status === 'Returned')))" class="mb-4">
+<div *ngIf="isAdioView && (application?.stage === 'Quotation' || (application?.stage === 'Evaluation' && (application?.status === 'In Progress' || application?.status === 'Returned')) || application?.stage === 'Review')" class="mb-4">
   <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
     <div class="mb-6">
       <h3 class="text-lg font-semibold text-gray-900 mb-1">
-        <span *ngIf="application?.stage === 'Evaluation'">Quotation</span>
-        <span *ngIf="application?.stage !== 'Evaluation'">Certifying Body Quotations</span>
+        <span *ngIf="application?.stage === 'Evaluation' || application?.stage === 'Review'">Quotation</span>
+        <span *ngIf="application?.stage !== 'Evaluation' && application?.stage !== 'Review'">Certifying Body Quotations</span>
       </h3>
-      <p *ngIf="application?.stage === 'Evaluation'" class="text-sm text-gray-600">
+      <p *ngIf="application?.stage === 'Evaluation' || application?.stage === 'Review'" class="text-sm text-gray-600">
         Awarded on 15 Dec 2024
       </p>
     </div>
@@ -44,30 +44,30 @@
           
           <!-- Status Column -->
           <div class="flex-1">
-            <!-- For Evaluation stage -->
-            <span *ngIf="application?.stage === 'Evaluation' && cb.awarded" 
+            <!-- For Evaluation and Review stages -->
+            <span *ngIf="(application?.stage === 'Evaluation' || application?.stage === 'Review') && cb.awarded" 
                   class="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md">
               Awarded
             </span>
-            <span *ngIf="application?.stage === 'Evaluation' && !cb.awarded && cb.status === 'submitted'" 
+            <span *ngIf="(application?.stage === 'Evaluation' || application?.stage === 'Review') && !cb.awarded && cb.status === 'submitted'" 
                   class="inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-md">
               Not Awarded
             </span>
-            <span *ngIf="application?.stage === 'Evaluation' && cb.status === 'pending'" 
+            <span *ngIf="(application?.stage === 'Evaluation' || application?.stage === 'Review') && cb.status === 'pending'" 
                   class="inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-md">
               Not Submitted
             </span>
             
             <!-- For other stages - consistent badge styling -->
-            <span *ngIf="application?.stage !== 'Evaluation' && cb.awarded" 
+            <span *ngIf="application?.stage !== 'Evaluation' && application?.stage !== 'Review' && cb.awarded" 
                   class="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md">
               Awarded
             </span>
-            <span *ngIf="application?.stage !== 'Evaluation' && !cb.awarded && cb.status === 'submitted'" 
+            <span *ngIf="application?.stage !== 'Evaluation' && application?.stage !== 'Review' && !cb.awarded && cb.status === 'submitted'" 
                   class="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md">
               Submitted
             </span>
-            <span *ngIf="application?.stage !== 'Evaluation' && cb.status === 'pending'" 
+            <span *ngIf="application?.stage !== 'Evaluation' && application?.stage !== 'Review' && cb.status === 'pending'" 
                   class="inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-md">
               Not Submitted
             </span>
@@ -75,19 +75,19 @@
           
           <!-- Submitted On -->
           <div class="flex-1 text-center">
-            <!-- For Evaluation stage -->
-            <span *ngIf="application?.stage === 'Evaluation' && cb.status === 'submitted'" class="text-xs text-gray-600">
+            <!-- For Evaluation and Review stages -->
+            <span *ngIf="(application?.stage === 'Evaluation' || application?.stage === 'Review') && cb.status === 'submitted'" class="text-xs text-gray-600">
               {{ cb.submissionDate }}
             </span>
-            <span *ngIf="application?.stage === 'Evaluation' && cb.status === 'pending'" class="text-xs text-gray-500">
+            <span *ngIf="(application?.stage === 'Evaluation' || application?.stage === 'Review') && cb.status === 'pending'" class="text-xs text-gray-500">
               -
             </span>
             
             <!-- For other stages -->
-            <span *ngIf="application?.stage !== 'Evaluation' && cb.status === 'submitted'" class="text-xs text-gray-600">
+            <span *ngIf="application?.stage !== 'Evaluation' && application?.stage !== 'Review' && cb.status === 'submitted'" class="text-xs text-gray-600">
               {{ cb.submissionDate }}
             </span>
-            <span *ngIf="application?.stage !== 'Evaluation' && cb.status === 'pending'" class="text-xs text-gray-500">
+            <span *ngIf="application?.stage !== 'Evaluation' && application?.stage !== 'Review' && cb.status === 'pending'" class="text-xs text-gray-500">
               -
             </span>
           </div>
@@ -176,13 +176,13 @@
 </div>
 
 <app-quotation-status 
-  *ngIf="isSubmitted && (!isAdioView || (isAdioView && application?.stage !== 'Quotation' && application?.stage !== 'Evaluation'))"
+  *ngIf="isSubmitted && (!isAdioView || (isAdioView && application?.stage !== 'Quotation' && application?.stage !== 'Evaluation' && application?.stage !== 'Review'))"
   [statusData]="statusData"
   (backToForm)="resetForm()"
   (startEvaluation)="onStartEvaluation()">
 </app-quotation-status>
 
 <app-rejected-quotations
-  *ngIf="isAdioView && application?.stage !== 'Quotation' && application?.stage !== 'Evaluation' && rejectedQuotations.length > 0"
+  *ngIf="isAdioView && application?.stage !== 'Quotation' && application?.stage !== 'Evaluation' && application?.stage !== 'Review' && rejectedQuotations.length > 0"
   [rejectedQuotations]="rejectedQuotations">
 </app-rejected-quotations>

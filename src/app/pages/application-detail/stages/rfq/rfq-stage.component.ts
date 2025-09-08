@@ -85,8 +85,8 @@ export class RfqStageComponent implements OnInit, OnChanges {
   }
 
   private setCertifyingBodiesData() {
-    // For Evaluation In Progress/Returned applications, show 2 submitted + 1 pending with one awarded
-    if (this.application?.stage === 'Evaluation' && (this.application?.status === 'In Progress' || this.application?.status === 'Returned')) {
+    // For Evaluation In Progress/Returned applications and Review applications, show 2 submitted + 1 pending with one awarded
+    if ((this.application?.stage === 'Evaluation' && (this.application?.status === 'In Progress' || this.application?.status === 'Returned')) || this.application?.stage === 'Review') {
       this.certifyingBodies = [
         {
           id: 'tuv-sud',

@@ -1,5 +1,5 @@
-<!-- ADIO Simple Alert View -->
-<div *ngIf="isAdioView" class="mb-4">
+<!-- ADIO Simple Alert View - Only for non-Review stage applications -->
+<div *ngIf="isAdioView && application?.stage !== 'Review'" class="mb-4">
   <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
     
     <!-- Headline -->
@@ -52,12 +52,12 @@
   </div>
 </div>
 
-<!-- CB Detailed View -->
-<div *ngIf="!isAdioView">
-  <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
-  <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
-  <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
-  <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
+<!-- CB Detailed View and ADIO View for Review stage applications -->
+<div *ngIf="!isAdioView || (isAdioView && application?.stage === 'Review')">
+  <app-general-sub-stage *ngIf="currentStep === 0" [application]="application"></app-general-sub-stage>
+  <app-economic-impact-sub-stage *ngIf="currentStep === 1" [application]="application"></app-economic-impact-sub-stage>
+  <app-productivity-sub-stage *ngIf="currentStep === 2" [application]="application"></app-productivity-sub-stage>
+  <app-ems-dms-sub-stage *ngIf="currentStep === 3" [application]="application"></app-ems-dms-sub-stage>
   <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
-  <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
+  <app-review-submit-sub-stage *ngIf="currentStep === 5" [application]="application"></app-review-submit-sub-stage>
 </div>

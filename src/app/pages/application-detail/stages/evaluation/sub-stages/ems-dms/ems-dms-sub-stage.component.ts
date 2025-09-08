@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { InputValidationComponent } from '../../../../../../components/ui/input-validation/input-validation.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
+import { Application } from '../../../../../../services/application-status.service';
 
 @Component({
   selector: 'app-ems-dms-sub-stage',
@@ -11,8 +13,29 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
   templateUrl: './ems-dms-sub-stage.component.html',
   styleUrl: './ems-dms-sub-stage.component.scss'
 })
-export class EmsDmsSubStageComponent {
+export class EmsDmsSubStageComponent implements OnInit {
   @Input() readOnly: boolean = false;
+  @Input() application?: Application;
+
+  // ADIO View Detection
+  isAdioView: boolean = false;
+  
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // Detect if we're in ADIO view
+    this.isAdioView = this.router.url.startsWith('/adio');
+
+    if (this.readOnly) {
+      this.connectionLoadMeterControl.disable();
+      this.emsAvailabilityControl.disable();
+      this.demandSideConsumptionControl.disable();
+    }
+  }
+
+  get showAdioView(): boolean {
+    return this.isAdioView && this.application?.stage === 'Review';
+  }
   connectionLoadMeterControl = new FormControl('');
   emsAvailabilityControl = new FormControl('Available');
   demandSideConsumptionControl = new FormControl('');

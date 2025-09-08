@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { InputComponent } from '../../../../../../components/ui/input/input.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
+import { Application } from '../../../../../../services/application-status.service';
 
 @Component({
   selector: 'app-productivity-sub-stage',
@@ -11,8 +13,43 @@ import { InputCalculatedComponent } from '../../../../../../components/ui/input-
   templateUrl: './productivity-sub-stage.component.html',
   styleUrl: './productivity-sub-stage.component.scss'
 })
-export class ProductivitySubStageComponent {
+export class ProductivitySubStageComponent implements OnInit {
   @Input() readOnly: boolean = false;
+  @Input() application?: Application;
+
+  // ADIO View Detection
+  isAdioView: boolean = false;
+  
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // Detect if we're in ADIO view
+    this.isAdioView = this.router.url.startsWith('/adio');
+
+    if (this.readOnly) {
+      this.totalRevenueMainActivityControl.disable();
+      this.finishedGoodsBeginningControl.disable();
+      this.finishedGoodsEndControl.disable();
+      this.workInProgressBeginningControl.disable();
+      this.workInProgressEndControl.disable();
+      this.otherMiscellaneousIncomeControl.disable();
+      this.rentalsOfBuildingControl.disable();
+      this.averageEmployeesControl.disable();
+      this.totalCostOfProductionControl.disable();
+      this.wagesSalariesBonusesCogsControl.disable();
+      this.benefitsGrantedEmployeesCogsControl.disable();
+      this.depreciationCogsControl.disable();
+      this.totalGeneralAdminExpensesControl.disable();
+      this.wagesSalariesBonusesAdminControl.disable();
+      this.benefitsGrantedEmployeesAdminControl.disable();
+      this.depreciationAdminControl.disable();
+      this.bankingChargesControl.disable();
+    }
+  }
+
+  get showAdioView(): boolean {
+    return this.isAdioView && this.application?.stage === 'Review';
+  }
   totalRevenueMainActivityControl = new FormControl('0');
   finishedGoodsBeginningControl = new FormControl('0');
   finishedGoodsEndControl = new FormControl('0');

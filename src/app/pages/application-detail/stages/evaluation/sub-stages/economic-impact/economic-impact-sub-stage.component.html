@@ -1,3 +1,134 @@
+<!-- ADIO Read-Only View for Review Applications -->
+<div *ngIf="showAdioView">
+  <!-- Investment Section -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Investment</h3>
+    </div>
+    
+    <!-- Two Column Layout matching CB edit view -->
+    <div class="grid grid-cols-2 gap-6">
+      <!-- Left Column: Gross Book Value in Abu Dhabi -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Gross Book Value in Abu Dhabi</label>
+        <p class="text-sm text-gray-700">AED 25,000,000</p>
+      </div>
+      
+      <!-- Right Column: Total Gross Book Value -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Total Gross Book Value</label>
+        <p class="text-sm text-gray-700">AED 50,000,000</p>
+      </div>
+    </div>
+    
+    <!-- Second Row: Calculated Fields -->
+    <div class="mt-6 grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Investment Score</label>
+        <p class="text-sm text-gray-700">0.50</p>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Investment Top-Up Score</label>
+        <p class="text-sm text-gray-700">0.50</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manpower & Emiratisation Section -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Manpower & Emiratisation</h3>
+    </div>
+    
+    <!-- Row 1 -->
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Salary & Benefits (Emirati)</label>
+        <p class="text-sm text-gray-700">AED 8,000,000</p>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Total Spent on Manpower</label>
+        <p class="text-sm text-gray-700">AED 10,000,000</p>
+      </div>
+    </div>
+    
+    <!-- Row 2 -->
+    <div class="mt-6 grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Original Number of Emiratis</label>
+        <p class="text-sm text-gray-700">8</p>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Growth In Emirati No's</label>
+        <p class="text-sm text-gray-700">12</p>
+      </div>
+    </div>
+    
+    <!-- Row 3 -->
+    <div class="mt-6 grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Total Number of Staff</label>
+        <p class="text-sm text-gray-700">150</p>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Number of Skilled Staff</label>
+        <p class="text-sm text-gray-700">90</p>
+      </div>
+    </div>
+    
+    <!-- Row 4: Calculated Fields -->
+    <div class="mt-6 grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Emiratisation: Salary & Benefits Score</label>
+        <p class="text-sm text-gray-700">0.80</p>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Emiratisation: Growth Score</label>
+        <p class="text-sm text-gray-700">0.50</p>
+      </div>
+    </div>
+    
+    <!-- Row 5: Skilled Labour Score -->
+    <div class="mt-6 grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Skilled Labour Score</label>
+        <p class="text-sm text-gray-700">0.90</p>
+      </div>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- Logistics Section -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Logistics</h3>
+    </div>
+    
+    <!-- Row 1 -->
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">AD Logistics Fees</label>
+        <p class="text-sm text-gray-700">AED 2,500,000</p>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">UAE Logistics Fees</label>
+        <p class="text-sm text-gray-700">AED 5,000,000</p>
+      </div>
+    </div>
+    
+    <!-- Row 2: Calculated Field -->
+    <div class="mt-6 grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Supply Chain Score</label>
+        <p class="text-sm text-gray-700">1.25</p>
+      </div>
+      <div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CB Interactive View -->
+<div *ngIf="!showAdioView">
 <div class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{investmentData.title}}</h3>
@@ -120,6 +251,7 @@
     </app-input-calculated>
     <div></div>
   </div>
+</div>
 </div>
 
 <div class="score-summary-container">

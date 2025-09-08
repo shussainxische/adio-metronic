@@ -1,3 +1,44 @@
+<!-- ADIO Read-Only View for Review Applications -->
+<div *ngIf="showAdioView">
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Additional Documents</h3>
+      <p class="text-sm text-gray-600">Documents submitted with the evaluation</p>
+    </div>
+
+    <!-- Document Files -->
+    <div class="space-y-3">
+      <div 
+        *ngFor="let doc of sampleDocuments" 
+        class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
+        (click)="downloadDocument(doc)">
+        <div class="flex items-center gap-3">
+          <div class="flex-shrink-0">
+            <app-icon name="file-text" [size]="20" className="text-red-600"></app-icon>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-900">{{ doc.fileName }}</p>
+            <p class="text-xs text-gray-500">Uploaded {{ doc.uploadDate }} • {{ doc.size }}</p>
+          </div>
+        </div>
+        <div class="flex-shrink-0">
+          <app-icon name="download" [size]="16" className="text-gray-400"></app-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Info -->
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+      <div class="flex items-center gap-2 text-sm text-gray-700">
+        <app-icon name="info" [size]="16" className="text-blue-600"></app-icon>
+        <span>{{ sampleDocuments.length }} documents uploaded</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CB Interactive View -->
+<div *ngIf="!showAdioView">
 <div *ngIf="!isSubmitted" class="section-container">
   <div class="section-header">
     <h3 class="section-title">Upload & Submit</h3>
@@ -51,3 +92,4 @@
   [statusData]="statusData"
   (backToForm)="resetForm()">
 </app-evaluation-status>
+</div>
