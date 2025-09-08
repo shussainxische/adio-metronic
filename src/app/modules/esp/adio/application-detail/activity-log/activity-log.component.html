@@ -1,0 +1,11 @@
+<div class="activity-log h-screen overflow-y-auto">
+  <div *ngFor="let group of activityGroups" class="activity-group">
+    <h3 class="group-date">{{ group.date }}</h3>
+    <div class="group-items">
+      <app-activity-log-item 
+        *ngFor="let item of group.items"
+        [item]="item">
+      </app-activity-log-item>
+    </div>
+  </div>
+</div>

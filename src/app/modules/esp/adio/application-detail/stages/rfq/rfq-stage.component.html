@@ -1,0 +1,72 @@
+<div *ngIf="!isSubmitted" class="mb-4">
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Submit Quotation</h3>
+      <p class="text-sm text-gray-600">Enter quotation details and accept standardized terms</p>
+    </div>
+    
+    <div class="space-y-6">
+      <div>
+        <app-input-numeric 
+          [control]="quotationAmountControl"
+          label="Quotation Amount"
+          labelStyle="standard"
+          placeholder="0.00"
+          type="text"
+          validationType="number"
+          [numericFormat]="true">
+          <span iconBefore class="aed-currency">AED</span>
+        </app-input-numeric>
+        <p class="text-xs text-gray-500 mt-1">VAT Exclusive</p>
+      </div>
+
+      <div>
+        <app-file-upload
+          label="Upload Proposal Document *"
+          [accept]="'.pdf,.doc,.docx'"
+          [allowedTypes]="['.pdf', '.doc', '.docx']"
+          [maxSize]="10485760"
+          [multiple]="false"
+          [formControl]="proposalDocumentControl"
+          (filesChanged)="onFilesChanged($event)">
+        </app-file-upload>
+        <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB (Required)</p>
+      </div>
+
+      <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="acceptTerms"
+          class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+        <label class="text-sm text-gray-700">
+          I hereby confirm that all information provided in this quotation is accurate and complete. I acknowledge that I have reviewed and accept all terms and conditions of the ADIO Energy Support Program.
+        </label>
+      </div>
+
+      <!-- Debug validation status (remove in production) -->
+      <div class="text-xs text-gray-500 mb-2">
+        Debug: Amount: {{!!quotationAmountControl.value}}, Terms: {{acceptTerms}}, File: {{hasUploadedFile()}}, Valid: {{isFormValid}}
+      </div>
+      
+      <div class="pt-4">
+        <app-button 
+          [disabled]="!isFormValid || isSubmitting"
+          (click)="onSubmitQuotation()"
+          className="w-full bg-gray-900 text-white py-4 px-6 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="!isSubmitting">Submit Quotation</span>
+          <span *ngIf="isSubmitting" class="flex items-center justify-center gap-2">
+            <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+            Submitting...
+          </span>
+        </app-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-quotation-status 
+  *ngIf="isSubmitted"
+  [statusData]="statusData"
+  (backToForm)="resetForm()"
+  (startEvaluation)="onStartEvaluation()">
+</app-quotation-status>

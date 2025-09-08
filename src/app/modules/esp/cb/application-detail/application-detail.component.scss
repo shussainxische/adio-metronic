@@ -1,0 +1,77 @@
+.container-fixed {
+  max-width: none;
+  padding: 0 2rem;
+}
+
+/* Ensure content doesn't go behind fixed sidebar */
+.main-content {
+  margin-left: 20rem; /* 80 * 0.25rem = 20rem */
+}
+
+/* Custom scrollbar for sidebar */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb #f9fafb;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
+
+/* Stage progress animation */
+.stage-progress {
+  transition: width 0.3s ease;
+}
+
+/* Step content animation */
+.step-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 16rem; /* Reduce sidebar width on smaller screens */
+  }
+  
+  .main-content {
+    margin-left: 16rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+}
+

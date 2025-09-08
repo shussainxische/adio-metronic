@@ -1,0 +1,52 @@
+<div class="certificate-card">
+    <!-- Certificate Header -->
+    <div class="certificate-header">
+      <div class="header-content">
+        <h1 class="certificate-title">Certificate of Approval</h1>
+        <p class="certificate-issuer">Abu Dhabi Investment Office</p>
+      </div>
+      <div class="header-actions">
+        <button class="download-button" (click)="downloadCertificate()">
+          <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7,10 12,15 17,10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Certificate
+        </button>
+      </div>
+    </div>
+
+    <!-- Certificate Details Grid -->
+    <div class="certificate-details">
+      <div class="detail-row">
+        <div class="detail-item">
+          <p class="detail-label">Company Name</p>
+          <p class="detail-value">{{ companyName }}</p>
+        </div>
+        <div class="detail-item">
+          <p class="detail-label">Ind. Licenses No.</p>
+          <p class="detail-value">{{ industrialLicenseNo }}</p>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-item">
+          <p class="detail-label">Transaction No.</p>
+          <p class="detail-value">{{ transactionNo }}</p>
+        </div>
+        <div class="detail-item">
+          <p class="detail-label">Issue Date</p>
+          <p class="detail-value">{{ issueDate }}</p>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-item">
+          <p class="detail-label">Expiry Date</p>
+          <p class="detail-value">{{ expiryDate }}</p>
+        </div>
+        <div class="detail-item">
+          <!-- Empty cell for grid layout -->
+        </div>
+      </div>
+    </div>
+</div>

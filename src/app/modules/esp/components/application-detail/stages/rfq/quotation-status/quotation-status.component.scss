@@ -1,0 +1,25 @@
+.file-download-row {
+  .file-name {
+    font-size: 0.875rem;
+  }
+  
+  .file-size {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+  
+  .download-icon {
+    transition: all 0.2s ease;
+  }
+  
+  &:hover {
+    .download-icon {
+      transform: scale(1.1);
+      color: #374151 !important;
+    }
+    
+    .file-name {
+      color: #1f2937;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<div 
+  class="bg-white border-l border-gray-200 h-screen sticky top-8 flex flex-col"
+  [class]="width + ' ' + className">
+  
+  <!-- Tabs Header -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="flex">
+      <button 
+        (click)="switchTab('summary')"
+        [class]="'px-4 py-3 text-sm font-medium border-b-2 ' + (activeTab === 'summary' ? 'text-primary border-primary' : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300')">
+        Summary
+      </button>
+      <button 
+        (click)="switchTab('activity')"
+        [class]="'px-4 py-3 text-sm font-medium border-b-2 ' + (activeTab === 'activity' ? 'text-primary border-primary' : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300')">
+        Activity Log
+      </button>
+    </div>
+  </div>
+  
+  <!-- Tab Content -->
+  <div class="flex-1 overflow-hidden">
+    <!-- Summary Tab Content -->
+    <div *ngIf="activeTab === 'summary'" class="h-full overflow-y-auto p-6">
+      <app-info-table-widget 
+        [data]="summaryTableData" 
+        [collapsed]="!isWidgetOpen('summary')"
+        [onToggle]="toggleWidget.bind(this, 'summary')">
+      </app-info-table-widget>
+      <app-info-table-widget 
+        [data]="contactTableData" 
+        [collapsed]="!isWidgetOpen('contact')"
+        [onToggle]="toggleWidget.bind(this, 'contact')">
+      </app-info-table-widget>
+    </div>
+    
+    <!-- Activity Log Tab Content -->
+    <div *ngIf="activeTab === 'activity'" class="h-full overflow-y-auto p-6">
+      <app-activity-log></app-activity-log>
+    </div>
+  </div>
+</div>

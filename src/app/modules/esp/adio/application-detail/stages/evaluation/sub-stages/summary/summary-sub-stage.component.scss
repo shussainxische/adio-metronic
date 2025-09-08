@@ -1,0 +1,11 @@
+.summary-header {
+  @apply mb-8;
+  
+  .summary-title {
+    @apply text-2xl font-bold text-gray-900 mb-2;
+  }
+  
+  .summary-description {
+    @apply text-sm text-gray-600;
+  }
+}

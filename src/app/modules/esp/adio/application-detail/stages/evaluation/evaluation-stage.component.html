@@ -1,0 +1,42 @@
+<!-- General Sub-Stage -->
+<app-general-sub-stage 
+  [readOnly]="isReadOnly"
+  [application]="application"
+  [licenseDetails]="licenseDetails"
+  [companyContact]="companyContact"
+  [applicationSummary]="applicationSummary">
+</app-general-sub-stage>
+
+<!-- Economic Impact Sub-Stage -->
+<app-economic-impact-sub-stage 
+  [readOnly]="isReadOnly"
+  [evaluation]="evaluation"
+  [evaluationConfiguration]="evaluationConfiguration">
+</app-economic-impact-sub-stage>
+
+<!-- Productivity Sub-Stage -->
+<app-productivity-sub-stage 
+  [readOnly]="isReadOnly"
+  [evaluation]="evaluation"
+  [evaluationConfiguration]="evaluationConfiguration">
+</app-productivity-sub-stage>
+
+<!-- EMS/DMS Sub-Stage -->
+<app-ems-dms-sub-stage 
+  [readOnly]="isReadOnly"
+  [evaluation]="evaluation"
+  [evaluationConfiguration]="evaluationConfiguration">
+</app-ems-dms-sub-stage>
+
+<!-- Summary Sub-Stage -->
+<app-summary-sub-stage 
+  [readOnly]="isReadOnly"
+  [evaluation]="evaluation"
+  [evaluationConfiguration]="evaluationConfiguration">
+</app-summary-sub-stage>
+
+<!-- Review & Submit Sub-Stage -->
+<app-review-submit-sub-stage 
+  [readOnly]="isReadOnly"
+  [evaluationData]="evaluationData">
+</app-review-submit-sub-stage>
