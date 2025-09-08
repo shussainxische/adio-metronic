@@ -49,6 +49,10 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   continueToCertification: boolean = false;
   certificateIssueDate: string = '';
   
+  // Reminder email properties for simple ADIO review
+  taqaReminderLastSent: Date | null = null;
+  adPortsReminderLastSent: Date | null = null;
+  
   // File upload properties for simple ADIO review
   taqaConfirmationFile: File | null = null;
   adPortsConfirmationFile: File | null = null;
@@ -56,6 +60,15 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   // Evaluation decision properties for simple ADIO review
   evaluationDecision: 'return' | 'not-certify' | 'certify' | '' = '';
   evaluationComments: string = '';
+  
+  // Post-submit state for ADIO review  
+  adioReviewSubmitted: boolean = false;
+  adioDecisionIssueDate: string = '';
+  
+  // ADIO accordion states (only one can be open at a time)
+  adioTaqaAccordionOpen: boolean = false;
+  adioAdPortsAccordionOpen: boolean = false;
+  adioEvaluationDecisionOpen: boolean = true; // Start with Evaluation Decision open
   
   // External Review accordion states
   taqaAccordionExpanded: boolean = false;
@@ -502,6 +515,18 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   }
 
   // Simple ADIO Review methods
+  sendTaqaReminderEmail() {
+    console.log('Sending TAQA reminder email...');
+    this.taqaReminderLastSent = new Date();
+    // TODO: Implement actual email sending logic
+  }
+
+  sendAdPortsReminderEmail() {
+    console.log('Sending AD Ports reminder email...');
+    this.adPortsReminderLastSent = new Date();
+    // TODO: Implement actual email sending logic
+  }
+
   onTaqaConfirmationUpload(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -523,14 +548,111 @@ export class ReviewStageComponent implements OnInit, OnChanges {
       taqaFile: this.taqaConfirmationFile?.name,
       adPortsFile: this.adPortsConfirmationFile?.name
     });
+    
+    // Set submission state and current date for issue/decision dates
+    this.adioReviewSubmitted = true;
+    this.adioDecisionIssueDate = new Date().toISOString().split('T')[0];
+    
+    // Keep Evaluation Decision accordion open after submission
+    this.adioEvaluationDecisionOpen = true;
   }
 
   getSubmitButtonText(): string {
     switch (this.evaluationDecision) {
       case 'return': return 'Return for Re-evaluation';
-      case 'certify': return 'Certify';
-      case 'not-certify': return 'Not Certify';
+      case 'certify': return 'Issue Certificate';
+      case 'not-certify': return 'Reject Evaluation';
       default: return 'Submit Decision';
     }
   }
+
+  getAdioDecisionExpiryDate(): string {
+    if (!this.adioDecisionIssueDate) return '';
+    const issueDate = new Date(this.adioDecisionIssueDate);
+    const expiryDate = new Date(issueDate.setFullYear(issueDate.getFullYear() + 1));
+    return expiryDate.toISOString().split('T')[0];
+  }
+
+  previewAdioDecision() {
+    if (this.evaluationDecision === 'certify') {
+      window.open('assets/certificate_sample.pdf', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+    } else if (this.evaluationDecision === 'not-certify') {
+      window.open('assets/rejection_notice_sample.pdf', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+    }
+  }
+
+  // ADIO accordion toggle methods (only one can be open at a time)
+  toggleAdioTaqaAccordion() {
+    if (this.adioTaqaAccordionOpen) {
+      this.adioTaqaAccordionOpen = false;
+    } else {
+      this.adioTaqaAccordionOpen = true;
+      this.adioAdPortsAccordionOpen = false; // Close AD Ports if open
+      this.adioEvaluationDecisionOpen = false; // Close Evaluation Decision if open
+    }
+  }
+
+  toggleAdioAdPortsAccordion() {
+    if (this.adioAdPortsAccordionOpen) {
+      this.adioAdPortsAccordionOpen = false;
+    } else {
+      this.adioAdPortsAccordionOpen = true;
+      this.adioTaqaAccordionOpen = false; // Close TAQA if open
+      this.adioEvaluationDecisionOpen = false; // Close Evaluation Decision if open
+    }
+  }
+
+  toggleAdioEvaluationDecision() {
+    if (this.adioEvaluationDecisionOpen) {
+      this.adioEvaluationDecisionOpen = false;
+    } else {
+      this.adioEvaluationDecisionOpen = true;
+      this.adioTaqaAccordionOpen = false; // Close TAQA if open
+      this.adioAdPortsAccordionOpen = false; // Close AD Ports if open
+    }
+  }
+
+  // Status label methods for accordion headers
+  getTaqaStatusText(): string {
+    return this.taqaConfirmationFile ? 'Completed' : 'Pending';
+  }
+
+  getTaqaStatusClasses(): string {
+    return this.taqaConfirmationFile 
+      ? 'bg-green-100 text-green-800' 
+      : 'bg-gray-100 text-gray-600';
+  }
+
+  getAdPortsStatusText(): string {
+    return this.adPortsConfirmationFile ? 'Completed' : 'Pending';
+  }
+
+  getAdPortsStatusClasses(): string {
+    return this.adPortsConfirmationFile 
+      ? 'bg-green-100 text-green-800' 
+      : 'bg-gray-100 text-gray-600';
+  }
+
+  getEvaluationDecisionStatusText(): string {
+    if (!this.adioReviewSubmitted) return '';
+    
+    switch (this.evaluationDecision) {
+      case 'return': return 'Returned';
+      case 'certify': return 'Certified';
+      case 'not-certify': return 'Not Certified';
+      default: return '';
+    }
+  }
+
+  getEvaluationDecisionStatusClasses(): string {
+    if (!this.adioReviewSubmitted) return '';
+    
+    switch (this.evaluationDecision) {
+      case 'return': return 'bg-red-100 text-red-800';
+      case 'certify': return 'bg-green-100 text-green-800';
+      case 'not-certify': return 'bg-red-100 text-red-800';
+      default: return '';
+    }
+  }
+
 }
