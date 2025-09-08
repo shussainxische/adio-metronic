@@ -119,39 +119,12 @@ export class ApplicationStatusService {
   }
 
   consolidateReviewApplicationsForAdio(applications: Application[]): Application[] {
-    // Group Review applications by company and show the most advanced one
-    const reviewApps = applications.filter(app => app.stage === 'Review');
     const otherApps = applications.filter(app => app.stage !== 'Review');
     
-    // Group by company name
-    const reviewAppsByCompany = reviewApps.reduce((groups, app) => {
-      const key = app.companyName;
-      if (!groups[key]) {
-        groups[key] = [];
-      }
-      groups[key].push(app);
-      return groups;
-    }, {} as Record<string, Application[]>);
+    // For ADIO users, show only ONE Review application as example (ESP012 - Final Review)
+    const sampleReviewApp = applications.find(app => app.id === 'ESP012');
     
-    // For each company, pick the most advanced review application
-    const consolidatedReviewApps: Application[] = [];
-    Object.values(reviewAppsByCompany).forEach(companyApps => {
-      // Priority order: Final Review > External Review > Initial Review
-      const finalReview = companyApps.find(app => app.status === 'Final Review');
-      const externalReview = companyApps.find(app => app.status === 'External Review');
-      const initialReview = companyApps.find(app => app.status === 'Initial Review');
-      
-      const selectedApp = finalReview || externalReview || initialReview;
-      if (selectedApp) {
-        // Modify the selected app to show unified Review status for ADIO
-        consolidatedReviewApps.push({
-          ...selectedApp,
-          // Keep original status for navigation logic, but badge will show "REVIEW"
-        });
-      }
-    });
-    
-    return [...otherApps, ...consolidatedReviewApps];
+    return sampleReviewApp ? [...otherApps, sampleReviewApp] : otherApps;
   }
 
 
