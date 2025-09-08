@@ -53,8 +53,9 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   certificateOnHold: boolean = false;
   certificateHoldReason: string = '';
   
-  // External Review accordion states - first one expanded by default
-  taqaAccordionExpanded: boolean = true;
+  // Review accordion states - Approve Evaluation expanded by default
+  approvalAccordionExpanded: boolean = true;
+  taqaAccordionExpanded: boolean = false;
   adPortsAccordionExpanded: boolean = false;
   
   // External Review statuses
@@ -71,7 +72,6 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   // Evaluation approval properties
   evaluationApprovalStatus: 'pending' | 'approved' | 'returned' = 'pending';
   evaluationComments: string = '';
-  approvalAccordionExpanded: boolean = false;
   
   entityReviews: EntityReview[] = [
     {
