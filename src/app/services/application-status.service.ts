@@ -44,11 +44,25 @@ export class ApplicationStatusService {
     return this.statusVariants[status] || 'pending';
   }
 
-  getBadgeText = (stage: string, status: string) => {
+  getStatusVariantForAdio(stage: string, status: string, isAdioView: boolean = false): StatusBadgeVariant {
+    // For ADIO view, Review stage should be yellow/warning
+    if (isAdioView && stage === 'Review') {
+      return 'warning';
+    }
+    return this.getStatusVariant(status);
+  }
+
+  getBadgeText = (stage: string, status: string, isAdioView: boolean = false) => {
     // For completed/closed applications with certified status, show "Certified"
     if (stage === 'Completed' && status === 'Certified') {
       return 'Certified';
     }
+    
+    // For ADIO view, show simplified badge text for Review stage
+    if (isAdioView && stage === 'Review') {
+      return 'Review';
+    }
+    
     return `${stage} - ${status}`;
   };
 
@@ -102,6 +116,42 @@ export class ApplicationStatusService {
   filterApplications(applications: Application[], stage: string, status?: string): Application[] {
     let filtered = stage === 'All' ? applications : applications.filter(app => app.stage === stage);
     return status ? filtered.filter(app => app.status === status) : filtered;
+  }
+
+  consolidateReviewApplicationsForAdio(applications: Application[]): Application[] {
+    // Group Review applications by company and show the most advanced one
+    const reviewApps = applications.filter(app => app.stage === 'Review');
+    const otherApps = applications.filter(app => app.stage !== 'Review');
+    
+    // Group by company name
+    const reviewAppsByCompany = reviewApps.reduce((groups, app) => {
+      const key = app.companyName;
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+      groups[key].push(app);
+      return groups;
+    }, {} as Record<string, Application[]>);
+    
+    // For each company, pick the most advanced review application
+    const consolidatedReviewApps: Application[] = [];
+    Object.values(reviewAppsByCompany).forEach(companyApps => {
+      // Priority order: Final Review > External Review > Initial Review
+      const finalReview = companyApps.find(app => app.status === 'Final Review');
+      const externalReview = companyApps.find(app => app.status === 'External Review');
+      const initialReview = companyApps.find(app => app.status === 'Initial Review');
+      
+      const selectedApp = finalReview || externalReview || initialReview;
+      if (selectedApp) {
+        // Modify the selected app to show unified Review status for ADIO
+        consolidatedReviewApps.push({
+          ...selectedApp,
+          // Keep original status for navigation logic, but badge will show "REVIEW"
+        });
+      }
+    });
+    
+    return [...otherApps, ...consolidatedReviewApps];
   }
 
 

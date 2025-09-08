@@ -88,8 +88,8 @@
       
       <div class="mb-4 flex items-start justify-between" style="min-height: 1.75rem;">
         <app-status-badge
-          [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
-          [variant]="applicationStatusService.getStatusVariant(app.status)"
+          [text]="applicationStatusService.getBadgeText(app.stage, app.status, isAdioView)"
+          [variant]="applicationStatusService.getStatusVariantForAdio(app.stage, app.status, isAdioView)"
           [className]="getStatusBadgeClassName(app)"
           size="sm"
           [autoWidth]="true">
@@ -193,8 +193,8 @@
         </td>
         <td>
           <app-status-badge
-            [text]="applicationStatusService.getBadgeText(app.stage, app.status)"
-            [variant]="applicationStatusService.getStatusVariant(app.status)"
+            [text]="applicationStatusService.getBadgeText(app.stage, app.status, isAdioView)"
+            [variant]="applicationStatusService.getStatusVariantForAdio(app.stage, app.status, isAdioView)"
             [className]="getStatusBadgeClassName(app)"
             [autoWidth]="true"
             size="sm">

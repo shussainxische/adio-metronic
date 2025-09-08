@@ -75,7 +75,10 @@ export class ApplicationsComponent implements OnInit {
     this.http.get<{applicationTypeOptions: SelectOption[], applications: Application[], applicationStages?: any[]}>('assets/mock-data/applications.json')
       .subscribe(data => {
         this.applicationTypeOptions = data.applicationTypeOptions;
-        this.applications = data.applications;
+        // For ADIO view, consolidate Review applications to show one per company
+        this.applications = this.isAdioView ? 
+          this.applicationStatusService.consolidateReviewApplicationsForAdio(data.applications) :
+          data.applications;
         this.updateFilteredApplications();
       });
   }
@@ -194,7 +197,14 @@ export class ApplicationsComponent implements OnInit {
       this.router.navigate([rolePrefix + '/applications', applicationId], {
         queryParams: { stage: 'Quotation', step: '0' }
       });
-    } else {
+    }
+    // For ADIO users, Review applications should go directly to Final Review tab (step 2)
+    else if (this.isAdioView && app?.stage === 'Review') {
+      this.router.navigate([rolePrefix + '/applications', applicationId], {
+        queryParams: { stage: 'Review', step: '2' }
+      });
+    }
+    else {
       this.router.navigate([rolePrefix + '/applications', applicationId]);
     }
   }
