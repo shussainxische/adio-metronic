@@ -541,6 +541,16 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     }
   }
 
+  removeTaqaConfirmation() {
+    this.taqaConfirmationFile = null;
+    console.log('TAQA confirmation file removed');
+  }
+
+  removeAdPortsConfirmation() {
+    this.adPortsConfirmationFile = null;
+    console.log('AD Ports confirmation file removed');
+  }
+
   submitEvaluationDecision() {
     console.log('Submitting evaluation decision:', {
       decision: this.evaluationDecision,
