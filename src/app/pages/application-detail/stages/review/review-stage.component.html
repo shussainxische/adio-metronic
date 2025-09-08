@@ -189,6 +189,11 @@
             </div>
           </div>
 
+          <!-- Debug info -->
+          <div *ngIf="evaluationApprovalStatus !== 'pending'" class="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+            Debug: Status = {{ evaluationApprovalStatus }}, CB View = {{ isCBView }}
+          </div>
+          
           <!-- Returned state -->
           <div *ngIf="evaluationApprovalStatus === 'returned'" class="returned-state">
             <div class="mb-6">

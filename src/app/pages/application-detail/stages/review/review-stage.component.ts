@@ -547,6 +547,11 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     
     // Clear certificate issue date
     this.certificateIssueDate = '';
+    
+    // Keep the accordion expanded to show the result
+    this.approvalAccordionExpanded = true;
+    
+    console.log('Updated evaluation status to returned:', this.evaluationApprovalStatus);
   }
 
   // New methods for restructured review
@@ -580,6 +585,11 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   approveEvaluation() {
     console.log('Approving evaluation with comments:', this.evaluationComments);
     this.evaluationApprovalStatus = 'approved';
+    
+    // Keep the accordion expanded to show the result
+    this.approvalAccordionExpanded = true;
+    
+    console.log('Updated evaluation status to approved:', this.evaluationApprovalStatus);
   }
 
   getEvaluationStatusText(status: string): string {
