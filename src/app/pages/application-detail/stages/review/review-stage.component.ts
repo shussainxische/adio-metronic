@@ -14,7 +14,7 @@ import { Application } from '../../../../services/application-status.service';
 
 export interface EntityReview {
   name: string;
-  status: 'submitted' | 'pending' | 'approved' | 'rejected' | 'accepted';
+  status: 'submitted' | 'pending' | 'approved' | 'rejected' | 'accepted' | 'reevaluation';
   isExpanded?: boolean;
 }
 
@@ -58,8 +58,8 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   adPortsAccordionExpanded: boolean = false;
   
   // External Review statuses
-  taqaStatus: 'submitted' | 'accepted' | 'returned' = 'submitted';
-  adPortsStatus: 'submitted' | 'accepted' | 'returned' = 'submitted';
+  taqaStatus: 'submitted' | 'accepted' | 'returned' | 'reevaluation' = 'submitted';
+  adPortsStatus: 'submitted' | 'accepted' | 'returned' | 'reevaluation' = 'submitted';
   
   entityReviews: EntityReview[] = [
     {

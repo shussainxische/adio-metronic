@@ -52,8 +52,13 @@ export class ApplicationStatusService {
     return `${stage} - ${status}`;
   };
 
-  getSubStatuses(applications: Application[], stage: string): string[] {
+  getSubStatuses(applications: Application[], stage: string, isAdioView: boolean = false): string[] {
     if (stage === 'All') return [];
+    
+    // For ADIO view, don't show Review sub-statuses
+    if (isAdioView && stage === 'Review') {
+      return [];
+    }
     
     const uniqueStatuses = [...new Set(
       applications.filter(app => app.stage === stage).map(app => app.status)

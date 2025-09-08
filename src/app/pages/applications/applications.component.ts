@@ -280,7 +280,7 @@ export class ApplicationsComponent implements OnInit {
     if (this.isAdioView) {
       apps = apps.filter(app => app.status !== 'Not Awarded' && app.status !== 'Rejected');
     }
-    return this.applicationStatusService.getSubStatuses(apps, stage);
+    return this.applicationStatusService.getSubStatuses(apps, stage, this.isAdioView);
   };
   shouldShowSubStatus = (stage: string) => stage !== 'All' && this.getSubStatuses(stage).length > 0;
 
