@@ -75,7 +75,31 @@ export class ApplicationsComponent implements OnInit {
     this.http.get<{applicationTypeOptions: SelectOption[], applications: Application[], applicationStages?: any[]}>('assets/mock-data/applications.json')
       .subscribe(data => {
         this.applicationTypeOptions = data.applicationTypeOptions;
-        this.applications = data.applications;
+        // For ADIO view, consolidate Review applications to show one per company
+        if (this.isAdioView) {
+          this.applications = this.applicationStatusService.consolidateReviewApplicationsForAdio(data.applications);
+        } else {
+          // For CB view, show all non-Review applications plus one sample Review application
+          const otherApps = data.applications.filter(app => app.stage !== 'Review');
+          
+          // Add one sample Review application for CB
+          const sampleReviewApp = data.applications.find(app => app.id === 'ESP012');
+          if (sampleReviewApp) {
+            const cbReviewApp = { 
+              ...sampleReviewApp, 
+              stage: 'Review' as const,
+              status: 'In Progress' as const,
+              assignee: 'Certifying Body'
+            };
+            this.applications = [...otherApps, cbReviewApp];
+            console.log('CB Review app created:', cbReviewApp);
+            console.log('Total applications:', this.applications.length);
+            console.log('Review applications:', this.applications.filter(app => app.stage === 'Review').length);
+          } else {
+            this.applications = otherApps;
+            console.log('No sample review app found');
+          }
+        }
         this.updateFilteredApplications();
       });
   }

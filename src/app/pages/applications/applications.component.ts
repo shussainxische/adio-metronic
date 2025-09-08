@@ -76,9 +76,26 @@ export class ApplicationsComponent implements OnInit {
       .subscribe(data => {
         this.applicationTypeOptions = data.applicationTypeOptions;
         // For ADIO view, consolidate Review applications to show one per company
-        this.applications = this.isAdioView ? 
-          this.applicationStatusService.consolidateReviewApplicationsForAdio(data.applications) :
-          data.applications;
+        if (this.isAdioView) {
+          this.applications = this.applicationStatusService.consolidateReviewApplicationsForAdio(data.applications);
+        } else {
+          // For CB view, show all non-Review applications plus one sample Review application
+          const otherApps = data.applications.filter(app => app.stage !== 'Review');
+          
+          // Add one sample Review application for CB
+          const sampleReviewApp = data.applications.find(app => app.id === 'ESP012');
+          if (sampleReviewApp) {
+            const cbReviewApp = { 
+              ...sampleReviewApp, 
+              stage: 'Review' as const,
+              status: 'Review' as any,
+              assignee: 'Certifying Body'
+            };
+            this.applications = [...otherApps, cbReviewApp];
+          } else {
+            this.applications = otherApps;
+          }
+        }
         this.updateFilteredApplications();
       });
   }
@@ -111,6 +128,7 @@ export class ApplicationsComponent implements OnInit {
     let filtered = this.applicationStatusService.filterApplications(
       this.applications, this.selectedFilter, this.selectedSubStatus
     );
+    
     
     // Remove "Not Awarded" and "Rejected" applications for ADIO users
     if (this.isAdioView) {

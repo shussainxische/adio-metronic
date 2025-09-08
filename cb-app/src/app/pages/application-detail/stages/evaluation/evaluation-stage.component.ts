@@ -43,4 +43,14 @@ export class EvaluationStageComponent {
     return 'In Progress';
   }
 
+  getCurrentDate(): string {
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    };
+    return today.toLocaleDateString('en-US', options);
+  }
+
 }

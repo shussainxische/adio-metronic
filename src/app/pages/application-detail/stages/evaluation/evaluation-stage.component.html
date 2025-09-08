@@ -52,12 +52,34 @@
   </div>
 </div>
 
-<!-- CB Detailed View and ADIO View for Review stage applications -->
-<div *ngIf="!isAdioView || (isAdioView && application?.stage === 'Review')">
-  <app-general-sub-stage *ngIf="currentStep === 0" [application]="application"></app-general-sub-stage>
-  <app-economic-impact-sub-stage *ngIf="currentStep === 1" [application]="application"></app-economic-impact-sub-stage>
-  <app-productivity-sub-stage *ngIf="currentStep === 2" [application]="application"></app-productivity-sub-stage>
-  <app-ems-dms-sub-stage *ngIf="currentStep === 3" [application]="application"></app-ems-dms-sub-stage>
-  <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
-  <app-review-submit-sub-stage *ngIf="currentStep === 5" [application]="application"></app-review-submit-sub-stage>
+<!-- CB Under Review Alert - Show when evaluation is under review with ADIO - ONLY on Review tab -->
+<div *ngIf="false" class="mb-4">
+  <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+    <div class="flex justify-center mb-4">
+      <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+    </div>
+    <h3 class="text-lg font-semibold text-blue-900 mb-2">Under Review with ADIO</h3>
+    <p class="text-blue-800 mb-4">Your evaluation has been submitted and is currently under review by ADIO.</p>
+    <div class="text-sm text-blue-700">
+      <p class="mb-1"><strong>Submitted:</strong> {{ application?.date || getCurrentDate() }}</p>
+      <p><strong>Application ID:</strong> {{ application?.id }}</p>
+    </div>
+    <div class="mt-4 pt-4 border-t border-blue-200">
+      <p class="text-sm text-blue-600">You will be notified once the review is complete.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Show evaluation sub-stages - CB sees read-only when under review, ADIO can edit -->
+<div>
+  <app-general-sub-stage *ngIf="currentStep === 0" [application]="application" [readOnly]="isReadOnly"></app-general-sub-stage>
+  <app-economic-impact-sub-stage *ngIf="currentStep === 1" [application]="application" [readOnly]="isReadOnly"></app-economic-impact-sub-stage>
+  <app-productivity-sub-stage *ngIf="currentStep === 2" [application]="application" [readOnly]="isReadOnly"></app-productivity-sub-stage>
+  <app-ems-dms-sub-stage *ngIf="currentStep === 3" [application]="application" [readOnly]="isReadOnly"></app-ems-dms-sub-stage>
+  <app-summary-sub-stage *ngIf="currentStep === 4" [readOnly]="isReadOnly"></app-summary-sub-stage>
+  <app-review-submit-sub-stage *ngIf="currentStep === 5" [application]="application" [readOnly]="isReadOnly"></app-review-submit-sub-stage>
 </div>

@@ -41,7 +41,8 @@ export class EconomicImpactSubStageComponent implements OnInit {
   }
 
   get showAdioView(): boolean {
-    return this.isAdioView && this.application?.stage === 'Review';
+    // Show ADIO read-only view when readOnly is true (for CB) or when ADIO is in Review stage
+    return this.readOnly || (this.isAdioView && this.application?.stage === 'Review');
   }
   // Investment Form Controls
   grossBookValueAbuDhabiControl = new FormControl('0');

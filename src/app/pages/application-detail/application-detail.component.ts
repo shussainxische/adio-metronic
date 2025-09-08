@@ -273,8 +273,8 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   private getStepDisplayName(step: any): string {
-    // Override step name for CB views to show Additional Documents
-    if (step.id === 'review-submit' && !this.isAdioView) {
+    // Override step name to show Additional Documents for review-submit step
+    if (step.id === 'review-submit') {
       return 'Additional Documents';
     }
     return step.name;

@@ -58,8 +58,8 @@ export class ApplicationStatusService {
       return 'Certified';
     }
     
-    // For ADIO view, show simplified badge text for Review stage
-    if (isAdioView && stage === 'Review') {
+    // For Review stage applications, just show "Review" (avoid "Review - Review")
+    if (stage === 'Review') {
       return 'Review';
     }
     
@@ -69,8 +69,8 @@ export class ApplicationStatusService {
   getSubStatuses(applications: Application[], stage: string, isAdioView: boolean = false): string[] {
     if (stage === 'All') return [];
     
-    // For ADIO view, don't show Review sub-statuses
-    if (isAdioView && stage === 'Review') {
+    // For both ADIO and CB view, don't show Review sub-statuses
+    if (stage === 'Review') {
       return [];
     }
     

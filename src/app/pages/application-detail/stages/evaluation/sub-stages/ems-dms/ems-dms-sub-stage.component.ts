@@ -34,7 +34,8 @@ export class EmsDmsSubStageComponent implements OnInit {
   }
 
   get showAdioView(): boolean {
-    return this.isAdioView && this.application?.stage === 'Review';
+    // Show ADIO read-only view when readOnly is true (for CB) or when ADIO is in Review stage
+    return this.readOnly || (this.isAdioView && this.application?.stage === 'Review');
   }
   connectionLoadMeterControl = new FormControl('');
   emsAvailabilityControl = new FormControl('Available');

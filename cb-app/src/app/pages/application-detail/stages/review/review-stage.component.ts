@@ -49,6 +49,14 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   continueToCertification: boolean = false;
   certificateIssueDate: string = '';
   
+  // File upload properties for simple ADIO review
+  taqaConfirmationFile: File | null = null;
+  adPortsConfirmationFile: File | null = null;
+  
+  // Evaluation decision properties for simple ADIO review
+  evaluationDecision: 'return' | 'not-certify' | 'certify' | '' = '';
+  evaluationComments: string = '';
+  
   // External Review accordion states
   taqaAccordionExpanded: boolean = false;
   adPortsAccordionExpanded: boolean = false;
@@ -491,5 +499,38 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     this.reviewTabs[2].status = 'completed';
     
     // TODO: Implement actual certification logic
+  }
+
+  // Simple ADIO Review methods
+  onTaqaConfirmationUpload(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.taqaConfirmationFile = target.files[0];
+    }
+  }
+
+  onAdPortsConfirmationUpload(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.adPortsConfirmationFile = target.files[0];
+    }
+  }
+
+  submitEvaluationDecision() {
+    console.log('Submitting evaluation decision:', {
+      decision: this.evaluationDecision,
+      comments: this.evaluationComments,
+      taqaFile: this.taqaConfirmationFile?.name,
+      adPortsFile: this.adPortsConfirmationFile?.name
+    });
+  }
+
+  getSubmitButtonText(): string {
+    switch (this.evaluationDecision) {
+      case 'return': return 'Return for Re-evaluation';
+      case 'certify': return 'Certify';
+      case 'not-certify': return 'Not Certify';
+      default: return 'Submit Decision';
+    }
   }
 }

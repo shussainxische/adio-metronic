@@ -40,7 +40,11 @@ export class ApplicationStatusService {
   private readonly closedStatusOrder = ['Certified', 'Not Certified', 'Not Awarded', 'Rejected', 'Cancelled'];
   private readonly reviewStatusOrder = ['Initial Review', 'External Review', 'Final Review'];
 
-  getStatusVariant(status: string): StatusBadgeVariant {
+  getStatusVariant(status: string, stage?: string): StatusBadgeVariant {
+    // For Review stage, always show warning (yellow) variant
+    if (stage === 'Review') {
+      return 'warning';
+    }
     return this.statusVariants[status] || 'pending';
   }
 
@@ -49,11 +53,20 @@ export class ApplicationStatusService {
     if (stage === 'Completed' && status === 'Certified') {
       return 'Certified';
     }
+    // For Review stage applications, just show "Review" (avoid "Review - Review")
+    if (stage === 'Review') {
+      return 'Review';
+    }
     return `${stage} - ${status}`;
   };
 
   getSubStatuses(applications: Application[], stage: string): string[] {
     if (stage === 'All') return [];
+    
+    // For both ADIO and CB view, don't show Review sub-statuses
+    if (stage === 'Review') {
+      return [];
+    }
     
     const uniqueStatuses = [...new Set(
       applications.filter(app => app.stage === stage).map(app => app.status)
@@ -97,6 +110,15 @@ export class ApplicationStatusService {
   filterApplications(applications: Application[], stage: string, status?: string): Application[] {
     let filtered = stage === 'All' ? applications : applications.filter(app => app.stage === stage);
     return status ? filtered.filter(app => app.status === status) : filtered;
+  }
+
+  consolidateReviewApplicationsForAdio(applications: Application[]): Application[] {
+    const otherApps = applications.filter(app => app.stage !== 'Review');
+    
+    // For ADIO users, show only ONE Review application as example (ESP012 - Final Review)
+    const sampleReviewApp = applications.find(app => app.id === 'ESP012');
+    
+    return sampleReviewApp ? [...otherApps, sampleReviewApp] : otherApps;
   }
 
 

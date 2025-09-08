@@ -29,7 +29,8 @@ export class EvaluationStageComponent {
   }
 
   get isReadOnly(): boolean {
-    return this.application?.stage === 'Review';
+    // CB users always see read-only mode, ADIO users see read-only when application is in Review stage
+    return !this.isAdioView || this.application?.stage === 'Review';
   }
 
   get isAdioView(): boolean {
@@ -41,6 +42,16 @@ export class EvaluationStageComponent {
       return 'Returned';
     }
     return 'In Progress';
+  }
+
+  getCurrentDate(): string {
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    };
+    return today.toLocaleDateString('en-US', options);
   }
 
 }

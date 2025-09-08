@@ -70,8 +70,9 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   adPortsConfirmationUploaded: boolean = false;
   
   // Evaluation approval properties
-  evaluationApprovalStatus: 'pending' | 'approved' | 'returned' = 'pending';
+  evaluationApprovalStatus: 'pending' | 'approved' | 'returned' | 'rejected' = 'pending';
   evaluationComments: string = '';
+  evaluationDecision: 'return' | 'not-certify' | 'certify' | '' = '';
   
   entityReviews: EntityReview[] = [
     {
@@ -101,6 +102,15 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     this.route.queryParams.subscribe(params => {
       this.currentStep = parseInt(params['step']) || 0;
     });
+  }
+
+  get isAdioView(): boolean {
+    return this.router.url.startsWith('/adio');
+  }
+
+  get isReadOnly(): boolean {
+    // CB users have read-only access to Review stage
+    return !this.isAdioView;
   }
 
   // Tab navigation methods
@@ -339,9 +349,6 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     return `Awaiting information from ${entity}`;
   }
 
-  get isReadOnly(): boolean {
-    return this.application?.stage === 'Review';
-  }
 
   get isCBView(): boolean {
     return !this.router.url.startsWith('/adio');
@@ -582,20 +589,53 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     }
   }
 
-  approveEvaluation() {
-    console.log('Approving evaluation with comments:', this.evaluationComments);
-    this.evaluationApprovalStatus = 'approved';
+  submitEvaluationDecision() {
+    if (!this.evaluationDecision) {
+      alert('Please select a decision');
+      return;
+    }
+
+    console.log('Submitting evaluation decision:', this.evaluationDecision, 'with comments:', this.evaluationComments);
+    
+    // Map radio button values to status
+    switch (this.evaluationDecision) {
+      case 'return':
+        if (!this.evaluationComments.trim()) {
+          alert('Please enter comments when returning for re-evaluation');
+          return;
+        }
+        this.evaluationApprovalStatus = 'returned';
+        break;
+      case 'not-certify':
+        this.evaluationApprovalStatus = 'rejected';
+        break;
+      case 'certify':
+        this.evaluationApprovalStatus = 'approved';
+        break;
+    }
     
     // Keep the accordion expanded to show the result
     this.approvalAccordionExpanded = true;
     
-    console.log('Updated evaluation status to approved:', this.evaluationApprovalStatus);
+    console.log('Updated evaluation status to:', this.evaluationApprovalStatus);
+  }
+
+  // Keep the old methods for backward compatibility if needed elsewhere
+  approveEvaluation() {
+    this.evaluationDecision = 'certify';
+    this.submitEvaluationDecision();
+  }
+
+  rejectEvaluation() {
+    this.evaluationDecision = 'not-certify';
+    this.submitEvaluationDecision();
   }
 
   getEvaluationStatusText(status: string): string {
     switch (status) {
       case 'approved': return 'Approved';
       case 'returned': return 'Returned';
+      case 'rejected': return 'Rejected';
       case 'pending': return 'Pending';
       default: return 'Pending';
     }
@@ -605,8 +645,18 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     switch (status) {
       case 'approved': return 'success';
       case 'returned': return 'warning';
+      case 'rejected': return 'archived';
       case 'pending': return 'pending';
       default: return 'pending';
+    }
+  }
+
+  getSubmitButtonText(): string {
+    switch (this.evaluationDecision) {
+      case 'return': return 'Return for Re-evaluation';
+      case 'certify': return 'Certify & Issue Certificate';
+      case 'not-certify': return 'Not Certify & Issue Certificate';
+      default: return 'Submit Decision';
     }
   }
 }

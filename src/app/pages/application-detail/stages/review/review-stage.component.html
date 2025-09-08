@@ -1,11 +1,16 @@
 <div class="review-stage-container">
-  <!-- Single Review Page for ADIO users -->
-  <div *ngIf="!isCBView" class="single-review-page">
+
+  <!-- Detailed Review Page for ADIO users -->
+  <div *ngIf="!isReadOnly" class="single-review-page">
 
     <!-- TAQA Confirmation Upload Accordion -->
     <div class="review-section bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
       <!-- Accordion Header -->
-      <div class="accordion-header flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200" (click)="toggleTaqaAccordion()">
+      <div class="accordion-header flex items-center justify-between p-4 transition-colors duration-200" 
+           [class.cursor-pointer]="!isReadOnly" 
+           [class.hover:bg-gray-50]="!isReadOnly"
+           [class.cursor-default]="isReadOnly"
+           (click)="!isReadOnly && toggleTaqaAccordion()">
         <div class="accordion-header-content flex items-center justify-between flex-1 mr-4">
           <h4 class="text-base font-medium text-gray-900">TAQA</h4>
           <div class="entity-status flex items-center">
@@ -49,9 +54,10 @@
                   #taqaFileInput>
                 <button 
                   type="button" 
-                  (click)="taqaFileInput.click()"
-                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                  Choose File
+                  (click)="!isReadOnly && taqaFileInput.click()"
+                  [disabled]="isReadOnly"
+                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {{ isReadOnly ? 'View Only' : 'Choose File' }}
                 </button>
                 
                 <!-- Show uploaded file -->
@@ -71,7 +77,11 @@
     <!-- AD Ports Confirmation Upload Accordion -->
     <div class="review-section bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
       <!-- Accordion Header -->
-      <div class="accordion-header flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200" (click)="toggleAdPortsAccordion()">
+      <div class="accordion-header flex items-center justify-between p-4 transition-colors duration-200" 
+           [class.cursor-pointer]="!isReadOnly" 
+           [class.hover:bg-gray-50]="!isReadOnly"
+           [class.cursor-default]="isReadOnly"
+           (click)="!isReadOnly && toggleAdPortsAccordion()">
         <div class="accordion-header-content flex items-center justify-between flex-1 mr-4">
           <h4 class="text-base font-medium text-gray-900">AD Ports</h4>
           <div class="entity-status flex items-center">
@@ -115,9 +125,10 @@
                   #adPortsFileInput>
                 <button 
                   type="button" 
-                  (click)="adPortsFileInput.click()"
-                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                  Choose File
+                  (click)="!isReadOnly && adPortsFileInput.click()"
+                  [disabled]="isReadOnly"
+                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {{ isReadOnly ? 'View Only' : 'Choose File' }}
                 </button>
                 
                 <!-- Show uploaded file -->
@@ -137,9 +148,13 @@
     <!-- Approve Evaluation Accordion -->
     <div class="review-section bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
       <!-- Accordion Header -->
-      <div class="accordion-header flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200" (click)="toggleApprovalAccordion()">
+      <div class="accordion-header flex items-center justify-between p-4 transition-colors duration-200" 
+           [class.cursor-pointer]="!isReadOnly" 
+           [class.hover:bg-gray-50]="!isReadOnly"
+           [class.cursor-default]="isReadOnly"
+           (click)="!isReadOnly && toggleApprovalAccordion()">
         <div class="accordion-header-content flex items-center justify-between flex-1 mr-4">
-          <h4 class="text-base font-medium text-gray-900">Approve Evaluation</h4>
+          <h4 class="text-base font-medium text-gray-900">Accept Evaluation</h4>
           <div class="entity-status flex items-center">
             <app-status-badge 
               [text]="getEvaluationStatusText(evaluationApprovalStatus)" 
@@ -162,30 +177,114 @@
       <div class="accordion-content border-t border-gray-200 bg-white" *ngIf="approvalAccordionExpanded">
         <div class="p-6">
           <div *ngIf="evaluationApprovalStatus === 'pending'">
+            <!-- Decision Section -->
+            <div class="decision-section mb-6">
+              <h4 class="text-sm font-medium text-gray-700 mb-4">Final Evaluation Decision</h4>
+              
+              <div class="space-y-3">
+                <label class="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" 
+                       [class.bg-gray-100]="evaluationDecision === 'return'"
+                       [class.border-gray-400]="evaluationDecision === 'return'">
+                  <input 
+                    type="radio" 
+                    name="evaluationDecision" 
+                    value="return"
+                    [(ngModel)]="evaluationDecision"
+                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    [disabled]="isReadOnly">
+                  <span class="ml-3 text-sm font-medium text-gray-700">Return for Re-evaluation</span>
+                </label>
+                
+                <label class="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                       [class.bg-gray-100]="evaluationDecision === 'not-certify'"
+                       [class.border-gray-400]="evaluationDecision === 'not-certify'">
+                  <input 
+                    type="radio" 
+                    name="evaluationDecision" 
+                    value="not-certify"
+                    [(ngModel)]="evaluationDecision"
+                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    [disabled]="isReadOnly">
+                  <span class="ml-3 text-sm font-medium text-gray-700">Not Certify (Reject)</span>
+                </label>
+                
+                <label class="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                       [class.bg-gray-100]="evaluationDecision === 'certify'"
+                       [class.border-gray-400]="evaluationDecision === 'certify'">
+                  <input 
+                    type="radio" 
+                    name="evaluationDecision" 
+                    value="certify"
+                    [(ngModel)]="evaluationDecision"
+                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    [disabled]="isReadOnly">
+                  <span class="ml-3 text-sm font-medium text-gray-700">Certify (Accept Evaluation)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Comments Section -->
             <div class="comments-section mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Comments (required for return)</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Comments</label>
               <textarea 
-                placeholder="Add your evaluation comments here..."
-                class="w-full h-32 p-3 border border-gray-300 rounded-md resize-none focus:border-blue-500 focus:outline-none"
+                [placeholder]="isReadOnly ? 'View only' : 'Add your evaluation comments here...'"
+                class="w-full h-32 p-3 border border-gray-300 rounded-md resize-none focus:border-blue-500 focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed"
+                [disabled]="isReadOnly"
                 [(ngModel)]="evaluationComments">
               </textarea>
               <p class="text-sm text-gray-600 mt-2">These comments will be visible to the certifying body</p>
             </div>
+
+            <!-- Certificate Details (for Certify/Not Certify decisions) -->
+            <div *ngIf="evaluationDecision === 'certify' || evaluationDecision === 'not-certify'" class="certificate-details mb-6">
+              <h4 class="text-sm font-medium text-gray-700 mb-4">Certificate Details</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Issue Date</label>
+                  <input 
+                    type="date" 
+                    [(ngModel)]="certificateIssueDate"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                  <input 
+                    type="date" 
+                    [value]="getCertificateExpiryDate()"
+                    readonly
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600">
+                  <p class="text-xs text-gray-500 mt-1">Auto-calculated (1 year from issue date)</p>
+                </div>
+              </div>
+              <div class="mt-3">
+                <p class="text-xs text-gray-600">
+                  Certificate Type: {{ evaluationDecision === 'certify' ? 'Certification of Compliance' : 'Rejection Certificate' }}
+                </p>
+              </div>
+            </div>
             
-            <div class="action-buttons grid grid-cols-2 gap-3">
+            <!-- Action Buttons -->
+            <div class="action-buttons flex gap-3" *ngIf="!isReadOnly">
               <button
-                (click)="returnForReEvaluation()"
-                class="flex items-center justify-center text-black hover:text-gray-800 bg-transparent border-2 px-3 rounded-md hover:bg-gray-50 font-medium text-sm h-12"
-                style="border-color: #845E2B;">
-                Return for Re-evaluation
+                *ngIf="evaluationDecision === 'certify'"
+                (click)="previewCertificate()"
+                class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm">
+                <app-icon name="eye" [size]="16"></app-icon>
+                <span>Preview Certificate</span>
               </button>
               
               <button
-                (click)="approveEvaluation()"
-                class="flex items-center justify-center text-white hover:text-white font-medium text-sm h-12 px-3 rounded-md hover:opacity-90"
+                (click)="submitEvaluationDecision()"
+                [disabled]="!evaluationDecision || ((evaluationDecision === 'certify' || evaluationDecision === 'not-certify') && !certificateIssueDate)"
+                class="flex items-center justify-center text-white hover:text-white font-medium text-sm h-12 px-6 rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 style="background-color: #845E2B; border: 2px solid #845E2B;">
-                Approve Evaluation
+                {{ getSubmitButtonText() }}
               </button>
+            </div>
+            
+            <!-- Read-only message for CB users -->
+            <div class="read-only-message text-center p-4 bg-gray-50 rounded-md" *ngIf="isReadOnly">
+              <p class="text-sm text-gray-600">This is a view-only interface. Only ADIO users can make evaluation decisions.</p>
             </div>
           </div>
 
@@ -234,72 +333,33 @@
               </div>
             </div>
           </div>
+
+          <!-- Rejected state -->
+          <div *ngIf="evaluationApprovalStatus === 'rejected'" class="rejected-state">
+            <div class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <p class="text-gray-600 text-xs mb-1">Rejected On:</p>
+                  <p class="text-gray-900 font-medium text-sm">{{ getCurrentDate() }}</p>
+                </div>
+              </div>
+              
+              <div class="mb-6" *ngIf="evaluationComments">
+                <p class="text-gray-600 text-xs mb-1">Comments:</p>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-gray-900 text-sm">{{ evaluationComments || 'No comments provided' }}</p>
+                </div>
+              </div>
+
+              <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p class="text-red-800 text-sm font-medium">Evaluation has been rejected. A rejection certificate will be issued.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Certificate Issuance Section -->
-    <div class="certificate-section bg-white border border-gray-200 rounded-lg p-6">
-      <div class="mb-6">
-        <h4 class="text-base font-semibold text-gray-900 mb-2">Certificate Issuance</h4>
-        <p class="text-sm text-gray-600">Issue the official certificate after evaluation approval</p>
-      </div>
-
-      <div *ngIf="evaluationApprovalStatus === 'pending' || evaluationApprovalStatus === 'returned'" class="pending-approval">
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <div class="flex items-center gap-3">
-            <div class="flex-shrink-0">
-              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-gray-700">Pending Evaluation Approval</p>
-              <p class="text-sm text-gray-600 mt-1">Certificate issuance will be available after the evaluation is approved.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="evaluationApprovalStatus === 'approved'" class="certificate-form">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Certificate Issue Date</label>
-            <input 
-              type="date" 
-              [(ngModel)]="certificateIssueDate"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Certificate Expiry Date</label>
-            <input 
-              type="text" 
-              [value]="getCertificateExpiryDate()"
-              readonly
-              class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600">
-            <p class="text-xs text-gray-500 mt-1">Automatically calculated (1 year from issue date)</p>
-          </div>
-        </div>
-
-        <div class="flex gap-3">
-          <button
-            (click)="previewCertificate()"
-            class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm">
-            <app-icon name="eye" [size]="16"></app-icon>
-            <span>Preview Certificate</span>
-          </button>
-          
-          <button
-            (click)="proceedToCertification()"
-            [disabled]="!certificateIssueDate"
-            class="flex items-center gap-2 px-6 py-2 font-medium text-sm text-white rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-            style="background-color: #845E2B;">
-            <app-icon name="award" [size]="16"></app-icon>
-            <span>Issue Certificate</span>
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- CB View (existing accordion view) -->

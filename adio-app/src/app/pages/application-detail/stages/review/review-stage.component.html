@@ -1,41 +1,447 @@
 <div class="review-stage-container">
-  <!-- Multi-Entity Review Status -->
-  <div class="section-card">
-    <div class="section-header">
-      <h3 class="section-title">Multi-Entity Review Status</h3>
-    </div>
-    
-    <div class="entity-cards">
-      <div class="entity-card" *ngFor="let entity of entityReviews">
-        <div class="entity-info">
-          <h4 class="entity-name">{{ entity.name }}</h4>
+
+  <!-- Detailed Review Page for ADIO users -->
+  <div *ngIf="!isReadOnly" class="single-review-page">
+
+    <!-- TAQA Confirmation Upload Accordion -->
+    <div class="review-section bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
+      <!-- Accordion Header -->
+      <div class="accordion-header flex items-center justify-between p-4 transition-colors duration-200" 
+           [class.cursor-pointer]="!isReadOnly" 
+           [class.hover:bg-gray-50]="!isReadOnly"
+           [class.cursor-default]="isReadOnly"
+           (click)="!isReadOnly && toggleTaqaAccordion()">
+        <div class="accordion-header-content flex items-center justify-between flex-1 mr-4">
+          <h4 class="text-base font-medium text-gray-900">TAQA</h4>
+          <div class="entity-status flex items-center">
+            <app-status-badge 
+              [text]="taqaConfirmationUploaded ? 'Completed' : 'Pending'" 
+              [variant]="taqaConfirmationUploaded ? 'success' : 'pending'" 
+              size="sm"
+              [autoWidth]="true">
+            </app-status-badge>
+          </div>
         </div>
-        <div class="entity-status">
-          <app-status-badge 
-            [text]="getStatusText(entity.status)" 
-            [variant]="getStatusVariant(entity.status)" 
-            size="sm">
-          </app-status-badge>
+        <div class="accordion-chevron flex items-center">
+          <app-icon 
+            [name]="taqaAccordionExpanded ? 'chevron-up' : 'chevron-down'" 
+            [size]="16"
+            className="text-gray-500">
+          </app-icon>
+        </div>
+      </div>
+      
+      <!-- Accordion Content -->
+      <div class="accordion-content border-t border-gray-200 bg-white" *ngIf="taqaAccordionExpanded">
+        <div class="p-6">
+          <div class="mb-4">
+            <p class="text-sm text-gray-600 mb-4">Upload the confirmation email received from TAQA regarding the meter readings verification.</p>
+            
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+              <div class="space-y-4">
+                <div class="flex justify-center">
+                  <app-icon name="upload-cloud" [size]="32" className="text-gray-400"></app-icon>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-700">Upload TAQA Confirmation</p>
+                  <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB</p>
+                </div>
+                <input 
+                  type="file" 
+                  accept=".pdf,.doc,.docx"
+                  (change)="onTaqaConfirmationUpload($event)"
+                  class="hidden" 
+                  #taqaFileInput>
+                <button 
+                  type="button" 
+                  (click)="!isReadOnly && taqaFileInput.click()"
+                  [disabled]="isReadOnly"
+                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {{ isReadOnly ? 'View Only' : 'Choose File' }}
+                </button>
+                
+                <!-- Show uploaded file -->
+                <div *ngIf="taqaConfirmationFile" class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div class="flex items-center gap-2">
+                    <app-icon name="check-circle" [size]="16" className="text-green-600"></app-icon>
+                    <span class="text-sm font-medium text-green-700">{{ taqaConfirmationFile.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AD Ports Confirmation Upload Accordion -->
+    <div class="review-section bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
+      <!-- Accordion Header -->
+      <div class="accordion-header flex items-center justify-between p-4 transition-colors duration-200" 
+           [class.cursor-pointer]="!isReadOnly" 
+           [class.hover:bg-gray-50]="!isReadOnly"
+           [class.cursor-default]="isReadOnly"
+           (click)="!isReadOnly && toggleAdPortsAccordion()">
+        <div class="accordion-header-content flex items-center justify-between flex-1 mr-4">
+          <h4 class="text-base font-medium text-gray-900">AD Ports</h4>
+          <div class="entity-status flex items-center">
+            <app-status-badge 
+              [text]="adPortsConfirmationUploaded ? 'Completed' : 'Pending'" 
+              [variant]="adPortsConfirmationUploaded ? 'success' : 'pending'" 
+              size="sm"
+              [autoWidth]="true">
+            </app-status-badge>
+          </div>
+        </div>
+        <div class="accordion-chevron flex items-center">
+          <app-icon 
+            [name]="adPortsAccordionExpanded ? 'chevron-up' : 'chevron-down'" 
+            [size]="16"
+            className="text-gray-500">
+          </app-icon>
+        </div>
+      </div>
+      
+      <!-- Accordion Content -->
+      <div class="accordion-content border-t border-gray-200 bg-white" *ngIf="adPortsAccordionExpanded">
+        <div class="p-6">
+          <div class="mb-4">
+            <p class="text-sm text-gray-600 mb-4">Upload the confirmation email received from AD Ports regarding the meter readings verification.</p>
+            
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+              <div class="space-y-4">
+                <div class="flex justify-center">
+                  <app-icon name="upload-cloud" [size]="32" className="text-gray-400"></app-icon>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-700">Upload AD Ports Confirmation</p>
+                  <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX up to 10MB</p>
+                </div>
+                <input 
+                  type="file" 
+                  accept=".pdf,.doc,.docx"
+                  (change)="onAdPortsConfirmationUpload($event)"
+                  class="hidden" 
+                  #adPortsFileInput>
+                <button 
+                  type="button" 
+                  (click)="!isReadOnly && adPortsFileInput.click()"
+                  [disabled]="isReadOnly"
+                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {{ isReadOnly ? 'View Only' : 'Choose File' }}
+                </button>
+                
+                <!-- Show uploaded file -->
+                <div *ngIf="adPortsConfirmationFile" class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div class="flex items-center gap-2">
+                    <app-icon name="check-circle" [size]="16" className="text-green-600"></app-icon>
+                    <span class="text-sm font-medium text-green-700">{{ adPortsConfirmationFile.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Approve Evaluation Accordion -->
+    <div class="review-section bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
+      <!-- Accordion Header -->
+      <div class="accordion-header flex items-center justify-between p-4 transition-colors duration-200" 
+           [class.cursor-pointer]="!isReadOnly" 
+           [class.hover:bg-gray-50]="!isReadOnly"
+           [class.cursor-default]="isReadOnly"
+           (click)="!isReadOnly && toggleApprovalAccordion()">
+        <div class="accordion-header-content flex items-center justify-between flex-1 mr-4">
+          <h4 class="text-base font-medium text-gray-900">Accept Evaluation</h4>
+          <div class="entity-status flex items-center">
+            <app-status-badge 
+              [text]="getEvaluationStatusText(evaluationApprovalStatus)" 
+              [variant]="getEvaluationStatusVariant(evaluationApprovalStatus)" 
+              size="sm"
+              [autoWidth]="true">
+            </app-status-badge>
+          </div>
+        </div>
+        <div class="accordion-chevron flex items-center">
+          <app-icon 
+            [name]="approvalAccordionExpanded ? 'chevron-up' : 'chevron-down'" 
+            [size]="16"
+            className="text-gray-500">
+          </app-icon>
+        </div>
+      </div>
+      
+      <!-- Accordion Content -->
+      <div class="accordion-content border-t border-gray-200 bg-white" *ngIf="approvalAccordionExpanded">
+        <div class="p-6">
+          <div *ngIf="evaluationApprovalStatus === 'pending'">
+            <!-- Decision Section -->
+            <div class="decision-section mb-6">
+              <h4 class="text-sm font-medium text-gray-700 mb-4">Final Evaluation Decision</h4>
+              
+              <div class="space-y-3">
+                <label class="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" 
+                       [class.bg-gray-100]="evaluationDecision === 'return'"
+                       [class.border-gray-400]="evaluationDecision === 'return'">
+                  <input 
+                    type="radio" 
+                    name="evaluationDecision" 
+                    value="return"
+                    [(ngModel)]="evaluationDecision"
+                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    [disabled]="isReadOnly">
+                  <span class="ml-3 text-sm font-medium text-gray-700">Return for Re-evaluation</span>
+                </label>
+                
+                <label class="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                       [class.bg-gray-100]="evaluationDecision === 'not-certify'"
+                       [class.border-gray-400]="evaluationDecision === 'not-certify'">
+                  <input 
+                    type="radio" 
+                    name="evaluationDecision" 
+                    value="not-certify"
+                    [(ngModel)]="evaluationDecision"
+                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    [disabled]="isReadOnly">
+                  <span class="ml-3 text-sm font-medium text-gray-700">Not Certify (Reject)</span>
+                </label>
+                
+                <label class="flex items-center cursor-pointer p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                       [class.bg-gray-100]="evaluationDecision === 'certify'"
+                       [class.border-gray-400]="evaluationDecision === 'certify'">
+                  <input 
+                    type="radio" 
+                    name="evaluationDecision" 
+                    value="certify"
+                    [(ngModel)]="evaluationDecision"
+                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    [disabled]="isReadOnly">
+                  <span class="ml-3 text-sm font-medium text-gray-700">Certify (Accept Evaluation)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Comments</label>
+              <textarea 
+                [placeholder]="isReadOnly ? 'View only' : 'Add your evaluation comments here...'"
+                class="w-full h-32 p-3 border border-gray-300 rounded-md resize-none focus:border-blue-500 focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed"
+                [disabled]="isReadOnly"
+                [(ngModel)]="evaluationComments">
+              </textarea>
+              <p class="text-sm text-gray-600 mt-2">These comments will be visible to the certifying body</p>
+            </div>
+
+            <!-- Certificate Details (for Certify/Not Certify decisions) -->
+            <div *ngIf="evaluationDecision === 'certify' || evaluationDecision === 'not-certify'" class="certificate-details mb-6">
+              <h4 class="text-sm font-medium text-gray-700 mb-4">Certificate Details</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Issue Date</label>
+                  <input 
+                    type="date" 
+                    [(ngModel)]="certificateIssueDate"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                  <input 
+                    type="date" 
+                    [value]="getCertificateExpiryDate()"
+                    readonly
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600">
+                  <p class="text-xs text-gray-500 mt-1">Auto-calculated (1 year from issue date)</p>
+                </div>
+              </div>
+              <div class="mt-3">
+                <p class="text-xs text-gray-600">
+                  Certificate Type: {{ evaluationDecision === 'certify' ? 'Certification of Compliance' : 'Rejection Certificate' }}
+                </p>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons flex gap-3" *ngIf="!isReadOnly">
+              <button
+                *ngIf="evaluationDecision === 'certify'"
+                (click)="previewCertificate()"
+                class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm">
+                <app-icon name="eye" [size]="16"></app-icon>
+                <span>Preview Certificate</span>
+              </button>
+              
+              <button
+                (click)="submitEvaluationDecision()"
+                [disabled]="!evaluationDecision || ((evaluationDecision === 'certify' || evaluationDecision === 'not-certify') && !certificateIssueDate)"
+                class="flex items-center justify-center text-white hover:text-white font-medium text-sm h-12 px-6 rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                style="background-color: #845E2B; border: 2px solid #845E2B;">
+                {{ getSubmitButtonText() }}
+              </button>
+            </div>
+            
+            <!-- Read-only message for CB users -->
+            <div class="read-only-message text-center p-4 bg-gray-50 rounded-md" *ngIf="isReadOnly">
+              <p class="text-sm text-gray-600">This is a view-only interface. Only ADIO users can make evaluation decisions.</p>
+            </div>
+          </div>
+
+          <!-- Returned state -->
+          <div *ngIf="evaluationApprovalStatus === 'returned'" class="returned-state">
+            <div class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <p class="text-gray-600 text-xs mb-1">Returned On:</p>
+                  <p class="text-gray-900 font-medium text-sm">{{ getCurrentDate() }}</p>
+                </div>
+              </div>
+              
+              <div class="mb-6" *ngIf="evaluationComments">
+                <p class="text-gray-600 text-xs mb-1">Comments:</p>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-gray-900 text-sm">{{ evaluationComments || 'No comments provided' }}</p>
+                </div>
+              </div>
+
+              <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <p class="text-orange-800 text-sm font-medium">Evaluation has been returned for re-evaluation to the certifying body.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Approved state -->
+          <div *ngIf="evaluationApprovalStatus === 'approved'" class="approved-state">
+            <div class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <p class="text-gray-600 text-xs mb-1">Approved On:</p>
+                  <p class="text-gray-900 font-medium text-sm">{{ getCurrentDate() }}</p>
+                </div>
+              </div>
+              
+              <div class="mb-6" *ngIf="evaluationComments">
+                <p class="text-gray-600 text-xs mb-1">Comments:</p>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-gray-900 text-sm">{{ evaluationComments || 'No comments provided' }}</p>
+                </div>
+              </div>
+
+              <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <p class="text-green-800 text-sm font-medium">Evaluation has been approved. Certificate issuance is now available.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rejected state -->
+          <div *ngIf="evaluationApprovalStatus === 'rejected'" class="rejected-state">
+            <div class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <p class="text-gray-600 text-xs mb-1">Rejected On:</p>
+                  <p class="text-gray-900 font-medium text-sm">{{ getCurrentDate() }}</p>
+                </div>
+              </div>
+              
+              <div class="mb-6" *ngIf="evaluationComments">
+                <p class="text-gray-600 text-xs mb-1">Comments:</p>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-gray-900 text-sm">{{ evaluationComments || 'No comments provided' }}</p>
+                </div>
+              </div>
+
+              <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p class="text-red-800 text-sm font-medium">Evaluation has been rejected. A rejection certificate will be issued.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CB View (existing accordion view) -->
+  <div *ngIf="isCBView" class="accordion-cards">
+    <div class="accordion-card" *ngFor="let entity of getVisibleEntityReviews(); let i = index">
+      <!-- Accordion Header -->
+      <div class="accordion-header" (click)="toggleAccordion(i)">
+        <div class="accordion-header-content">
+          <h4 class="entity-name">{{ entity.name }}</h4>
+          <div class="entity-status">
+            <app-status-badge 
+              [text]="getStatusText(entity.status)" 
+              [variant]="getStatusVariant(entity.status)" 
+              size="sm">
+            </app-status-badge>
+          </div>
+        </div>
+        <div class="accordion-chevron">
+          <app-icon 
+            [name]="entity.isExpanded ? 'chevron-up' : 'chevron-down'" 
+            [size]="16"
+            className="text-gray-500">
+          </app-icon>
+        </div>
+      </div>
+      
+      <!-- Accordion Content -->
+      <div class="accordion-content" *ngIf="entity.isExpanded">
+        <!-- Initial Review - Interactive (during Initial Review stage) -->
+        <div *ngIf="i === 0 && !shouldShowInitialReviewAsAccepted" class="review-actions">
+          <!-- Comments Section -->
+          <div class="comments-section">
+            <h4 class="comments-title">Comments</h4>
+            <textarea 
+              placeholder="Add your review comments here..."
+              class="w-full h-32 p-3 border border-gray-300 rounded-md resize-none focus:border-blue-500 focus:outline-none"
+              [(ngModel)]="initialReviewComments">
+            </textarea>
+            <p class="comments-note">These comments will be visible to the certifying body</p>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="action-buttons grid grid-cols-2 gap-3">
+            <button
+              (click)="returnInitialForReEvaluation()"
+              class="flex items-center justify-center text-black hover:text-gray-800 bg-transparent border-2 px-3 rounded-md hover:bg-gray-50 font-medium text-sm w-full h-12"
+              style="border-color: #845E2B;">
+              Return For Re-Submission
+            </button>
+            
+            <button
+              (click)="acceptInitialEvaluation()"
+              class="flex items-center justify-center text-white hover:text-white font-medium text-sm w-full h-12 px-3 rounded-md hover:opacity-90"
+              style="background-color: #845E2B; border: 2px solid #845E2B;">
+              Accept Submission
+            </button>
+          </div>
+        </div>
+
+        <!-- Placeholder content for other entities -->
+        <div *ngIf="i !== 0 || shouldShowInitialReviewAsAccepted" class="review-content">
+          <p class="text-gray-600">Review content for {{ entity.name }} will be displayed here.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Certificate Issuance -->
-  <div class="section-card">
-    <div class="section-header">
-      <h3 class="section-title">Certificate Issuance</h3>
-    </div>
-    
-    
-    <!-- Pending Approvals Alert -->
-    <div class="alert-card">
-      <div class="alert-header">
-        <span class="alert-title">Pending Approvals</span>
+  <!-- CB Submission Sub-tabs for Review Stage -->
+  <div *ngIf="isCBView" class="submission-sub-tabs">
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">Submission Details</h3>
       </div>
-      <p class="alert-message">
-        {{ getPendingMessage() }}
-      </p>
+      
+      <div class="sub-stage-content">
+        <app-general-sub-stage *ngIf="currentStep === 0"></app-general-sub-stage>
+        <app-economic-impact-sub-stage *ngIf="currentStep === 1"></app-economic-impact-sub-stage>
+        <app-productivity-sub-stage *ngIf="currentStep === 2"></app-productivity-sub-stage>
+        <app-ems-dms-sub-stage *ngIf="currentStep === 3"></app-ems-dms-sub-stage>
+        <app-summary-sub-stage *ngIf="currentStep === 4"></app-summary-sub-stage>
+        <app-review-submit-sub-stage *ngIf="currentStep === 5"></app-review-submit-sub-stage>
+      </div>
     </div>
   </div>
 </div>
