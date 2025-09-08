@@ -30,6 +30,81 @@
       </div>
     </div>
   </div>
+
+  <!-- Meter Readings Section - Read Only for ADIO -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Meter Readings</h3>
+      <p class="text-sm text-gray-600">Meter readings verification by external entities</p>
+    </div>
+    
+    <!-- TAQA Meter Readings -->
+    <div class="mb-8">
+      <h4 class="text-base font-semibold text-gray-900 mb-4">TAQA</h4>
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Premise ID</label>
+          <p class="text-sm text-gray-700">TAQA-12345</p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Account Number</label>
+          <p class="text-sm text-gray-700">ACC-789012</p>
+        </div>
+      </div>
+      
+      <div class="mt-6">
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Meter Numbers</label>
+        <div class="space-y-2">
+          <p class="text-sm text-gray-700">• MTR-001-2024</p>
+          <p class="text-sm text-gray-700">• MTR-002-2024</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-6 mt-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Connectivity Type</label>
+          <p class="text-sm text-gray-700">Medium Voltage (11kV)</p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Connected Load (Supply Capacity)</label>
+          <p class="text-sm text-gray-700">15.5 kW</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AD Ports Meter Readings -->
+    <div class="border-t border-gray-200 pt-6">
+      <h4 class="text-base font-semibold text-gray-900 mb-4">AD Ports</h4>
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Premise ID</label>
+          <p class="text-sm text-gray-700">ADP-67890</p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Account Number</label>
+          <p class="text-sm text-gray-700">ACC-345678</p>
+        </div>
+      </div>
+      
+      <div class="mt-6">
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Meter Numbers</label>
+        <div class="space-y-2">
+          <p class="text-sm text-gray-700">• ADPM-001-2024</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-6 mt-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Connectivity Type</label>
+          <p class="text-sm text-gray-700">High Voltage (33kV)</p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Connected Load (Supply Capacity)</label>
+          <p class="text-sm text-gray-700">22.8 kW</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- CB Interactive View -->
@@ -80,6 +155,192 @@
         [value]="dmsScore"
         [tooltip]="emsData.calculatedFields.dmsScore.tooltip">
       </app-input-calculated>
+    </div>
+  </div>
+</div>
+
+<!-- Meter Readings Section - CB can edit, ADIO sees read-only -->
+<div class="section-container mt-8" *ngIf="!showAdioView">
+  <div class="section-header">
+    <h3 class="section-title">Meter Readings</h3>
+    <p class="text-sm text-gray-600">External entity meter readings verification</p>
+  </div>
+  
+  <!-- TAQA Meter Readings -->
+  <div class="mb-8">
+    <h4 class="text-base font-semibold text-gray-900 mb-4">TAQA</h4>
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Premise ID <span class="text-red-500">*</span></label>
+        <input 
+          type="text" 
+          placeholder="Enter premise ID"
+          class="w-full h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+          [(ngModel)]="taqaPremiseId"
+          [readonly]="isAdioView">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Account Number <span class="text-red-500">*</span></label>
+        <input 
+          type="text" 
+          placeholder="Enter account number"
+          class="w-full h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+          [(ngModel)]="taqaAccountNumber"
+          [readonly]="isAdioView">
+      </div>
+    </div>
+    
+    <div class="mt-6">
+      <label class="block text-sm font-semibold text-gray-900 mb-2">Meter Numbers <span class="text-red-500">*</span></label>
+      <div class="space-y-3 mb-4">
+        <div 
+          *ngFor="let meter of taqaMeterNumbers; let i = index" 
+          class="flex items-center gap-4">
+          <input 
+            type="text" 
+            placeholder="Enter meter number {{i + 1}}"
+            class="flex-1 h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+            [(ngModel)]="taqaMeterNumbers[i]"
+            [readonly]="isAdioView">
+          <button 
+            *ngIf="!isAdioView"
+            type="button" 
+            (click)="removeTaqaMeter(i)"
+            class="w-20 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium whitespace-nowrap"
+            [class.invisible]="taqaMeterNumbers.length <= 1">
+            Remove
+          </button>
+        </div>
+      </div>
+      <button 
+        *ngIf="!isAdioView"
+        type="button" 
+        (click)="addTaqaMeter()"
+        class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 whitespace-nowrap">
+        + Add Meter
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-6 mt-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Connectivity Type <span class="text-red-500">*</span></label>
+        <select 
+          class="w-full h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+          [(ngModel)]="taqaConnectivityType"
+          [disabled]="isAdioView">
+          <option value="">Select connectivity type</option>
+          <option value="Low Voltage (400V)">Low Voltage (400V)</option>
+          <option value="Medium Voltage (11kV)">Medium Voltage (11kV)</option>
+          <option value="High Voltage (33kV)">High Voltage (33kV)</option>
+          <option value="High Voltage (132kV)">High Voltage (132kV)</option>
+          <option value="Extra High Voltage (220kV+)">Extra High Voltage (220kV+)</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Connected Load (Supply Capacity) <span class="text-red-500">*</span></label>
+        <div class="relative">
+          <input 
+            type="number" 
+            placeholder="Enter capacity"
+            class="w-full h-12 px-3 py-2 pr-12 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+            [(ngModel)]="taqaConnectedLoad"
+            [readonly]="isAdioView">
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <span class="text-gray-500 text-sm">kW</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- AD Ports Meter Readings -->
+  <div class="border-t border-gray-200 pt-8">
+    <h4 class="text-base font-semibold text-gray-900 mb-4">AD Ports</h4>
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Premise ID <span class="text-red-500">*</span></label>
+        <input 
+          type="text" 
+          placeholder="Enter premise ID"
+          class="w-full h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+          [(ngModel)]="adPortsPremiseId"
+          [readonly]="isAdioView">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Account Number <span class="text-red-500">*</span></label>
+        <input 
+          type="text" 
+          placeholder="Enter account number"
+          class="w-full h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+          [(ngModel)]="adPortsAccountNumber"
+          [readonly]="isAdioView">
+      </div>
+    </div>
+    
+    <div class="mt-6">
+      <label class="block text-sm font-semibold text-gray-900 mb-2">Meter Numbers <span class="text-red-500">*</span></label>
+      <div class="space-y-3 mb-4">
+        <div 
+          *ngFor="let meter of adPortsMeterNumbers; let i = index" 
+          class="flex items-center gap-4">
+          <input 
+            type="text" 
+            placeholder="Enter meter number {{i + 1}}"
+            class="flex-1 h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+            [(ngModel)]="adPortsMeterNumbers[i]"
+            [readonly]="isAdioView">
+          <button 
+            *ngIf="!isAdioView"
+            type="button" 
+            (click)="removeAdPortsMeter(i)"
+            class="w-20 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium whitespace-nowrap"
+            [class.invisible]="adPortsMeterNumbers.length <= 1">
+            Remove
+          </button>
+        </div>
+      </div>
+      <button 
+        *ngIf="!isAdioView"
+        type="button" 
+        (click)="addAdPortsMeter()"
+        class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 whitespace-nowrap">
+        + Add Meter
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-6 mt-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Connectivity Type <span class="text-red-500">*</span></label>
+        <select 
+          class="w-full h-12 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+          [(ngModel)]="adPortsConnectivityType"
+          [disabled]="isAdioView">
+          <option value="">Select connectivity type</option>
+          <option value="Low Voltage (400V)">Low Voltage (400V)</option>
+          <option value="Medium Voltage (11kV)">Medium Voltage (11kV)</option>
+          <option value="High Voltage (33kV)">High Voltage (33kV)</option>
+          <option value="High Voltage (132kV)">High Voltage (132kV)</option>
+          <option value="Extra High Voltage (220kV+)">Extra High Voltage (220kV+)</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Connected Load (Supply Capacity) <span class="text-red-500">*</span></label>
+        <div class="relative">
+          <input 
+            type="number" 
+            placeholder="Enter capacity"
+            class="w-full h-12 px-3 py-2 pr-12 border border-gray-300 rounded-lg text-sm focus:outline-none gold-focus"
+            [(ngModel)]="adPortsConnectedLoad"
+            [readonly]="isAdioView">
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <span class="text-gray-500 text-sm">kW</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

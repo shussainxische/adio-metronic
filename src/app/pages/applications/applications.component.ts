@@ -214,18 +214,13 @@ export class ApplicationsComponent implements OnInit {
     if (this.isAdioView) {
       // Closed applications maintain their normal styling
       if (app.stage === 'Closed') {
-        return this.applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : '';
+        return this.applicationAssignmentService.isLocked(app, this.isAdioView) ? 'border-transparent bg-gray-50' : '';
       }
       
       // Quotation Submitted and External Review should be grey
       if ((app.stage === 'Quotation' && app.status === 'Submitted') || 
           app.status === 'External Review') {
         return 'border-transparent bg-gray-50';
-      }
-      
-      // Initial Review and Final Review statuses should always be white in ADIO view
-      if (app.status === 'Initial Review' || app.status === 'Final Review') {
-        return 'bg-white';
       }
       
       // External/other entity assignees get grey background (same as locked applications)
@@ -243,7 +238,7 @@ export class ApplicationsComponent implements OnInit {
     }
     
     // CB view or default logic
-    return this.applicationAssignmentService.isLocked(app) ? 'border-transparent bg-gray-50' : '';
+    return this.applicationAssignmentService.isLocked(app, this.isAdioView) ? 'border-transparent bg-gray-50' : '';
   }
 
   getAdioCardClasses(app: any): string {
@@ -381,7 +376,7 @@ export class ApplicationsComponent implements OnInit {
   }
 
   getRowClasses = (app: Application): string => {
-    return this.applicationAssignmentService.isLocked(app) ? 'locked' : '';
+    return this.applicationAssignmentService.isLocked(app, this.isAdioView) ? 'locked' : '';
   };
 
   onTableRowClick(app: Application) {

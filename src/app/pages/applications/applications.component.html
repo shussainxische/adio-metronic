@@ -78,9 +78,9 @@
     <app-preview-card 
       *ngFor="let app of paginatedApplications"
       [className]="getCardClasses(app)"
-      [showShadow]="!applicationAssignmentService.isLocked(app) || (isAdioView && (app.status === 'Initial Review' || app.status === 'Final Review'))"
+      [showShadow]="!applicationAssignmentService.isLocked(app, isAdioView) || (isAdioView && (app.status === 'Initial Review' || app.status === 'Final Review'))"
       class="application-card"
-      [class.locked]="applicationAssignmentService.isLocked(app)"
+      [class.locked]="applicationAssignmentService.isLocked(app, isAdioView)"
       [class.cancelled]="app.status === 'Cancelled'"
       (click)="onCardClick(app)"
       (mouseenter)="onCardHover(app, true)"

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InputValidationComponent } from '../../../../../../components/ui/input-validation/input-validation.component';
 import { InputCalculatedComponent } from '../../../../../../components/ui/input-calculated/input-calculated.component';
@@ -9,7 +9,7 @@ import { Application } from '../../../../../../services/application-status.servi
 @Component({
   selector: 'app-ems-dms-sub-stage',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputValidationComponent, InputCalculatedComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, InputValidationComponent, InputCalculatedComponent],
   templateUrl: './ems-dms-sub-stage.component.html',
   styleUrl: './ems-dms-sub-stage.component.scss'
 })
@@ -84,6 +84,40 @@ export class EmsDmsSubStageComponent implements OnInit {
       }
     }
   };
+
+  // Meter readings properties for CB to fill
+  taqaPremiseId: string = '';
+  taqaAccountNumber: string = '';
+  taqaConnectedLoad: string = '';
+  taqaConnectivityType: string = '';
+  taqaMeterNumbers: string[] = [''];
+  
+  adPortsPremiseId: string = '';
+  adPortsAccountNumber: string = '';
+  adPortsConnectedLoad: string = '';
+  adPortsConnectivityType: string = '';
+  adPortsMeterNumbers: string[] = [''];
+
+  // Methods for dynamic meter management
+  addTaqaMeter() {
+    this.taqaMeterNumbers.push('');
+  }
+
+  removeTaqaMeter(index: number) {
+    if (this.taqaMeterNumbers.length > 1) {
+      this.taqaMeterNumbers.splice(index, 1);
+    }
+  }
+
+  addAdPortsMeter() {
+    this.adPortsMeterNumbers.push('');
+  }
+
+  removeAdPortsMeter(index: number) {
+    if (this.adPortsMeterNumbers.length > 1) {
+      this.adPortsMeterNumbers.splice(index, 1);
+    }
+  }
 
   get dmsScore(): string {
     const consumption = this.demandSideConsumptionControl.value;

@@ -14,7 +14,11 @@ export class ApplicationAssignmentService {
     return this.externalAssignees.includes(app.assignee);
   }
 
-  isLocked(app: Application): boolean {
+  isLocked(app: Application, isAdioView: boolean = false): boolean {
+    // For ADIO view, applications assigned to ADIO should not be locked
+    if (isAdioView && app.assignee === 'ADIO') {
+      return app.stage === 'Closed';
+    }
     return app.stage === 'Closed' || app.status === 'Initial Review' || this.isExternalAssignment(app);
   }
 }

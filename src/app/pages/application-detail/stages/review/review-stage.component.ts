@@ -53,13 +53,25 @@ export class ReviewStageComponent implements OnInit, OnChanges {
   certificateOnHold: boolean = false;
   certificateHoldReason: string = '';
   
-  // External Review accordion states
-  taqaAccordionExpanded: boolean = false;
+  // External Review accordion states - first one expanded by default
+  taqaAccordionExpanded: boolean = true;
   adPortsAccordionExpanded: boolean = false;
   
   // External Review statuses
   taqaStatus: 'submitted' | 'accepted' | 'returned' | 'reevaluation' = 'submitted';
   adPortsStatus: 'submitted' | 'accepted' | 'returned' | 'reevaluation' = 'submitted';
+  
+  // New properties for restructured review
+  // TAQA and AD Ports confirmation file uploads
+  taqaConfirmationFile: File | null = null;
+  adPortsConfirmationFile: File | null = null;
+  taqaConfirmationUploaded: boolean = false;
+  adPortsConfirmationUploaded: boolean = false;
+  
+  // Evaluation approval properties
+  evaluationApprovalStatus: 'pending' | 'approved' | 'returned' = 'pending';
+  evaluationComments: string = '';
+  approvalAccordionExpanded: boolean = false;
   
   entityReviews: EntityReview[] = [
     {
@@ -287,10 +299,20 @@ export class ReviewStageComponent implements OnInit, OnChanges {
 
   toggleTaqaAccordion() {
     this.taqaAccordionExpanded = !this.taqaAccordionExpanded;
+    // Close other accordions when opening this one
+    if (this.taqaAccordionExpanded) {
+      this.adPortsAccordionExpanded = false;
+      this.approvalAccordionExpanded = false;
+    }
   }
 
   toggleAdPortsAccordion() {
     this.adPortsAccordionExpanded = !this.adPortsAccordionExpanded;
+    // Close other accordions when opening this one
+    if (this.adPortsAccordionExpanded) {
+      this.taqaAccordionExpanded = false;
+      this.approvalAccordionExpanded = false;
+    }
   }
 
   getStatusVariantExternal(status: string): StatusBadgeVariant {
@@ -304,11 +326,11 @@ export class ReviewStageComponent implements OnInit, OnChanges {
 
   getStatusTextExternal(status: string): string {
     switch (status) {
-      case 'accepted': return 'Accepted';
-      case 'returned': return 'Awaiting Information';
-      case 'submitted': return 'Submitted';
+      case 'accepted': return 'Completed';
+      case 'returned': return 'Pending';
+      case 'submitted': return 'Completed';
       case 'pending': return 'Pending';
-      case 'reevaluation': return 'Re-evaluation';
+      case 'reevaluation': return 'Pending';
       default: return 'Pending';
     }
   }
@@ -498,19 +520,83 @@ export class ReviewStageComponent implements OnInit, OnChanges {
     // TODO: Implement actual certification logic
   }
 
-  // Return for Re-evaluation method (only for Initial Review)
-  returnForReEvaluation(reviewType: 'initial') {
-    console.log(`Returning ${reviewType} review for re-evaluation`);
-    
+  // Return for Re-evaluation method (handles both signatures)
+  returnForReEvaluation(reviewType?: 'initial') {
+    // Handle the old signature for Initial Review
     if (reviewType === 'initial') {
+      console.log(`Returning ${reviewType} review for re-evaluation`);
       this.initialReviewStatus = 'reevaluation';
       this.certificateHoldReason = 'Initial Review returned for re-evaluation to certifying body';
-      
-      // Put certificate on hold
       this.certificateOnHold = true;
-      
-      // Clear certificate issue date
       this.certificateIssueDate = '';
+      return;
+    }
+    
+    // Handle the new signature for Evaluation approval
+    if (!this.evaluationComments.trim()) {
+      alert('Please enter comments before returning for re-evaluation');
+      return;
+    }
+    
+    console.log('Returning for re-evaluation with comments:', this.evaluationComments);
+    this.evaluationApprovalStatus = 'returned';
+    
+    // Put certificate on hold
+    this.certificateOnHold = true;
+    this.certificateHoldReason = 'Evaluation returned for re-evaluation to certifying body';
+    
+    // Clear certificate issue date
+    this.certificateIssueDate = '';
+  }
+
+  // New methods for restructured review
+  toggleApprovalAccordion() {
+    this.approvalAccordionExpanded = !this.approvalAccordionExpanded;
+    // Close other accordions when opening this one
+    if (this.approvalAccordionExpanded) {
+      this.taqaAccordionExpanded = false;
+      this.adPortsAccordionExpanded = false;
+    }
+  }
+
+  onTaqaConfirmationUpload(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.taqaConfirmationFile = target.files[0];
+      this.taqaConfirmationUploaded = true;
+      console.log('TAQA confirmation uploaded:', this.taqaConfirmationFile.name);
+    }
+  }
+
+  onAdPortsConfirmationUpload(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.adPortsConfirmationFile = target.files[0];
+      this.adPortsConfirmationUploaded = true;
+      console.log('AD Ports confirmation uploaded:', this.adPortsConfirmationFile.name);
+    }
+  }
+
+  approveEvaluation() {
+    console.log('Approving evaluation with comments:', this.evaluationComments);
+    this.evaluationApprovalStatus = 'approved';
+  }
+
+  getEvaluationStatusText(status: string): string {
+    switch (status) {
+      case 'approved': return 'Approved';
+      case 'returned': return 'Returned';
+      case 'pending': return 'Pending';
+      default: return 'Pending';
+    }
+  }
+
+  getEvaluationStatusVariant(status: string): StatusBadgeVariant {
+    switch (status) {
+      case 'approved': return 'success';
+      case 'returned': return 'warning';
+      case 'pending': return 'pending';
+      default: return 'pending';
     }
   }
 }

@@ -543,7 +543,7 @@ export class ApplicationDetailComponent implements OnInit {
 
   get summaryTableData(): InfoTableData {
     const baseRows: any[] = [
-      { label: 'Status', value: this.applicationStatusService.getBadgeText(this.application?.stage || 'Quotation', this.application?.status || 'Pending'), type: 'status-badge', statusVariant: this.applicationStatusService.getStatusVariant(this.application?.status || 'Pending') },
+      { label: 'Status', value: this.applicationStatusService.getBadgeText(this.application?.stage || 'Quotation', this.application?.status || 'Pending', this.isAdioView), type: 'status-badge', statusVariant: this.applicationStatusService.getStatusVariantForAdio(this.application?.stage || 'Quotation', this.application?.status || 'Pending', this.isAdioView) },
       { label: 'Application ID', value: this.application?.id || 'ESP-001' },
       { label: 'Application Date', value: this.getApplicationDate() },
       { label: 'Company', value: this.application?.companyName || 'Unknown Company' },

@@ -356,3 +356,11 @@
   }
 }
 
+// Custom focus styling for form inputs
+.gold-focus {
+  &:focus {
+    border-color: #845E2B !important;
+    box-shadow: 0 0 0 3px rgba(132, 94, 43, 0.1) !important;
+  }
+}
+
