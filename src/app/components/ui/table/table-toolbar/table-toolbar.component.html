@@ -1,17 +1,13 @@
+<!-- Results count messages removed per user request -->
 <div
-  *ngIf="hasActiveFilters && totalItems"
+  *ngIf="false"
   class="text-primary-on-surface ps-6 pt-5 gap-2 flex items-center self-stretch leading-[28px]"
 >
-  {{
-    "table.showing_filtered_results"
-      | translate : { start: displayedStartIndex, total: totalItems }
-  }}
 </div>
 <div
-  *ngIf="!hasActiveFilters && totalItems"
+  *ngIf="false"
   class="text-primary-on-surface ps-6 pt-5 gap-2 flex items-center self-stretch leading-[28px]"
 >
-  {{ "table.showing_all_results" | translate }}
 </div>
 <div
   *ngIf="!totalItems"
