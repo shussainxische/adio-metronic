@@ -55,7 +55,7 @@
         },
         {
           "id": "summary",
-          "name": "Summary",
+          "name": "Score Summary",
           "description": "Application summary and overview",
           "status": "pending",
           "required": true
