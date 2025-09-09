@@ -1,32 +1,67 @@
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-  <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">Application Details</h3>
+<!-- Editable Application Details Section -->
+<div *ngIf="!readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{applicationDetailsData.title}}</h3>
   </div>
-  <div class="grid grid-cols-2 gap-6">
-    <div>
-      <label class="block text-sm font-semibold text-gray-900 mb-2">Application Type</label>
-      <div class="text-gray-700">Renewal</div>
-    </div>
-    <div>
-      <label class="block text-sm font-semibold text-gray-900 mb-2">Utilities Required</label>
-      <div class="flex gap-2 flex-wrap">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">Electricity</span>
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">Gas</span>
+  <div class="field-grid">
+    <app-input 
+      [control]="applicationTypeControl" 
+      [label]="applicationDetailsData.fields.applicationType.label">
+    </app-input>
+    <div class="form-field">
+      <label class="field-label">{{applicationDetailsData.fields.utilitiesRequired.label}}</label>
+      <div class="utilities-checkboxes">
+        <label *ngFor="let utility of applicationDetailsData.fields.utilitiesRequired.options" class="checkbox-item">
+          <input type="checkbox" [value]="utility.value" class="checkbox-input">
+          <span class="checkbox-label">{{utility.label}}</span>
+        </label>
       </div>
     </div>
   </div>
-  <div class="mt-6 grid grid-cols-2 gap-6">
-    <div>
-      <label class="block text-sm font-semibold text-gray-900 mb-2">Financial Year End Date</label>
-      <div class="text-gray-700">31 Dec 2025</div>
+  <div class="field-grid with-spacing">
+    <app-input 
+      [control]="financialYearEndDateControl" 
+      [label]="applicationDetailsData.fields.financialYearEndDate.label"
+      [placeholder]="applicationDetailsData.fields.financialYearEndDate.placeholder"
+      type="date">
+    </app-input>
+    <div></div>
+  </div>
+</div>
+
+<!-- Read-Only Application Details Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{applicationDetailsData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">{{applicationDetailsData.fields.applicationType.label}}</label>
+      <div class="field-value">{{applicationTypeControl.value}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{applicationDetailsData.fields.utilitiesRequired.label}}</label>
+      <div class="field-value">
+        <span *ngFor="let utility of utilitiesRequiredControl.value; let last = last" 
+              class="utility-badge">
+          {{utility}}{{!last ? ', ' : ''}}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <div class="form-field">
+      <label class="field-label">{{applicationDetailsData.fields.financialYearEndDate.label}}</label>
+      <div class="field-value">{{financialYearEndDateControl.value | date:'dd MMM yyyy'}}</div>
     </div>
     <div></div>
   </div>
 </div>
 
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-  <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">Past Renewals</h3>
+<!-- Past Renewals Section (same for both editable and read-only) -->
+<div class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">Past Renewals</h3>
     <p class="text-sm text-gray-600">View and download certificates from previous renewals</p>
   </div>
 

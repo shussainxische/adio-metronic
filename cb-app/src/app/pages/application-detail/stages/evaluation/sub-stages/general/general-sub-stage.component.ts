@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../../../../../../components/ui/icon/icon.component';
+import { InputComponent } from '../../../../../../components/ui/input/input.component';
 
 interface PastCertificate {
   title: string;
@@ -19,12 +21,52 @@ interface SimpleDocument {
 @Component({
   selector: 'app-general-sub-stage',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, InputComponent],
   templateUrl: './general-sub-stage.component.html',
   styleUrl: './general-sub-stage.component.scss'
 })
-export class GeneralSubStageComponent {
+export class GeneralSubStageComponent implements OnInit {
   @Input() readOnly: boolean = false;
+  
+  // Form Controls
+  applicationTypeControl = new FormControl('Renewal');
+  utilitiesRequiredControl = new FormControl(['Electricity', 'Gas']);
+  financialYearEndDateControl = new FormControl('2025-12-31');
+  
+  // Application Details Data
+  applicationDetailsData = {
+    title: 'Application Details',
+    fields: {
+      applicationType: {
+        label: 'Application Type',
+        options: [
+          { value: 'new', label: 'New Application' },
+          { value: 'renewal', label: 'Renewal' },
+          { value: 'modification', label: 'Modification' }
+        ]
+      },
+      utilitiesRequired: {
+        label: 'Utilities Required',
+        options: [
+          { value: 'electricity', label: 'Electricity' },
+          { value: 'gas', label: 'Gas' },
+          { value: 'water', label: 'Water' }
+        ]
+      },
+      financialYearEndDate: {
+        label: 'Financial Year End Date',
+        placeholder: 'Select date'
+      }
+    }
+  };
+
+  ngOnInit() {
+    if (this.readOnly) {
+      this.applicationTypeControl.disable();
+      this.utilitiesRequiredControl.disable();
+      this.financialYearEndDateControl.disable();
+    }
+  }
   
   pastCertificates: PastCertificate[] = [
     {
