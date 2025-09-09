@@ -1,4 +1,5 @@
-<div class="section-container">
+<!-- Editable EMS Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{emsData.title}}</h3>
   </div>
@@ -44,6 +45,221 @@
         [value]="dmsScore"
         [tooltip]="emsData.calculatedFields.dmsScore.tooltip">
       </app-input-calculated>
+    </div>
+  </div>
+</div>
+
+<!-- Read-Only EMS Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{emsData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">{{emsData.fields.connectionLoadMeter.label}}</label>
+      <div class="field-value">{{connectionLoadMeterControl.value}} {{emsData.fields.connectionLoadMeter.unit}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{emsData.fields.emsAvailability.label}}</label>
+      <div class="field-value">{{emsAvailabilityControl.value}}</div>
+    </div>
+  </div>
+  <div class="consumption-section with-spacing">
+    <label class="section-label">{{emsData.fields.demandSideConsumption.label}}</label>
+    <div class="horizontal-fields">
+      <div class="field-value">{{demandSideConsumptionControl.value}}</div>
+      
+      <app-input-calculated
+        variant="blue"
+        [label]="emsData.calculatedFields.dmsScore.label"
+        [value]="dmsScore"
+        [tooltip]="emsData.calculatedFields.dmsScore.tooltip">
+      </app-input-calculated>
+    </div>
+  </div>
+</div>
+
+<!-- Editable AD Ports Section -->
+<div *ngIf="!readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">AD Ports</h3>
+  </div>
+  
+  <div class="field-grid">
+    <app-input 
+      [control]="adPortsPremiseIdControl" 
+      label="Premise ID" 
+      [required]="true"
+      placeholder="Enter premise ID">
+    </app-input>
+    
+    <app-input 
+      [control]="adPortsAccountNumberControl" 
+      label="Account Number" 
+      [required]="true"
+      placeholder="Enter account number">
+    </app-input>
+  </div>
+
+  <div class="form-field mb-6">
+    <div class="flex items-center justify-between mb-2">
+      <label class="block text-sm font-medium text-gray-900">
+        Meter Numbers <span class="text-red-500">*</span>
+      </label>
+      <button 
+        *ngIf="!readOnly"
+        type="button" 
+        (click)="addAdPortsMeter()"
+        class="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700">
+        <span class="text-lg">+</span>
+        Add Meter
+      </button>
+    </div>
+    <div class="space-y-3">
+      <div *ngFor="let meter of adPortsMeters; let i = index" class="flex items-center gap-2">
+        <app-input 
+          [control]="adPortsMeterControls[i]" 
+          [placeholder]="'Enter meter number ' + (i + 1)"
+          class="flex-1">
+        </app-input>
+        <button 
+          *ngIf="!readOnly && adPortsMeters.length > 1"
+          type="button"
+          (click)="removeAdPortsMeter(i)"
+          class="flex items-center justify-center w-8 h-8 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors">
+          <span class="text-sm">×</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="block text-sm font-medium text-gray-900 mb-2">
+        Connectivity Type <span class="text-red-500">*</span>
+      </label>
+      <select 
+        class="w-full p-3 border border-gray-300 rounded-md focus:border-yellow-500 focus:outline-none"
+        [formControl]="adPortsConnectivityTypeControl">
+        <option value="">Select connectivity type</option>
+        <option *ngFor="let option of connectivityTypeOptions" [value]="option.value">
+          {{option.label}}
+        </option>
+      </select>
+    </div>
+    
+    <app-input 
+      [control]="adPortsConnectedLoadControl" 
+      label="Connected Load (Supply Capacity)" 
+      [required]="true"
+      placeholder="Enter capacity">
+      <span iconAfter class="unit-suffix">kW</span>
+    </app-input>
+  </div>
+</div>
+
+<!-- Read-Only AD Ports Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">AD Ports</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">Premise ID</label>
+      <div class="field-value">{{adPortsPremiseIdControl.value}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">Account Number</label>
+      <div class="field-value">{{adPortsAccountNumberControl.value}}</div>
+    </div>
+  </div>
+  <div class="form-field">
+    <label class="field-label">Meter Numbers</label>
+    <div class="field-value">
+      <div *ngFor="let meter of adPortsMeters; let i = index">
+        {{adPortsMeterControls[i].value}}
+      </div>
+    </div>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">Connectivity Type</label>
+      <div class="field-value">{{adPortsConnectivityTypeControl.value}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">Connected Load (Supply Capacity)</label>
+      <div class="field-value">{{adPortsConnectedLoadControl.value}} kW</div>
+    </div>
+  </div>
+</div>
+
+<!-- Editable TAQA Section -->
+<div *ngIf="!readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">TAQA</h3>
+  </div>
+  
+  <div class="field-grid">
+    <app-input 
+      [control]="taqaGasProviderInfoControl" 
+      label="Gas Provider Info" 
+      [required]="true"
+      placeholder="Enter gas provider information">
+    </app-input>
+    <div></div>
+  </div>
+
+  <div class="form-field mb-8">
+    <div class="flex items-center justify-between mb-2">
+      <label class="block text-sm font-medium text-gray-900">
+        Gas Meter Numbers <span class="text-red-500">*</span>
+      </label>
+      <button 
+        *ngIf="!readOnly"
+        type="button" 
+        (click)="addTaqaMeter()"
+        class="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700">
+        <span class="text-lg">+</span>
+        Add Meter
+      </button>
+    </div>
+    <div class="space-y-3">
+      <div *ngFor="let meter of taqaGasMeters; let i = index" class="flex items-center gap-2">
+        <app-input 
+          [control]="taqaGasMeterControls[i]" 
+          [placeholder]="'Enter gas meter number ' + (i + 1)"
+          class="flex-1">
+        </app-input>
+        <button 
+          *ngIf="!readOnly && taqaGasMeters.length > 1"
+          type="button"
+          (click)="removeTaqaMeter(i)"
+          class="flex items-center justify-center w-8 h-8 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors">
+          <span class="text-sm">×</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Read-Only TAQA Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">TAQA</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">Gas Provider Info</label>
+      <div class="field-value">{{taqaGasProviderInfoControl.value}}</div>
+    </div>
+    <div></div>
+  </div>
+  <div class="form-field">
+    <label class="field-label">Gas Meter Numbers</label>
+    <div class="field-value">
+      <div *ngFor="let meter of taqaGasMeters; let i = index">
+        {{taqaGasMeterControls[i].value}}
+      </div>
     </div>
   </div>
 </div>

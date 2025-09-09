@@ -41,6 +41,19 @@
   }
 }
 
+// Form field styling for read-only sections
+.form-field {
+  @apply mb-4;
+  
+  .field-label {
+    @apply text-xs font-semibold text-gray-900 mb-2 block;
+  }
+  
+  .field-value {
+    @apply text-sm text-gray-700;
+  }
+}
+
 .dropdown-field {
   @apply mb-6;
   

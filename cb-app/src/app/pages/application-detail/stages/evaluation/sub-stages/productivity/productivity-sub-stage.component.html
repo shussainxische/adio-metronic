@@ -1,4 +1,5 @@
-<div class="section-container">
+<!-- Editable Revenue Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{revenueData.title}}</h3>
   </div>
@@ -81,7 +82,78 @@
   </div>
 </div>
 
-<div class="section-container">
+<!-- Read-Only Revenue Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{revenueData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">{{revenueData.fields.totalRevenueMainActivity.label}}</label>
+      <div class="field-value">AED {{totalRevenueMainActivityControl.value | number}}</div>
+    </div>
+    <div></div>
+  </div>
+  <div class="field-grid with-spacing">
+    <div class="form-field">
+      <label class="field-label">{{revenueData.fields.finishedGoodsBeginning.label}}</label>
+      <div class="field-value">AED {{finishedGoodsBeginningControl.value | number}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{revenueData.fields.finishedGoodsEnd.label}}</label>
+      <div class="field-value">AED {{finishedGoodsEndControl.value | number}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <div class="form-field">
+      <label class="field-label">{{revenueData.fields.workInProgressBeginning.label}}</label>
+      <div class="field-value">AED {{workInProgressBeginningControl.value | number}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{revenueData.fields.workInProgressEnd.label}}</label>
+      <div class="field-value">AED {{workInProgressEndControl.value | number}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <div class="form-field">
+      <label class="field-label">{{revenueData.fields.otherMiscellaneousIncome.label}}</label>
+      <div class="field-value">AED {{otherMiscellaneousIncomeControl.value | number}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{revenueData.fields.rentalsOfBuilding.label}}</label>
+      <div class="field-value">AED {{rentalsOfBuildingControl.value | number}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      variant="mid-calculation"
+      [label]="revenueData.calculatedFields.mainRevenue.label" 
+      [value]="mainRevenue | number:'1.0-0'"
+      [unit]="'AED'"
+      [tooltip]="revenueData.calculatedFields.mainRevenue.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      variant="mid-calculation"
+      [label]="revenueData.calculatedFields.secondaryRevenue.label" 
+      [value]="secondaryRevenue | number:'1.0-0'"
+      [unit]="'AED'"
+      [tooltip]="revenueData.calculatedFields.secondaryRevenue.tooltip">
+    </app-input-calculated>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      variant="mid-calculation"
+      [label]="revenueData.calculatedFields.totalRevenue.label" 
+      [value]="totalRevenue | number:'1.0-0'"
+      [unit]="'AED'"
+      [tooltip]="revenueData.calculatedFields.totalRevenue.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<!-- Editable Intermediate Consumption Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{intermediateConsumptionData.title}}</h3>
   </div>
@@ -166,7 +238,84 @@
   </div>
 </div>
 
-<div class="section-container">
+<!-- Read-Only Intermediate Consumption Section -->
+<div *ngIf="readOnly" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">Intermediate Consumption</h3>
+  </div>
+  
+  <!-- COGS Section -->
+  <div class="mb-6">
+    <h4 class="text-md font-medium text-gray-800 mb-4 border-b border-gray-200 pb-2">Cost of Goods Sold (COGS)</h4>
+    <div class="grid grid-cols-2 gap-6 mb-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Total Cost of Production</label>
+        <div class="text-gray-700">AED 45,000,000</div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Wages, Salaries & Bonuses (COGS)</label>
+        <div class="text-gray-700">AED 8,000,000</div>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Benefits Granted to Employees (COGS)</label>
+        <div class="text-gray-700">AED 1,200,000</div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Depreciation (COGS)</label>
+        <div class="text-gray-700">AED 2,500,000</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- General Admin Section -->
+  <div class="mb-6">
+    <h4 class="text-md font-medium text-gray-800 mb-4 border-b border-gray-200 pb-2">General & Administrative Expenses</h4>
+    <div class="grid grid-cols-2 gap-6 mb-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Total General & Administrative Expenses</label>
+        <div class="text-gray-700">AED 5,000,000</div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Wages, Salaries & Bonuses (Admin)</label>
+        <div class="text-gray-700">AED 2,000,000</div>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-6 mb-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Benefits Granted to Employees (Admin)</label>
+        <div class="text-gray-700">AED 300,000</div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Depreciation (Admin)</label>
+        <div class="text-gray-700">AED 800,000</div>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Banking Charges</label>
+        <div class="text-gray-700">AED 150,000</div>
+      </div>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- Total Section -->
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      variant="mid-calculation"
+      [label]="intermediateConsumptionData.calculatedFields.totalIntermediateConsumption.label" 
+      [value]="totalIntermediateConsumption | number:'1.0-0'"
+      [unit]="'AED'"
+      [tooltip]="intermediateConsumptionData.calculatedFields.totalIntermediateConsumption.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<!-- Editable Value Added Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{valueAddedData.title}}</h3>
   </div>
@@ -197,7 +346,40 @@
   </div>
 </div>
 
-<div class="section-container">
+<!-- Read-Only Value Added Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{valueAddedData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <app-input-calculated 
+      variant="mid-calculation"
+      [label]="valueAddedData.calculatedFields.totalRevenue.label" 
+      [value]="totalRevenue | number:'1.0-0'"
+      [unit]="'AED'"
+      [tooltip]="valueAddedData.calculatedFields.totalRevenue.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      variant="mid-calculation"
+      [label]="valueAddedData.calculatedFields.totalIntermediateConsumption.label" 
+      [value]="totalIntermediateConsumption | number:'1.0-0'"
+      [unit]="'AED'"
+      [tooltip]="valueAddedData.calculatedFields.totalIntermediateConsumption.tooltip">
+    </app-input-calculated>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="valueAddedData.calculatedFields.valueAdded.label" 
+      [value]="valueAdded | number:'1.0-0'"
+      [unit]="'AED'"
+      [tooltip]="valueAddedData.calculatedFields.valueAdded.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<!-- Editable Average Employees Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{averageEmployeesData.title}}</h3>
   </div>
@@ -211,7 +393,64 @@
   </div>
 </div>
 
-<div class="score-summary-container">
+<!-- Read-Only Average Employees Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{averageEmployeesData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">{{averageEmployeesData.fields.averageEmployees.label}}</label>
+      <div class="field-value">{{averageEmployeesControl.value}}</div>
+    </div>
+    <div></div>
+  </div>
+</div>
+
+<!-- Editable Score Summary Section -->
+<div *ngIf="!readOnly" class="score-summary-container">
+  <div class="score-summary-header">
+    <h3 class="section-title">{{scoreSummaryData.title}}</h3>
+    <div class="total-score-badge">
+      {{ productivityScore.toFixed(1) }}
+    </div>
+  </div>
+  
+  <div class="productivity-score-table">
+    <div class="score-table-header">
+      <div class="score-header-cell">Metric</div>
+      <div class="score-header-cell">Value</div>
+    </div>
+    
+    <div class="score-table-row">
+      <div class="score-cell-metric">{{scoreSummaryData.staticValues.valueAdded.label}}</div>
+      <div class="score-cell-value">{{scoreSummaryData.staticValues.valueAdded.value}}</div>
+    </div>
+    
+    <div class="score-table-row">
+      <div class="score-cell-metric">{{scoreSummaryData.staticValues.averageEmployees.label}}</div>
+      <div class="score-cell-value">{{scoreSummaryData.staticValues.averageEmployees.value}}</div>
+    </div>
+    
+    <div class="score-table-row productivity-highlight">
+      <div class="score-cell-metric">{{scoreSummaryData.staticValues.productivityPerEmployee.label}}</div>
+      <div class="score-cell-value-highlight">{{scoreSummaryData.staticValues.productivityPerEmployee.value}}</div>
+    </div>
+  </div>
+  
+  <div class="benchmark-alert">
+    <div class="alert-content">
+      <span class="alert-icon">ⓘ</span>
+      <div class="alert-text-group">
+        <div class="alert-text">{{scoreSummaryData.benchmarkInfo.industryBenchmark}}</div>
+        <div class="alert-text">{{scoreSummaryData.benchmarkInfo.yearOverYear}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Read-Only Score Summary Section -->
+<div *ngIf="readOnly" class="score-summary-container">
   <div class="score-summary-header">
     <h3 class="section-title">{{scoreSummaryData.title}}</h3>
     <div class="total-score-badge">

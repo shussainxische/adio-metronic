@@ -1,9 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { InputComponent } from '../../../../../../components/ui/input/input.component';
-import { DateInputComponent } from '../../../../../../components/ui/date-input/date-input.component';
-import { StatusBadgeComponent } from '../../../../../../components/ui/status-badge/status-badge.component';
 import { IconComponent } from '../../../../../../components/ui/icon/icon.component';
 
 interface PastCertificate {
@@ -23,45 +19,13 @@ interface SimpleDocument {
 @Component({
   selector: 'app-general-sub-stage',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, DateInputComponent, StatusBadgeComponent, IconComponent],
+  imports: [CommonModule, IconComponent],
   templateUrl: './general-sub-stage.component.html',
   styleUrl: './general-sub-stage.component.scss'
 })
-export class GeneralSubStageComponent implements OnInit {
+export class GeneralSubStageComponent {
   @Input() readOnly: boolean = false;
   
-  applicationTypeControl = new FormControl({ value: '', disabled: true });
-  financialYearEndControl = new FormControl('');
-  
-
-  applicationDetails = {
-    title: 'Application Details',
-    fields: {
-      applicationType: {
-        label: 'Application Type',
-        placeholder: 'Application Type'
-      },
-      utilitiesRequired: {
-        label: 'Utilities Required'
-      },
-      financialYearEnd: {
-        label: 'Financial Year End Date',
-        placeholder: 'Select date'
-      }
-    }
-  };
-
-  pastRenewals = {
-    title: 'Past Renewals',
-    description: 'View and download certificates from previous renewals'
-  };
-
-  applicationData = {
-    applicationType: 'Renewal',
-    financialYearEnd: '2025-12-31',
-    utilitiesRequired: ['Electricity', 'Gas']
-  };
-
   pastCertificates: PastCertificate[] = [
     {
       title: 'Certificate 2022-2024',
@@ -85,12 +49,6 @@ export class GeneralSubStageComponent implements OnInit {
       status: 'Expired'
     }
   ];
-
-  ngOnInit() {
-    this.applicationTypeControl.setValue(this.applicationData.applicationType);
-    this.financialYearEndControl.setValue(this.applicationData.financialYearEnd);
-  }
-
 
   // Data for ViewFileSimple components
   get viewFileData(): SimpleDocument[] {

@@ -1,6 +1,22 @@
 
-<!-- Show evaluation sub-stages - CB sees read-only when under review, ADIO can edit -->
-<div>
+<!-- ADIO View: Simple alert for Evaluation In Progress/Returned -->
+<div *ngIf="isAdioView && (application?.status === 'In Progress' || application?.status === 'Returned')" class="mb-6">
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Evaluation Status</h3>
+      <p class="text-sm text-gray-600">Application awarded on 15 Dec 2024</p>
+    </div>
+    
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <p class="text-sm text-blue-700">
+        This application is with the Certifying Body for evaluation. You will be notified once the evaluation is ready for review.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Show evaluation sub-stages for CB users or other statuses -->
+<div *ngIf="!isAdioView || (application?.status !== 'In Progress' && application?.status !== 'Returned')">
   <app-general-sub-stage *ngIf="currentStep === 0" [readOnly]="isReadOnly"></app-general-sub-stage>
   <app-economic-impact-sub-stage *ngIf="currentStep === 1" [readOnly]="isReadOnly"></app-economic-impact-sub-stage>
   <app-productivity-sub-stage *ngIf="currentStep === 2" [readOnly]="isReadOnly"></app-productivity-sub-stage>

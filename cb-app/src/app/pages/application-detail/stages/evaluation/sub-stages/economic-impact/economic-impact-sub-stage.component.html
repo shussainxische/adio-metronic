@@ -1,4 +1,5 @@
-<div class="section-container">
+<!-- Editable Investment Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{investmentData.title}}</h3>
   </div>
@@ -30,7 +31,37 @@
   </div>
 </div>
 
-<div class="section-container">
+<!-- Read-Only Investment Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{investmentData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">{{investmentData.fields.grossBookValueAbuDhabi.label}}</label>
+      <div class="field-value">AED {{grossBookValueAbuDhabiControl.value | number}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{investmentData.fields.totalGrossBookValue.label}}</label>
+      <div class="field-value">AED {{totalGrossBookValueControl.value | number}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="investmentData.calculatedFields.investmentScore.label" 
+      [value]="investmentScore"
+      [tooltip]="investmentData.calculatedFields.investmentScore.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      [label]="investmentData.calculatedFields.investmentTopUpScore.label" 
+      [value]="investmentTopUpScore"
+      [tooltip]="investmentData.calculatedFields.investmentTopUpScore.tooltip">
+    </app-input-calculated>
+  </div>
+</div>
+
+<!-- Editable Manpower Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{manpowerData.title}}</h3>
   </div>
@@ -94,7 +125,65 @@
   </div>
 </div>
 
-<div class="section-container">
+<!-- Read-Only Manpower Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{manpowerData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">{{manpowerData.fields.salaryBenefitsEmirati.label}}</label>
+      <div class="field-value">AED {{salaryBenefitsEmiratiControl.value | number}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{manpowerData.fields.totalSpentManpower.label}}</label>
+      <div class="field-value">AED {{totalSpentManpowerControl.value | number}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <div class="form-field">
+      <label class="field-label">{{manpowerData.fields.originalEmiratiNumber.label}}</label>
+      <div class="field-value">{{originalEmiratiNumberControl.value}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{manpowerData.fields.growthEmiratiNumber.label}}</label>
+      <div class="field-value">{{growthEmiratiNumberControl.value}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <div class="form-field">
+      <label class="field-label">{{manpowerData.fields.totalStaff.label}}</label>
+      <div class="field-value">{{totalStaffControl.value}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{manpowerData.fields.skilledStaff.label}}</label>
+      <div class="field-value">{{skilledStaffControl.value}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.emiratisationSalaryScore.label" 
+      [value]="emiratisationSalaryScore"
+      [tooltip]="manpowerData.calculatedFields.emiratisationSalaryScore.tooltip">
+    </app-input-calculated>
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.emiratisationGrowthScore.label" 
+      [value]="emiratisationGrowthScore"
+      [tooltip]="manpowerData.calculatedFields.emiratisationGrowthScore.tooltip">
+    </app-input-calculated>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="manpowerData.calculatedFields.skilledLabourScore.label" 
+      [value]="skilledLabourScore"
+      [tooltip]="manpowerData.calculatedFields.skilledLabourScore.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<!-- Editable Logistics Section -->
+<div *ngIf="!readOnly" class="section-container">
   <div class="section-header">
     <h3 class="section-title">{{logisticsData.title}}</h3>
   </div>
@@ -122,7 +211,58 @@
   </div>
 </div>
 
-<div class="score-summary-container">
+<!-- Read-Only Logistics Section -->
+<div *ngIf="readOnly" class="section-container">
+  <div class="section-header">
+    <h3 class="section-title">{{logisticsData.title}}</h3>
+  </div>
+  <div class="field-grid">
+    <div class="form-field">
+      <label class="field-label">{{logisticsData.fields.adLogisticsFees.label}}</label>
+      <div class="field-value">AED {{adLogisticsFeesControl.value | number}}</div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">{{logisticsData.fields.uaeLogisticsFees.label}}</label>
+      <div class="field-value">AED {{uaeLogisticsFeesControl.value | number}}</div>
+    </div>
+  </div>
+  <div class="field-grid with-spacing">
+    <app-input-calculated 
+      [label]="logisticsData.calculatedFields.supplyChainScore.label" 
+      [value]="supplyChainScore"
+      [tooltip]="logisticsData.calculatedFields.supplyChainScore.tooltip">
+    </app-input-calculated>
+    <div></div>
+  </div>
+</div>
+
+<!-- Editable Score Summary Section -->
+<div *ngIf="!readOnly" class="score-summary-container">
+  <div class="score-summary-header">
+    <h3 class="section-title">{{scoreSummaryData.title}}</h3>
+    <div class="total-score-badge">
+      {{ totalEconomicImpactScore.toFixed(1) }}
+    </div>
+  </div>
+  
+  <div class="economic-score-table">
+    <div class="score-table-header">
+      <div class="score-header-cell" *ngFor="let header of scoreSummaryData.headers">{{ header }}</div>
+    </div>
+    
+    <div *ngFor="let row of scoreSummaryTableData" class="score-table-row">
+      <div class="score-cell-component">{{ row.component }}</div>
+      <div class="score-cell-score">{{ row.score }}</div>
+      <div class="score-cell-weight">{{ row.weight }}</div>
+      <div class="score-cell-result">
+        <span class="result-badge">{{ row.result }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Read-Only Score Summary Section -->
+<div *ngIf="readOnly" class="score-summary-container">
   <div class="score-summary-header">
     <h3 class="section-title">{{scoreSummaryData.title}}</h3>
     <div class="total-score-badge">

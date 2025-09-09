@@ -1,27 +1,33 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
   <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{applicationDetails.title}}</h3>
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">Application Details</h3>
   </div>
   <div class="grid grid-cols-2 gap-6">
-    <app-input [control]="applicationTypeControl" [label]="applicationDetails.fields.applicationType.label" [placeholder]="applicationDetails.fields.applicationType.placeholder" variant="locked"></app-input>
     <div>
-      <label class="block text-sm font-semibold text-gray-900 mb-2">{{applicationDetails.fields.utilitiesRequired.label}}</label>
+      <label class="block text-sm font-semibold text-gray-900 mb-2">Application Type</label>
+      <div class="text-gray-700">Renewal</div>
+    </div>
+    <div>
+      <label class="block text-sm font-semibold text-gray-900 mb-2">Utilities Required</label>
       <div class="flex gap-2 flex-wrap">
-        <span *ngFor="let utility of applicationData.utilitiesRequired" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">{{utility}}</span>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">Electricity</span>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">Gas</span>
       </div>
     </div>
   </div>
   <div class="mt-6 grid grid-cols-2 gap-6">
-    <app-date-input [control]="financialYearEndControl" [label]="applicationDetails.fields.financialYearEnd.label" [placeholder]="applicationDetails.fields.financialYearEnd.placeholder"></app-date-input>
+    <div>
+      <label class="block text-sm font-semibold text-gray-900 mb-2">Financial Year End Date</label>
+      <div class="text-gray-700">31 Dec 2025</div>
+    </div>
     <div></div>
   </div>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
   <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">{{pastRenewals.title}} - Component Demo</h3>
-    <p class="text-sm text-gray-600">{{pastRenewals.description}}</p>
-    
+    <h3 class="text-lg font-semibold text-gray-900 mb-1">Past Renewals</h3>
+    <p class="text-sm text-gray-600">View and download certificates from previous renewals</p>
   </div>
 
   <!-- Certificate Files -->
