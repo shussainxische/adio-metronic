@@ -4,12 +4,24 @@
       title="Energy Support Program"
       subtitle="Manage and track all application types">
     </app-page-header>
-    <app-filter-button
-      label="All Applications"
-      [active]="isFilterActive('All')"
-      [count]="getApplicationCount('All')"
-      (clicked)="filterApplications('All')">
-    </app-filter-button>
+    <div class="flex gap-3">
+      <app-filter-button
+        label="All Applications"
+        [active]="isFilterActive('All')"
+        [count]="getApplicationCount('All')"
+        [className]="isFilterActive('All') ? 'bg-yellow-400 text-black border-yellow-400 font-bold' : 'bg-white text-gray-500 border-gray-300 hover:text-black hover:border-black'"
+        [icon]="'file-text'"
+        (clicked)="filterApplications('All')">
+      </app-filter-button>
+      <app-filter-button
+        *ngIf="!isAdioView"
+        label="Not Awarded"
+        [active]="isFilterActive('Archive')"
+        [count]="getApplicationCount('Archive')"
+        [className]="isFilterActive('Archive') ? 'bg-white text-black border-black' : 'bg-white text-gray-500 border-gray-300 hover:text-black hover:border-black'"
+        (clicked)="filterApplications('Archive')">
+      </app-filter-button>
+    </div>
   </div>
 
   <div class="responsive-grid mb-8">

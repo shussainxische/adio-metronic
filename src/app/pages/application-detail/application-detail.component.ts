@@ -231,6 +231,18 @@ export class ApplicationDetailComponent implements OnInit {
       return;
     }
     
+    // For Archive stage applications, only show Application and Quotation tabs (similar to Quotation)
+    if (this.application?.stage === 'Archive') {
+      this.stageTabs = this.stages.filter(stage => 
+        stage.id === 'Application' || stage.id === 'Quotation'
+      ).map(stage => ({ 
+        id: stage.id, 
+        label: stage.name,
+        icon: stage.icon
+      }));
+      return;
+    }
+    
     // For Evaluation stage applications, hide Review and Completed tabs
     if (this.application?.stage === 'Evaluation') {
       this.stageTabs = this.stages.filter(stage => 
@@ -697,7 +709,7 @@ export class ApplicationDetailComponent implements OnInit {
     }
     
     // Default stage logic for other applications
-    if (this.applicationId === 'ESP003') {
+    if (this.applicationId === 'ESP003' || this.applicationId === 'ESP016') {
       this.currentStage = 'Quotation';
     } else if (this.applicationId === 'ESP005' || this.applicationId === 'ESP007') {
       this.currentStage = 'Evaluation';

@@ -15,6 +15,8 @@ export interface QuotationStatusData {
   decisionDate?: string;
   rfqDeadline?: string;
   uploadedFileName?: string;
+  rejectionReason?: string;
+  rejectionComment?: string;
 }
 
 @Component({
@@ -55,8 +57,8 @@ export class QuotationStatusComponent {
       },
       'not-awarded': {
         icon: 'x',
-        iconColor: 'text-red-600',
-        iconBg: 'bg-red-100',
+        iconColor: 'text-gray-600',
+        iconBg: 'bg-gray-100',
         title: 'Not Awarded',
         description: 'Your quotation was not selected for this project',
         badge: { text: 'Quotation - Not Awarded', variant: 'archived' as StatusBadgeVariant },

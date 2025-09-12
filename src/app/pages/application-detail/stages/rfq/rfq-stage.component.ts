@@ -206,7 +206,19 @@ export class RfqStageComponent implements OnInit, OnChanges {
   }
 
   private checkApplicationStatus() {
-    if (this.application?.status === 'Submitted') {
+    if (this.application?.stage === 'Archive') {
+      // For Archive stage applications, show not awarded status
+      this.isSubmitted = true;
+      this.statusData = {
+        type: 'not-awarded',
+        submittedAmount: '25,000',
+        submissionDate: '10 Dec 2024',
+        decisionDate: this.application.date || this.formatCurrentDate(),
+        rejectionReason: this.application.rejectionReason || 'Quotation did not meet program requirements',
+        rejectionComment: 'The proposal did not align with our current requirements and budget constraints.',
+        uploadedFileName: 'ESP_Quotation_Proposal.pdf'
+      };
+    } else if (this.application?.status === 'Submitted') {
       this.isSubmitted = true;
       this.statusData = {
         type: 'under-approval',

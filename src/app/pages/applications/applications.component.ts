@@ -130,9 +130,9 @@ export class ApplicationsComponent implements OnInit {
     );
     
     
-    // Remove "Not Awarded" and "Rejected" applications for ADIO users
+    // Remove Archive stage, "Not Awarded" and "Rejected" applications for ADIO users
     if (this.isAdioView) {
-      filtered = filtered.filter(app => app.status !== 'Not Awarded' && app.status !== 'Rejected');
+      filtered = filtered.filter(app => app.stage !== 'Archive' && app.status !== 'Not Awarded' && app.status !== 'Rejected');
     }
     
     // Then apply application type filtering
@@ -290,18 +290,18 @@ export class ApplicationsComponent implements OnInit {
 
   getApplicationCount = (stage: string) => {
     let apps = this.applications;
-    // Remove "Not Awarded" and "Rejected" applications for ADIO users
+    // Remove Archive stage, "Not Awarded" and "Rejected" applications for ADIO users
     if (this.isAdioView) {
-      apps = apps.filter(app => app.status !== 'Not Awarded' && app.status !== 'Rejected');
+      apps = apps.filter(app => app.stage !== 'Archive' && app.status !== 'Not Awarded' && app.status !== 'Rejected');
     }
     return this.applicationStatusService.getApplicationCount(apps, stage);
   };
   isFilterActive = (stage: string) => this.selectedFilter === stage;
   getSubStatuses = (stage: string) => {
     let apps = this.applications;
-    // Remove "Not Awarded" and "Rejected" applications for ADIO users
+    // Remove Archive stage, "Not Awarded" and "Rejected" applications for ADIO users
     if (this.isAdioView) {
-      apps = apps.filter(app => app.status !== 'Not Awarded' && app.status !== 'Rejected');
+      apps = apps.filter(app => app.stage !== 'Archive' && app.status !== 'Not Awarded' && app.status !== 'Rejected');
     }
     return this.applicationStatusService.getSubStatuses(apps, stage, this.isAdioView);
   };

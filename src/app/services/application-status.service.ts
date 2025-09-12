@@ -5,7 +5,7 @@ export interface Application {
   id: string;
   companyName: string;
   companyType?: string;
-  stage: 'Quotation' | 'Evaluation' | 'Review' | 'Closed';
+  stage: 'Quotation' | 'Evaluation' | 'Review' | 'Closed' | 'Archive';
   status: 'Pending' | 'Submitted' | 'In Progress' | 'Returned' | 'Initial Review' | 'External Review' | 'Final Review' | 'Certified' | 'Not Awarded' | 'Cancelled' | 'Rejected' | 'Not Certified';
   progress: number;
   date: string;
@@ -63,6 +63,11 @@ export class ApplicationStatusService {
       return 'Review';
     }
     
+    // For Archive stage applications, just show "Not Awarded"
+    if (stage === 'Archive') {
+      return 'Not Awarded';
+    }
+    
     return `${stage} - ${status}`;
   };
 
@@ -71,6 +76,11 @@ export class ApplicationStatusService {
     
     // For both ADIO and CB view, don't show Review sub-statuses
     if (stage === 'Review') {
+      return [];
+    }
+    
+    // Don't show sub-statuses for Archive stage
+    if (stage === 'Archive') {
       return [];
     }
     

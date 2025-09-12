@@ -176,7 +176,7 @@
 </div>
 
 <app-quotation-status 
-  *ngIf="isSubmitted && (!isAdioView || (isAdioView && application?.stage !== 'Quotation' && application?.stage !== 'Evaluation' && application?.stage !== 'Review'))"
+  *ngIf="isSubmitted || application?.stage === 'Archive'"
   [statusData]="statusData"
   (backToForm)="resetForm()"
   (startEvaluation)="onStartEvaluation()">
