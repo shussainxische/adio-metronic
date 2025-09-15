@@ -1,7 +1,8 @@
 <button 
-  class="filter-button"
+  class="filter-button flex items-center"
   [class.active]="active"
   (click)="onClick()">
+  <app-icon *ngIf="icon" [name]="icon" class="mr-2"></app-icon>
   {{ label }}
   <span *ngIf="count !== undefined" class="count">({{ count }})</span>
 </button>
